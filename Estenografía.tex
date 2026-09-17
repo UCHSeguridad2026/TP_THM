@@ -1,0 +1,281 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Configuración de colores
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Configuración de listings
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+\lstset{style=mystyle}
+
+% Configuración de tcolorbox
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{notebox}[1][]{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    title=#1
+}
+
+\title{\textbf{Guía de Esteganografía de Doble Capa}\\
+\large Uso de Steghide y OpenSSL para Comunicación Segura}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Concepto General}
+
+Este método implementa un esquema de \textbf{doble capa de seguridad} utilizando esteganografía y cifrado simétrico. La idea es ocultar información en dos imágenes separadas:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Imagen} & \textbf{Contenido} & \textbf{Función} \\
+\hline
+\textbf{RedTeam.jpg} & Texto plano (la "llave") & Es la contraseña \\
+\hline
+\textbf{BlueTeam.jpg} & Archivo cifrado con esa llave & Es el cofre \\
+\hline
+\end{tabular}
+\end{table}
+
+El receptor \textbf{primero} extrae la llave de RedTeam, y \textbf{después} la usa para abrir el cofre de BlueTeam.
+
+\section{Fase 1: Creación (Emisor)}
+
+\subsection{Paso 1 --- Definir la llave y el mensaje secreto}
+
+\begin{lstlisting}[language=bash, caption={Crear archivos iniciales}]
+# La llave que ocultarás en RedTeam (puede ser cualquier texto)
+echo "CaballoDeTroya2026!" > RedKey.txt
+
+# El mensaje secreto real que quieres que lea el receptor
+echo "El punto de encuentro es el muelle 7 a las 03:00 AM. Destruye este mensaje." > mensaje_secreto.txt
+\end{lstlisting}
+
+\subsection{Paso 2 --- Cifrar el mensaje secreto usando la llave}
+
+Usamos \texttt{openssl} para cifrar \texttt{mensaje\_secreto.txt} con la contraseña que está dentro de \texttt{RedKey.txt}:
+
+\begin{lstlisting}[language=bash, caption={Cifrar mensaje con OpenSSL}]
+openssl enc -aes-256-cbc -salt -pbkdf2 \
+  -in mensaje_secreto.txt \
+  -out mensaje_cifrado.bin \
+  -pass file:RedKey.txt
+\end{lstlisting}
+
+\textbf{Explicación de parámetros:}
+\begin{itemize}
+    \item \texttt{-aes-256-cbc}: Algoritmo de cifrado robusto.
+    \item \texttt{-salt -pbkdf2}: Añade seguridad contra ataques de diccionario.
+    \item \texttt{-pass file:RedKey.txt}: Le dice a openssl que la contraseña está dentro del archivo \texttt{RedKey.txt}.
+\end{itemize}
+
+Ahora \texttt{mensaje\_cifrado.bin} es un archivo ilegible sin la llave.
+
+\subsection{Paso 3 --- Ocultar la llave en RedTeam.jpg}
+
+\begin{lstlisting}[language=bash, caption={Ocultar llave con Steghide}]
+steghide embed -cf RedTeam.jpg -ef RedKey.txt -sf RedTeamKey.jpg
+\end{lstlisting}
+
+\begin{notebox}[Nota importante]
+Te pedirá una contraseña de steghide. Anótala, la necesitará el receptor para abrir esta imagen. Ejemplo: \texttt{pass\_red}.
+\end{notebox}
+
+\subsection{Paso 4 --- Ocultar el archivo cifrado en BlueTeam.jpg}
+
+\begin{lstlisting}[language=bash, caption={Ocultar mensaje cifrado con Steghide}]
+steghide embed -cf BlueTeam.jpg -ef mensaje_cifrado.bin -sf BlueTeamFinal.jpg
+\end{lstlisting}
+
+\begin{notebox}[Nota importante]
+Te pedirá otra contraseña de steghide. Ejemplo: \texttt{pass\_blue}.
+\end{notebox}
+
+\subsection{Paso 5 --- Limpiar archivos temporales}
+
+\begin{lstlisting}[language=bash, caption={Eliminar archivos sensibles}]
+shred -u RedKey.txt mensaje_secreto.txt mensaje_cifrado.bin
+\end{lstlisting}
+
+\textbf{Resultado final:} Solo te quedan \texttt{RedTeamKey.jpg} y \texttt{BlueTeamFinal.jpg} para enviar al receptor.
+
+\section{Fase 2: Extracción (Receptor)}
+
+\subsection{Paso 1 --- Extraer la llave de RedTeam}
+
+\begin{lstlisting}[language=bash, caption={Extraer llave de RedTeam}]
+steghide extract -sf RedTeamKey.jpg -xf llave_recuperada.txt
+\end{lstlisting}
+
+Introduce la contraseña de steghide de RedTeam (\texttt{pass\_red}).
+
+\subsection{Paso 2 --- Extraer el archivo cifrado de BlueTeam}
+
+\begin{lstlisting}[language=bash, caption={Extraer mensaje cifrado de BlueTeam}]
+steghide extract -sf BlueTeamFinal.jpg -xf mensaje_cifrado_recuperado.bin
+\end{lstlisting}
+
+Introduce la contraseña de steghide de BlueTeam (\texttt{pass\_blue}).
+
+\subsection{Paso 3 --- Descifrar el mensaje usando la llave recuperada}
+
+\begin{lstlisting}[language=bash, caption={Descifrar mensaje con OpenSSL}]
+openssl enc -aes-256-cbc -d -pbkdf2 \
+  -in mensaje_cifrado_recuperado.bin \
+  -out mensaje_final.txt \
+  -pass file:llave_recuperada.txt
+\end{lstlisting}
+
+\textbf{Explicación:}
+\begin{itemize}
+    \item \texttt{-d}: Modo \textbf{descifrado} (decrypt).
+    \item \texttt{-pass file:llave\_recuperada.txt}: Usa la llave que extrajo de RedTeam.
+\end{itemize}
+
+\subsection{Paso 4 --- Leer el mensaje}
+
+\begin{lstlisting}[language=bash, caption={Visualizar mensaje final}]
+cat mensaje_final.txt
+\end{lstlisting}
+
+\textbf{Salida esperada:}
+\begin{verbatim}
+El punto de encuentro es el muelle 7 a las 03:00 AM. Destruye este mensaje.
+\end{verbatim}
+
+\section{Resumen Visual del Flujo}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    box/.style={rectangle, draw=blue!75!black, fill=blue!5, thick, minimum width=3cm, minimum height=0.8cm, align=center},
+    arrow/.style={->, >=stealth, thick, color=blue!75!black}
+]
+
+% Emisor
+\node[box] (llave) {RedKey.txt};
+\node[box, right=of llave] (redteam) {RedTeam.jpg};
+\node[box, right=of redteam] (redfinal) {RedTeamKey.jpg};
+
+\node[box, below=1.5cm of llave] (mensaje) {mensaje\_secreto.txt};
+\node[box, right=of mensaje] (cifrado) {mensaje\_cifrado.bin};
+\node[box, below=of redfinal] (blueteam) {BlueTeam.jpg};
+\node[box, right=of blueteam] (bluefinal) {BlueTeamFinal.jpg};
+
+% Flechas emisor
+\draw[arrow] (llave) -- node[above] {steghide} (redteam);
+\draw[arrow] (redteam) -- node[above] {embed} (redfinal);
+
+\draw[arrow] (llave) |- node[pos=0.25, left] {openssl cifrar} (mensaje);
+\draw[arrow] (mensaje) -- node[above] {genera} (cifrado);
+\draw[arrow] (cifrado) |- node[pos=0.75, right] {steghide} (blueteam);
+\draw[arrow] (blueteam) -- node[above] {embed} (bluefinal);
+
+% Receptor
+\node[box, below=2cm of redfinal] (redfinal2) {RedTeamKey.jpg};
+\node[box, right=of redfinal2] (llave2) {llave\_recuperada.txt};
+
+\node[box, below=of bluefinal] (bluefinal2) {BlueTeamFinal.jpg};
+\node[box, right=of bluefinal2] (cifrado2) {mensaje\_cifrado.bin};
+\node[box, below=of llave2] (final) {mensaje\_final.txt};
+
+% Flechas receptor
+\draw[arrow] (redfinal2) -- node[above] {steghide extract} (llave2);
+\draw[arrow] (bluefinal2) -- node[above] {steghide extract} (cifrado2);
+\draw[arrow] (llave2) |- node[pos=0.25, left] {openssl descifrar} (cifrado2);
+\draw[arrow] (cifrado2) -- node[above] {genera} (final);
+
+% Etiquetas
+\node[above=0.3cm of redfinal, font=\bfseries, color=red!75!black] {EMISOR};
+\node[below=0.3cm of final, font=\bfseries, color=green!50!black] {RECEPTOR};
+
+\end{tikzpicture}
+\caption{Flujo completo de cifrado y descifrado}
+\end{figure}
+
+\section{Notas Importantes}
+
+\begin{enumerate}
+    \item \textbf{Las contraseñas de steghide} (\texttt{pass\_red} y \texttt{pass\_blue}) deben comunicarse al receptor por un \textbf{canal separado y seguro} (por ejemplo, de voz, Signal, o en persona). Si las mandas por el mismo chat que las imágenes, pierdes toda la seguridad.
+
+    \item \textbf{Si la llave se corrompe} (aunque sea un solo carácter), \texttt{openssl} no podrá descifrar y dará un error de \textit{"bad decrypt"}. Por eso es buena idea que la llave sea algo fácil de verificar visualmente.
+
+    \item \textbf{Las imágenes originales} (\texttt{RedTeam.jpg} y \texttt{BlueTeam.jpg}) no se modifican. Steghide crea copias nuevas (\texttt{RedTeamKey.jpg} y \texttt{BlueTeamFinal.jpg}). No envíes las originales.
+
+    \item \textbf{El orden importa}: El receptor \textit{debe} extraer primero RedTeam para obtener la llave antes de poder abrir BlueTeam. Es buena idea indicarle el orden de alguna forma (el nombre ya lo sugiere: rojo primero, azul después).
+
+    \item \textbf{Compatibilidad de formatos}: Steghide soporta formatos de imagen como \texttt{.jpg}, \texttt{.bmp}, \texttt{.wav} y \texttt{.au}. Asegúrate de usar uno compatible.
+
+    \item \textbf{Seguridad adicional}: Considera usar \texttt{shred} o herramientas similares para eliminar de forma segura los archivos temporales sensibles.
+\end{enumerate}
+
+\section{Comandos Útiles Adicionales}
+
+\subsection{Ver información de una imagen con datos ocultos}
+\begin{lstlisting}[language=bash]
+steghide info RedTeamKey.jpg
+\end{lstlisting}
+
+Esto te dirá si la imagen tiene datos ocultos, qué formato tiene el archivo oculto y qué algoritmo de cifrado se usó, pero \textbf{no} te mostrará el contenido ni te dejará extraerlo sin la contraseña correcta.
+
+\subsection{Parámetros de Steghide}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Parámetro} & \textbf{Significado} & \textbf{Uso} \\
+\hline
+\texttt{-cf} & Cover File & Archivo de portada (imagen original) \\
+\hline
+\texttt{-ef} & Embed File & Archivo que quieres ocultar \\
+\hline
+\texttt{-sf} & Stego File & Archivo de salida (imagen con datos ocultos) \\
+\hline
+\texttt{-xf} & eXtract File & Archivo de salida al extraer (opcional) \\
+\hline
+\texttt{-p} & Passphrase & Contraseña (opcional) \\
+\hline
+\end{tabular}
+\end{table}
+
+\end{document}
