@@ -1,0 +1,19 @@
+# Nmap 7.99 scan initiated Wed Sep 30 02:23:38 2026 as: /usr/lib/nmap/nmap --privileged -p- --min-rate 5000 -T4 -oA /home/kali/TP_THM/evidencias/escaneo/KB-02_nmap 10.64.134.243
+Warning: 10.64.134.243 giving up on port because retransmission cap hit (6).
+Nmap scan report for 10.64.134.243
+Host is up (0.18s latency).
+Not shown: 44306 closed tcp ports (reset), 21218 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+22/tcp    open  ssh
+80/tcp    open  http
+111/tcp   open  rpcbind
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+2049/tcp  open  nfs
+35437/tcp open  unknown
+43057/tcp open  unknown
+48695/tcp open  unknown
+58469/tcp open  unknown
+
+# Nmap done at Wed Sep 30 02:25:36 2026 -- 1 IP address (1 host up) scanned in 117.67 seconds

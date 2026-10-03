@@ -1,0 +1,4 @@
+# Nmap 7.99 scan initiated Wed Sep 30 02:23:38 2026 as: /usr/lib/nmap/nmap --privileged -p- --min-rate 5000 -T4 -oA /home/kali/TP_THM/evidencias/escaneo/KB-02_nmap 10.64.134.243
+Host: 10.64.134.243 ()	Status: Up
+Host: 10.64.134.243 ()	Ports: 21/open/tcp//ftp///, 22/open/tcp//ssh///, 80/open/tcp//http///, 111/open/tcp//rpcbind///, 139/open/tcp//netbios-ssn///, 445/open/tcp//microsoft-ds///, 2049/open/tcp//nfs///, 35437/open/tcp/////, 43057/open/tcp/////, 48695/open/tcp/////, 58469/open/tcp/////
+# Nmap done at Wed Sep 30 02:25:36 2026 -- 1 IP address (1 host up) scanned in 117.67 seconds

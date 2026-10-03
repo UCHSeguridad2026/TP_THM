@@ -1,0 +1,25 @@
+# Claves privadas y secretos
+id_rsa_*
+*.key
+*.pem
+
+# Archivos auxiliares de LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# PDFs temporales / backups
+informe_basic_pentesting_backup.pdf
+
+# Archivos LaTeX temporales de trabajo
+informe_basic_pentesting_backup.tex
+informe_pre_parte2.tex
+kenobi_anexoA.tex
+kenobi_parte2.tex
+
+# Montajes locales
+mnt/

