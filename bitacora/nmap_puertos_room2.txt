@@ -1,0 +1,26 @@
+# Nmap 7.99 scan initiated Sun Oct  4 18:28:22 2026 as: /usr/lib/nmap/nmap --privileged -p- --min-rate 5000 -oN bitacora/nmap_puertos_room2.txt 10.66.142.132
+Warning: 10.66.142.132 giving up on port because retransmission cap hit (10).
+Nmap scan report for 10.66.142.132
+Host is up (0.16s latency).
+Not shown: 65517 closed tcp ports (reset)
+PORT      STATE    SERVICE
+21/tcp    open     ftp
+22/tcp    open     ssh
+139/tcp   open     netbios-ssn
+445/tcp   open     microsoft-ds
+3128/tcp  open     squid-http
+3333/tcp  open     dec-notes
+7860/tcp  filtered unknown
+13595/tcp filtered unknown
+16157/tcp filtered unknown
+16613/tcp filtered unknown
+28262/tcp filtered unknown
+28982/tcp filtered unknown
+34308/tcp filtered unknown
+36141/tcp filtered unknown
+36490/tcp filtered unknown
+46362/tcp filtered unknown
+59857/tcp filtered unknown
+61287/tcp filtered unknown
+
+# Nmap done at Sun Oct  4 18:32:20 2026 -- 1 IP address (1 host up) scanned in 237.77 seconds
