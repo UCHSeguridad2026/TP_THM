@@ -1,0 +1,14 @@
+    1  nano /home/kali/kay_id_rsa
+    2  chmod 600 /home/kali/kay_id_rsa
+    3  locate ssh2john
+    4  ssh2john /home/kali/kay_id_rsa > /home/kali/kay_hash.txt\ncat /home/kali/kay_hash.txt
+    5  john --wordlist=/usr/share/wordlists/rockyou.txt /home/kali/kay_hash.txt
+    6  echo -n "[REDACTED]" | sha256sum
+    7  read -s PASS
+    8  echo -n "$PASS" | sha256sum
+    9  read -s PASS
+   10  echo -n "$PASS" | sha256sum
+   11  ssh -i /home/kali/kay_id_rsa kay@10.65.166.84
+   12  echo -n "[REDACTED]" | sha256sum
+   13  echo -n '[REDACTED] | sha256sum
+   14  history | sed -E 's/(password=[REDACTED] ]*/\1=[REDACTED]/Ig' > ~/TP_THM/bitacora/clase_sala2_$(date +%Y%m%d).txt

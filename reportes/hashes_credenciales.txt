@@ -1,0 +1,4 @@
+Credenciales	Hash SHA-256
+Contraseña SSH de jan	9eb6835cc95b053818b660bd9fc9f092a0b30cef89c1f0f17f469d5caa0ae617
+Passphrase clave de kay	873504f0103a88d762191a358f4aa432dbbcf8af64f19dd913d7f8f925191a08
+Contraseña sudo de kay	3ffd53ec80858f9ddcd75d69102724ab1bc1020855fff924227f618c4bfccf57
