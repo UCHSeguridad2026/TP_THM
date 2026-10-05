@@ -1,0 +1,34 @@
+
+ * Esperando en cola... 
+Los paquetes siguientes deben instalarse:
+ afpfs-ng_0.8.1-67.fc44.x86_64              Apple Filing Protocol client
+ apr_1.7.6-5.fc44.x86_64                    Apache Portable Runtime library
+ apr-util_1.6.5-1.fc44.x86_64               Apache Portable Runtime Utility library
+ apr-util-lmdb_1.6.5-1.fc44.x86_64          APR utility library LMDB driver
+ apr-util-openssl_1.6.5-1.fc44.x86_64       APR utility library OpenSSL crypto support
+ freerdp2-libs_2.11.7-16.fc44.x86_64        Core libraries implementing the RDP protocol
+ hydra_9.6-2.fc44.x86_64                    Very fast network log-on cracker
+ libbson_1.30.11-1.fc44.x86_64              Building, parsing, and iterating BSON documents
+ libfbclient2_5.0.4.1812-1.fc44.x86_64      Firebird SQL server client library
+ libidn_1.44-1.fc44.x86_64                  Internationalized Domain Name support library
+ libmemcached-awesome_1.1.4-9.fc44.x86_64   Client library and command line tools for memcached server
+ libmongocrypt_1.15.2-2.fc44.x86_64         The companion C library for client side encryption in drivers
+ libpq_18.0-4.fc44.x86_64                   PostgreSQL client library
+ libserf_1.3.10-13.fc44.x86_64              High-Performance Asynchronous HTTP Client Library
+ libwinpr2_2.11.7-16.fc44.x86_64            Windows Portable Runtime
+ mongo-c-driver-libs_1.30.11-1.fc44.x86_64  Shared libraries for mongo-c-driver
+ subversion-libs_1.14.5-26.fc44.x86_64      Libraries for Subversion Version Control system
+ utf8proc_2.11.3-2.fc44.x86_64              Library for processing UTF-8 encoded Unicode strings
+
+ * Esperando en cola... 
+ * Esperando autenticación... 
+ * Esperando en cola... 
+ * Descargando paquetes... 
+ * Ejecutando... 
+ * Instalando paquetes... 
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-10-03 20:21:32
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 14344398 login tries (l:1/p:14344398), ~3586100 tries per task
+[DATA] attacking ssh://10.65.135.80:22/
+
