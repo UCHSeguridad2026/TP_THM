@@ -1,0 +1,14 @@
+# Archivos de configuración VPN de TryHackMe (contienen credenciales/claves)
+*.ovpn
+
+# Artefactos temporales de herramientas
+*.pcap.tmp
+*.swp
+*~
+.DS_Store
+
+# Salidas crudas voluminosas que NO van al repo (dejar solo las relevantes en bitacora/)
+*.nessus
+
+# Nunca subir flags en texto plano: en el informe van SOLO los hashes SHA-256
+flags_plano.txt
