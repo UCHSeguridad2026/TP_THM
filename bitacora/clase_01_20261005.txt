@@ -1,0 +1,17 @@
+### INICIO CLASE 01 - 2026-10-05 19:00 - Sala: Pentesting Fundamentals
+# Sala teórica (5 tareas): lectura y preguntas en la plataforma TryHackMe.
+# No se ejecutaron escaneos ni ataques contra ningún objetivo.
+# Username THM: mateofalantiuch
+
+# Conexión a la VPN de TryHackMe (hora de la laptop: 20:49)
+cd ~/Downloads
+sudo openvpn --config us-east-1-mateofalantiuch-regular.ovpn
+
+# Verificación de la interfaz de la VPN (tun0 con IP 192.168.149.209/18)
+ip a show tun0
+
+### FIN CLASE 01 - 2026-10-05 21:49 - Sala Pentesting Fundamentals completada (5/5 tareas)
+# Evidencia: evidencias/reconocimiento/pentesting_fundamentals_completada.png
+
+# Nota: bitácora reconstruida al día siguiente (2026-10-06) a partir de lo
+# trabajado en la sesión. Las horas corresponden al reloj de la laptop, ya que la hora de la VM estaba desconfigurada inicialmente.
