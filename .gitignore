@@ -1,0 +1,18 @@
+# Archivos auxiliares de compilación LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+ 
+# Claves privadas u otros archivos sensibles que nunca deben commitearse
+*id_rsa*
+*.pem
+*.key
+ 
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+ 
