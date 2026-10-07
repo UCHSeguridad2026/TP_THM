@@ -1,0 +1,9 @@
+# Nmap 7.94SVN scan initiated Tue Oct  6 21:55:10 2026 as: nmap -Pn -p 139,445 --script smb-enum-shares,smb-enum-users -oN /home/maxi/TP_THM/bitacora/clase_01_smb_enum.txt 10.67.151.105
+Nmap scan report for 10.67.151.105
+Host is up (0.20s latency).
+
+PORT    STATE SERVICE
+139/tcp open  netbios-ssn
+445/tcp open  microsoft-ds
+
+# Nmap done at Tue Oct  6 21:55:12 2026 -- 1 IP address (1 host up) scanned in 1.76 seconds

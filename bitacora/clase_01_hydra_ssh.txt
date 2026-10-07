@@ -1,0 +1,1 @@
+# Hydra v9.5 run at 2026-10-06 22:05:38 on 10.67.151.105 ssh (hydra -l jan -P /usr/share/dirb/wordlists/common.txt -o /home/maxi/TP_THM/bitacora/clase_01_hydra_ssh.txt ssh://10.67.151.105)

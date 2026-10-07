@@ -1,0 +1,20 @@
+# Nmap 7.94SVN scan initiated Tue Oct  6 21:42:12 2026 as: nmap -Pn -sC -sV -oN /home/maxi/TP_THM/bitacora/clase_01_nmap_2.txt 10.67.151.105
+Nmap scan report for 10.67.151.105
+Host is up (0.20s latency).
+Not shown: 997 closed tcp ports (conn-refused)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 a2:15:ef:a0:76:aa:3e:c5:c9:a3:75:b3:d0:1c:f9:41 (RSA)
+|   256 57:ce:c5:e8:88:9a:67:0a:f9:0e:97:67:b8:ce:41:09 (ECDSA)
+|_  256 6e:9e:d5:a0:9e:80:ce:18:21:7e:01:9c:dd:bf:71:04 (ED25519)
+80/tcp   open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+8009/tcp open  ajp13   Apache Jserv (Protocol v1.3)
+| ajp-methods: 
+|_  Supported methods: GET HEAD POST OPTIONS
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Oct  6 21:42:55 2026 -- 1 IP address (1 host up) scanned in 42.81 seconds
