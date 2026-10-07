@@ -1,0 +1,26 @@
+# Descargas incompletas / temporales
+*.crdownload
+*.part
+*.tmp
+
+# Credenciales y archivos de VPN (NUNCA subir)
+*.ovpn
+*.pem
+*.key
+id_rsa
+id_rsa.*
+.env
+
+# Artefactos de LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+desktop.ini
