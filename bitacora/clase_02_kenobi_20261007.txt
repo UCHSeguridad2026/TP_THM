@@ -68,3 +68,12 @@ whoami
 
 cat /root/root.txt
 # Flag obtenida -> ver Anexo C del informe (hash SHA-256)
+
+## Repeticion tras reinicio de la VM atacante (misma maquina objetivo, sin resetear)
+# Se repitio toda la cadena para generar capturas; nmap, SMB, NFS, flag de usuario
+# y privesc dieron resultados identicos (confirma reproducibilidad).
+# Correccion de un error propio: en el primer intento del exploit FTP se tipeo
+# "id-rsa" en vez de "id_rsa" (SITE CPFR fallo con 550). No afecto el resultado
+# final porque el archivo copiado en la sesion anterior seguia en /var/tmp.
+# Se repitio correctamente el privesc por PATH y se leyo /root/root.txt DENTRO
+# de la shell de root (sin salir antes), confirmando: 177b3cd8562289f37382721c28381f02
