@@ -1,0 +1,30 @@
+# Nmap 7.991 scan initiated Wed Oct  7 03:32:42 2026 as: nmap -sC -sV -Pn -p21,22,80,139,445,3389,8080,1337 -oN bitacora/vulnversity_nmap_servicios.txt 10.67.184.183
+Nmap scan report for 10.67.184.183
+Host is up (0.17s latency).
+
+PORT     STATE  SERVICE       VERSION
+21/tcp   open   ftp           vsftpd 3.0.5
+22/tcp   open   ssh           OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 2b:0d:0b:4a:ad:cf:21:74:2e:11:f2:bf:12:5d:d7:47 (RSA)
+|   256 b5:1f:cf:b9:9c:12:a7:cb:ba:41:6f:47:ec:ca:07:d9 (ECDSA)
+|_  256 6a:b0:5c:9f:4d:9f:31:27:75:65:d5:c0:9c:a2:f8:f9 (ED25519)
+80/tcp   closed http
+139/tcp  open   netbios-ssn   Samba smbd 4
+445/tcp  open   netbios-ssn   Samba smbd 4
+1337/tcp closed waste
+3389/tcp closed ms-wbt-server
+8080/tcp closed http-proxy
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+|_nbstat: NetBIOS name: , NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-time: 
+|   date: 2026-10-07T06:32:56
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 03:33:03 2026 -- 1 IP address (1 host up) scanned in 20.49 seconds

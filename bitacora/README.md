@@ -52,3 +52,20 @@ msfconsole -q -x "use auxiliary/admin/http/tomcat_ghostcat; set RHOSTS 10.65.141
 - **H-04** – Tomcat 9.0.7 desactualizado + `/manager/html` con credenciales por defecto
   descartadas (76 combos de SecLists, sin éxito).
 - **Usuarios confirmados (SAMR lookupnames):** `jan` (1001), `kay` (1000), `ubuntu` (1002).
+
+## Vulnversity (10.67.184.183) — fase de explotación
+
+```bash
+nmap -p- --min-rate 5000 -Pn -oN bitacora/vulnversity_nmap_puertos.txt 10.67.184.183
+nmap -sC -sV -Pn -p21,22,80,139,445,3128,3333 -oN bitacora/vulnversity_nmap_servicios.txt 10.67.184.183
+gobuster dir -u http://10.67.184.183:3333 -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 25 -o bitacora/vulnversity_gobuster.txt
+nikto -h http://10.67.184.183:3333 | tee bitacora/vulnversity_nikto.txt
+```
+
+### Hallazgos
+- **H-05** – Formulario de carga de archivos en `/internal/` sin validación robusta de tipo
+  (blacklist de extensiones). Bypass con `.phtml`, que Apache ejecuta como PHP.
+  → RCE no autenticada. OWASP A04:2021 Unsafe Design / CWE-434.
+- **H-06** – Los archivos subidos quedan en `/internal/uploads/` y son accesibles y
+  ejecutables públicamente (CWE-552).
+- Nikto: Apache 2.4.41 desactualizado (CVE-2003-1418 ETags), cabeceras de seguridad ausentes.

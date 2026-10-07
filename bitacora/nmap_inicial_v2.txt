@@ -1,0 +1,8 @@
+# Nmap 7.991 scan initiated Wed Oct  7 03:31:03 2026 as: nmap -Pn -sV -oN /home/valentin/TP_THM/bitacora/nmap_inicial_v2.txt 10.67.184.183
+Nmap scan report for 10.67.184.183
+Host is up (0.17s latency).
+All 1000 scanned ports on 10.67.184.183 are in ignored states.
+Not shown: 1000 closed tcp ports (conn-refused)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 03:31:24 2026 -- 1 IP address (1 host up) scanned in 20.90 seconds
