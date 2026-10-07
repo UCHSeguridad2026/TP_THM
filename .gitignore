@@ -1,0 +1,19 @@
+# Nunca subir credenciales ni material sensible
+*.ovpn
+*.key
+*.pem
+id_rsa*
+*.pfx
+.env
+secrets.*
+*.pcapng
+
+# Flags en claro (solo se sube su hash SHA-256)
+flags*.txt
+*.flag
+
+# SO / editores
+.DS_Store
+Thumbs.db
+*.swp
+__pycache__/
