@@ -1,0 +1,54 @@
+# Nmap 7.99 scan initiated Wed Oct  7 12:00:45 2026 as: /usr/lib/nmap/nmap -sC -sV -O -oN evidencias/vulnversity/escaneo/nmap_vulnversity.txt 10.67.147.130
+Nmap scan report for 10.67.147.130
+Host is up (0.31s latency).
+Not shown: 994 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.5
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 e5:e6:af:fa:5b:b4:51:0b:66:3a:a9:a6:93:00:3c:19 (ECDSA)
+|_  256 7c:3f:72:22:9d:24:34:6e:99:85:0f:c9:fc:5a:57:fc (ED25519)
+139/tcp  open  netbios-ssn Samba smbd 4
+445/tcp  open  netbios-ssn Samba smbd 4
+3128/tcp open  http-proxy  Squid http proxy 4.10
+|_http-server-header: squid/4.10
+3333/tcp open  dec-notes?
+| fingerprint-strings: 
+|   LPDString: 
+|     HTTP/1.1 400 Bad Request
+|     Date: Wed, 07 Oct 2026 15:01:01 GMT
+|     Server: Apache/2.4.41 (Ubuntu)
+|     Content-Length: 321
+|     Connection: close
+|     Content-Type: text/html; charset=iso-8859-1
+|     <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+|     <html><head>
+|     <title>400 Bad Request</title>
+|     </head><body>
+|     <h1>Bad Request</h1>
+|     <p>Your browser sent a request that this server could not understand.<br />
+|     </p>
+|     <hr>
+|     <address>Apache/2.4.41 (Ubuntu) Server at ip-10-67-147-130.ec2.internal Port 80</address>
+|_    </body></html>
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port3333-TCP:V=7.99%I=7%D=10/7%Time=6AC65EAE%P=x86_64-pc-linux-gnu%r(LP
+SF:DString,1F7,"HTTP/1\.1\x20400\x20Bad\x20Request\r\nDate:\x20Wed,\x2007\
+SF:x20Oct\x202026\x2015:01:01\x20GMT\r\nServer:\x20Apache/2\.4\.41\x20\(Ub
+SF:untu\)\r\nContent-Length:\x20321\r\nConnection:\x20close\r\nContent-Typ
+SF:e:\x20text/html;\x20charset=iso-8859-1\r\n\r\n<!DOCTYPE\x20HTML\x20PUBL
+SF:IC\x20\"-//IETF//DTD\x20HTML\x202\.0//EN\">\n<html><head>\n<title>400\x
+SF:20Bad\x20Request</title>\n</head><body>\n<h1>Bad\x20Request</h1>\n<p>Yo
+SF:ur\x20browser\x20sent\x20a\x20request\x20that\x20this\x20server\x20coul
+SF:d\x20not\x20understand\.<br\x20/>\n</p>\n<hr>\n<address>Apache/2\.4\.41
+SF:\x20\(Ubuntu\)\x20Server\x20at\x20ip-10-67-147-130\.ec2\.internal\x20Po
+SF:rt\x2080</address>\n</body></html>\n");
+OS fingerprint not ideal because: Didn't receive UDP response. Please try again with -sSU
+No OS matches for host
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_smb2-time: Protocol negotiation failed (SMB2)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 12:03:24 2026 -- 1 IP address (1 host up) scanned in 158.86 seconds

