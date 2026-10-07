@@ -1,3 +1,7 @@
+> **Trabajo en borrador — no constituye la entrega final.**
+>
+> Este branch contiene un avance del TP A08 de Maria Paz Sinner, actualizado al 7 de octubre de 2026. Quedan pendientes la finalización de Vulnversity, la documentación del acceso y la escalada de Basic Pentesting, los hashes SHA-256 de las flags y la firma de la declaración ética. El material se actualizará a medida que se completen estas tareas.
+
 # TP_TryHackMe
 
 Repositorio de entrega del trabajo práctico de TryHackMe.
