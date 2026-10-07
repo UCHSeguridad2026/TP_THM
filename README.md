@@ -1,31 +1,15 @@
-> **Trabajo en borrador — no constituye la entrega final.**
->
-> Este branch contiene un avance del TP A08 de Maria Paz Sinner, actualizado al 7 de octubre de 2026. Quedan pendientes la finalización de Vulnversity, la documentación del acceso y la escalada de Basic Pentesting, los hashes SHA-256 de las flags y la firma de la declaración ética. El material se actualizará a medida que se completen estas tareas.
+TP A08 de Maria Paz Sinner
 
-# TP_TryHackMe
+En esta rama reuní el informe, las evidencias y las bitácoras del trabajo de TryHackMe. Completé Pentesting Fundamentals, Basic Pentesting y Vulnversity. El informe incluye los resultados, las recomendaciones de seguridad, el protocolo de contingencia y los hashes SHA-256.
 
-Repositorio de entrega del trabajo práctico de TryHackMe.
+Todavía falta agregar mi firma escaneada a la declaración ética. Hasta entonces, el trabajo sigue pendiente de cierre.
 
-Este repositorio está destinado exclusivamente a la entrega individual del estudiante. Cada alumno debe trabajar en su propia branch y mantener evidencia ordenada del proceso realizado.
+El informe está en reportes/informe_pentesting.pdf. Las capturas están en evidencias/, organizadas por fase, y los comandos registrados están en bitacora/.
 
-## Política de ramas
+Mi usuario de TryHackMe es mariapazsinner y la rama de entrega es sinner-maria-paz.
 
-- Cada estudiante debe crear una branch personal con su nombre/apellido.
-- La entrega debe realizarse desde esa branch.
-- No se permite reemplazar la entrega con un pull request.
+Reglas de entrega de la cátedra
 
-## Penalización
+La entrega es individual y se realiza desde la rama personal. No se permite reemplazarla con un pull request; hacerlo implica un descuento de 3/10 puntos. Cada estudiante es responsable de su rama. No se permite usar git push --force sobre ramas compartidas. Cualquier error sobre main o la rama de otro compañero debe comunicarse al docente.
 
-Si un estudiante envía un pull request en lugar de trabajar en su propia branch, se descontarán 3/10 puntos del trabajo.
-
-## Reglas adicionales
-
-- Cada estudiante es responsable de su propia rama.
-- No se permite hacer `git push --force` sobre ramas compartidas.
-- Si se comete un error sobre `main` o la rama de otro compañero, debe comunicarse de inmediato al docente.
-- Se deben respetar las buenas prácticas de GitHub y la guía de la actividad.
-
-## Ética y legalidad
-
-La actividad debe desarrollarse únicamente en entornos controlados y autorizados. No se permite aplicar estas técnicas sobre sistemas reales sin autorización.
-
+Las prácticas deben realizarse únicamente en entornos controlados y autorizados. No se permite aplicar estas técnicas sobre sistemas reales sin autorización.
