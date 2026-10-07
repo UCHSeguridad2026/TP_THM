@@ -1,0 +1,15 @@
+=== SearchSploit - Basic Pentesting ===
+
+[Apache Struts 2.5.12]
+--------------------------------------------- ---------------------------------
+ Exploit Title                               |  Path
+--------------------------------------------- ---------------------------------
+[01;31m[KApache[m[K [01;31m[KStruts[m[K 2.3 < 2.3.34 / 2.5 < 2.5.16 -  | linux/remote/45260.py
+[01;31m[KApache[m[K [01;31m[KStruts[m[K 2.3 < 2.3.34 / 2.5 < 2.5.16 -  | multiple/remote/45262.py
+[01;31m[KApache[m[K [01;31m[KStruts[m[K 2.5 < [01;31m[K2.5.12[m[K - REST Plugin XSt | linux/remote/42627.py
+--------------------------------------------- ---------------------------------
+Shellcodes: No Results
+
+[Apache Tomcat 9.0.7]
+Exploits: No Results
+Shellcodes: No Results
