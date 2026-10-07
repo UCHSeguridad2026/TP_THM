@@ -1,0 +1,5 @@
+# Transcripción de comandos visibles en capturas; no es historial exportado.
+# Incluye intentos fallidos documentados en el informe.
+nmap -sV MACHINE_IP
+nmap -sV 10.65.179.207
+gobuster dir -u http://10.65.179.207:3333 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt

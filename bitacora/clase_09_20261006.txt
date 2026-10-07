@@ -1,0 +1,5 @@
+# Transcripción de comandos visibles en capturas; no es historial exportado.
+# Incluye intentos fallidos documentados en el informe.
+nmap -sC -sV -oN basicpentesting_nmap.txt 10.67.158.18
+gobuster dir -u http://10.67.158.18 -w /usr/share/wordlists/dirb/common.txt -o basicpentesting_gobuster.txt
+enum4linux -a 10.67.158.18 | tee basicpentesting_enum4linux.txt
