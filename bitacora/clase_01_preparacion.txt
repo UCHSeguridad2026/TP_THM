@@ -1,0 +1,84 @@
+BITÁCORA - CLASE 01 - PREPARACIÓN DEL ENTORNO
+==============================================
+
+Usuario de TryHackMe:
+santillirocio20
+
+Sistema:
+Kali Linux 2026.2
+
+Entorno:
+VirtualBox
+
+Plataforma:
+TryHackMe
+
+
+1. PREPARACIÓN DE KALI LINUX
+----------------------------
+
+Se preparó Kali Linux 2026.2 en una máquina virtual utilizando VirtualBox.
+
+
+2. VERIFICACIÓN DE CONECTIVIDAD
+--------------------------------
+
+Se verificó la conexión a Internet desde Kali Linux mediante:
+
+ping -c 4 google.com
+
+Resultado:
+La conexión fue correcta y no se registró pérdida de paquetes.
+
+
+3. VERIFICACIÓN DE OPENVPN
+--------------------------
+
+Se verificó que OpenVPN estuviera instalado mediante:
+
+openvpn --version
+
+Resultado:
+OpenVPN 2.7.7.
+
+
+4. CONEXIÓN A LA VPN DE TRYHACKME
+---------------------------------
+
+Se utilizó la configuración proporcionada por TryHackMe:
+
+us-east-1-santillirocio20-regular.ovpn
+
+La conexión se realizó mediante:
+
+sudo openvpn --config ~/Downloads/us-east-1-santillirocio20-regular.ovpn
+
+
+5. VERIFICACIÓN DE LA INTERFAZ VPN
+----------------------------------
+
+Se comprobó el estado de la interfaz tun0 mediante:
+
+ip addr show tun0
+
+Resultado:
+La interfaz tun0 se encontró activa y con una dirección IP asignada.
+
+
+6. VERIFICACIÓN DE LOS OBJETIVOS
+--------------------------------
+
+Se realizaron pruebas de conectividad mediante ping cuando fue necesario
+para comprobar el acceso a los objetivos de los laboratorios.
+
+Durante las prácticas, las direcciones IP de los laboratorios podían
+cambiar al reiniciar o renovar las máquinas de TryHackMe.
+
+
+7. PENTESTING FUNDAMENTALS
+--------------------------
+
+Se completó la sala Pentesting Fundamentals de TryHackMe.
+
+La finalización de la sala quedó registrada mediante una captura de
+TryHackMe.

@@ -1,0 +1,239 @@
+BITÁCORA - CLASE 03 - VULNVERSITY
+=================================
+
+Usuario de TryHackMe:
+santillirocio20
+
+Plataforma:
+TryHackMe
+
+Laboratorio:
+Vulnversity
+
+
+1. RECONOCIMIENTO Y ESCANEO
+---------------------------
+
+Se inició el reconocimiento del objetivo mediante Nmap:
+
+nmap -sC -sV 10.66.132.228
+
+Se identificaron diferentes servicios expuestos, entre ellos:
+
+- FTP
+- SSH
+- SMB
+- Squid
+- Apache
+
+También se realizaron escaneos adicionales sobre el objetivo.
+
+
+2. ENUMERACIÓN DEL SERVIDOR WEB
+-------------------------------
+
+Se accedió al servidor web mediante el puerto 3333.
+
+Se realizó una enumeración de directorios mediante Gobuster:
+
+gobuster dir -u http://10.66.132.228:3333 -w /usr/share/wordlists/dirb/common.txt
+
+Durante la enumeración se identificó el directorio:
+
+/internal
+
+Dentro de este directorio se encontró un formulario de carga de archivos.
+
+También se identificó el directorio:
+
+/internal/uploads/
+
+
+3. PRUEBA DE CARGA DE ARCHIVOS
+------------------------------
+
+Se realizaron pruebas controladas para determinar qué extensiones de
+archivo eran aceptadas por el servidor.
+
+Una extensión PHP convencional fue rechazada.
+
+Posteriormente se realizó una prueba utilizando la extensión:
+
+.phtml
+
+La extensión .phtml fue aceptada por el servidor.
+
+
+4. EJECUCIÓN DEL ARCHIVO
+------------------------
+
+Se realizó una prueba controlada utilizando un archivo:
+
+prueba.phtml
+
+Al acceder al archivo desde el navegador se obtuvo:
+
+VULNVERSITY_TEST
+
+Esto permitió comprobar que el servidor interpretaba el archivo subido.
+
+
+5. OBTENCIÓN DE SHELL
+---------------------
+
+Posteriormente se preparó un archivo de shell inversa utilizando la
+dirección IP de la interfaz VPN y el puerto 4444.
+
+Se inició un listener mediante:
+
+nc -lvnp 4444
+
+Se obtuvo una conexión desde el objetivo.
+
+El acceso obtenido correspondía al usuario:
+
+www-data
+
+Se verificó la identidad mediante:
+
+whoami
+
+También se realizaron comprobaciones mediante:
+
+id
+pwd
+
+
+6. RECONOCIMIENTO DEL SISTEMA
+-----------------------------
+
+Una vez obtenida la shell se consultó información del sistema mediante:
+
+uname -a
+
+También se consultó la información de la distribución mediante:
+
+cat /etc/os-release
+
+Se verificó el nombre del equipo mediante:
+
+hostname
+
+
+7. OBTENCIÓN DE LA FLAG DEL USUARIO
+------------------------------------
+
+Se realizó una búsqueda del archivo user.txt mediante:
+
+find /home -maxdepth 2 -type f -name user.txt 2>/dev/null
+
+Se localizó la flag correspondiente al usuario.
+
+La flag obtenida fue:
+
+8bd7992fbe8a6ad22a63361004cfcedb
+
+
+8. ENUMERACIÓN DE PRIVILEGIOS
+-----------------------------
+
+Se verificaron los permisos disponibles mediante:
+
+sudo -l
+
+También se realizó una búsqueda de archivos con permisos SUID para
+identificar posibles vectores de escalada de privilegios.
+
+Durante la búsqueda se identificó:
+
+/bin/systemctl
+
+El binario systemctl presentaba permisos SUID.
+
+
+9. ESCALADA DE PRIVILEGIOS
+--------------------------
+
+Se utilizó systemctl como vector de escalada de privilegios dentro del
+laboratorio.
+
+Se creó un servicio temporal:
+
+/tmp/root.service
+
+El servicio permitía crear una copia de Bash con permisos SUID:
+
+/tmp/rootbash
+
+Se vinculó el servicio mediante:
+
+/bin/systemctl link /tmp/root.service
+
+Posteriormente se inició mediante:
+
+/bin/systemctl start root.service
+
+
+10. COMPROBACIÓN DE PRIVILEGIOS
+-------------------------------
+
+Se comprobó la elevación mediante:
+
+/tmp/rootbash -p -c 'whoami'
+
+Resultado:
+
+root
+
+Posteriormente se verificó la identidad mediante:
+
+id
+
+Resultado:
+
+euid=0
+
+
+11. OBTENCIÓN DE LA FLAG DE ROOT
+--------------------------------
+
+Se obtuvo la flag de root:
+
+a58ff8579f0a9270368d33a9966c7fd5
+
+
+12. HASH SHA-256 DE LAS FLAGS
+-----------------------------
+
+Se documentaron las flags mediante sus valores SHA-256.
+
+SHA-256 de la flag de usuario:
+
+d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
+
+SHA-256 de la flag de root:
+
+cfbc740435ad60030304880e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
+
+
+13. LIMPIEZA
+------------
+
+Una vez finalizada la práctica se eliminaron los archivos temporales
+utilizados durante la escalada:
+
+/tmp/rootbash
+/tmp/root.service
+
+Durante la limpieza quedó registrado un enlace residual relacionado con
+el servicio utilizado en el laboratorio.
+
+
+14. FINALIZACIÓN
+----------------
+
+La sala Vulnversity fue completada al 100 % en TryHackMe.
+
+Las evidencias correspondientes al proceso se encuentran organizadas en
+las carpetas de reconocimiento, escaneo, explotación y
+post-explotación.

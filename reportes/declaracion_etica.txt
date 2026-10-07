@@ -1,0 +1,29 @@
+DECLARACIÓN ÉTICA
+=================
+
+Trabajo práctico de Pentesting / TryHackMe
+
+Estudiante:
+Rocío Santilli
+
+Usuario de TryHackMe:
+santillirocio20
+
+Declaro que las actividades documentadas en este trabajo práctico
+fueron realizadas exclusivamente dentro de los laboratorios
+proporcionados por la plataforma TryHackMe y en el marco de la
+actividad académica correspondiente.
+
+Las técnicas de reconocimiento, enumeración, explotación y escalada
+de privilegios fueron ejecutadas únicamente sobre los objetivos
+asignados y dentro del entorno controlado autorizado.
+
+No se realizaron pruebas sobre sistemas reales o terceros fuera del
+alcance establecido para la actividad.
+
+Firma del estudiante:
+
+Rocío Santilli
+
+Fecha:
+7/10/2026

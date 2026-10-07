@@ -1,0 +1,33 @@
+ANEXO C - HASHES SHA-256 DE FLAGS
+=================================
+
+Usuario de TryHackMe:
+santillirocio20
+
+Laboratorio:
+Vulnversity
+
+
+FLAG DE USUARIO
+---------------
+
+Valor de la flag:
+8bd7992fbe8a6ad22a63361004cfcedb
+
+SHA-256:
+d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
+
+
+FLAG DE ROOT
+------------
+
+Valor de la flag:
+a58ff8579f0a9270368d33a9966c7fd5
+
+SHA-256:
+cfbc740435ad60030304880e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
+
+
+Observación:
+Los hashes fueron registrados como mecanismo de verificación de
+integridad de las evidencias obtenidas durante el laboratorio.
