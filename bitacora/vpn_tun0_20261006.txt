@@ -1,0 +1,7 @@
+4: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1380 qdisc fq_codel state UNKNOWN group default qlen 500
+    link/none 
+    inet 192.168.150.157/18 scope global tun0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f0f4:924b:75a9:5de0/64 scope link stable-privacy 
+       valid_lft forever preferred_lft forever
+mar 06 oct 2026 19:03:21 -03

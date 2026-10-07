@@ -1,0 +1,14 @@
+# Nmap 7.80 scan initiated Tue Oct  6 19:42:15 2026 as: nmap -p- --min-rate 5000 -oN bitacora/02_nmap_puertos.txt 10.65.163.226
+Warning: 10.65.163.226 giving up on port because retransmission cap hit (10).
+Nmap scan report for 10.65.163.226 (10.65.163.226)
+Host is up (0.87s latency).
+Not shown: 34793 filtered ports, 30736 closed ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+8009/tcp open  ajp13
+8080/tcp open  http-proxy
+
+# Nmap done at Tue Oct  6 19:44:25 2026 -- 1 IP address (1 host up) scanned in 129.57 seconds
