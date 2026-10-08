@@ -1,0 +1,28 @@
+# Nmap 7.99 scan initiated Wed Oct  7 17:49:10 2026 as: /usr/lib/nmap/nmap --privileged -p- --open -sS -sC -sV --min-rate 5000 -vvv -n -Pn -oN /home/kali/Desktop/nmap_inicial.txt 10.64.172.42
+Nmap scan report for 10.64.172.42
+Host is up, received user-set (0.19s latency).
+Scanned at 2026-10-07 17:49:11 EDT for 66s
+Not shown: 37159 closed tcp ports (reset), 28374 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE REASON         VERSION
+22/tcp open  ssh     syn-ack ttl 62 OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 23:eb:31:77:ac:a7:0d:c8:bc:1e:33:67:a1:c9:51:4c (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDNcCx/wuGy27wSRQcLUJrQhCi1Lh7S0wBye6b4qQLcas4WPp5IMLEkBwzKoOht8CCf8JSqCmyuSu1/JQsb6+EAcNJnhnTgxjcIUwZ+mBLL/dWKzy4m85Vldc2vywnRJ96hOrl5vb1fFMi2hkKaHOfMR2jCgLaALa2ocYVfadLEfm/CBq/VFmRyslpPZnT0504YSzIYVDBHGlYb1KomoAwQGycRJJrfmjBp+a9Xa9GzEtTweVNAUYEoLt5VqQU7rYfGyf9e2lBModMxSrFJI+eCZNaktSxDt7IKpPP7zsMIKtYp59XdW2CBFj2jcymcRTGL9zqsG90uWxrulHeJ3meY2h6h4SHme43oZUyEtFdbOwbpavXNa6p4tWrJMquYgHnpLTQM6KXien1lpCPoMkyeDVIWqBP2YKIBp9oleqCPo4n+ThDVHNuab7uobboog4tIlv2Ft3+iVG2FUXi2F9LzAltc7HfzAVYPJh6MdoIII1DFzFf1cimwpquqRwpF/T8=
+|   256 95:52:76:b9:bd:d3:57:aa:71:4b:63:fa:75:ce:9f:d0 (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIp6rPkt+kiJGMNrtzV+kiKtJL/1NlM3myepZUd+/l9DI+D9mviKhZoagzuWh//a0hDj7f32/ENZI24oqzLr2i8=
+|   256 d0:f4:2d:60:29:b1:3c:a1:06:25:52:66:88:3a:5a:6b (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINtK1zXFIcvHBuR9qDALR5M9Qspz0WPdLPISmPIYZrux
+80/tcp open  http    syn-ack ttl 62 Apache httpd 2.4.41 ((Ubuntu))
+| http-methods: 
+|_  Supported Methods: GET HEAD POST
+|_http-title: HackIT - Home
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /usr/share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 17:50:17 2026 -- 1 IP address (1 host up) scanned in 66.30 seconds
