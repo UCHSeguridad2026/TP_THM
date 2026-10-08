@@ -1,0 +1,30 @@
+# Nmap 7.99 scan initiated Wed Oct  7 21:52:39 2026 as: /usr/lib/nmap/nmap --privileged -Pn -sC -sV -p- --min-rate 2000 -oN /mnt/c/Facultad/Seguridad/tp-thm/evidencias/escaneo/nmap_sala_nmap.txt 10.66.130.208
+Nmap scan report for 10.66.130.208
+Host is up (0.15s latency).
+Not shown: 65529 filtered tcp ports (no-response)
+PORT      STATE SERVICE    VERSION
+21/tcp    open  ftp        FileZilla ftpd 0.9.60 beta
+53/tcp    open  domain     Simple DNS Plus
+80/tcp    open  http       Microsoft IIS httpd 10.0
+|_http-title: IIS Windows Server
+135/tcp   open  tcpwrapped
+3389/tcp  open  tcpwrapped
+| ssl-cert: Subject: commonName=win-scan
+| Not valid before: 2026-10-07T00:50:22
+|_Not valid after:  2027-04-08T00:50:22
+| rdp-ntlm-info: 
+|   Target_Name: WIN-SCAN
+|   NetBIOS_Domain_Name: WIN-SCAN
+|   NetBIOS_Computer_Name: WIN-SCAN
+|   DNS_Domain_Name: win-scan
+|   DNS_Computer_Name: win-scan
+|   Product_Version: 10.0.17763
+|_  System_Time: 2026-10-08T00:53:56+00:00
+49666/tcp open  tcpwrapped
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_clock-skew: -1s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 21:54:22 2026 -- 1 IP address (1 host up) scanned in 102.45 seconds

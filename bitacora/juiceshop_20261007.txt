@@ -10,3 +10,15 @@ HTTP 80 -> codigo 200
 ### HTTP en puerto 3000
 HTTP 3000 -> codigo 000
    titulo: 
+### Task4 Q1: Brute force password admin@juice-sh.op Wed Oct  7 09:37:10 PM -03 2026
+No encontrada en la lista
+### Verificacion directa [REDACTED_PASS_ADMIN] Wed Oct  7 09:37:30 PM -03 2026
+[REDACTED_PASS_ADMIN] -> HTTP 200
+### Task4 Q1: demo brute force password admin (endpoint /rest/user/login) Wed Oct  7 09:37:55 PM -03 2026
+THM: gonzacarbajal18 | objetivo admin@juice-sh.op
+  [401   ] clave-probada -> 123456
+  [401   ] clave-probada -> password
+  [401   ] clave-probada -> qwerty
+  [401   ] clave-probada -> letmein
+  [401   ] clave-probada -> admin
+  [200 OK ] clave-probada -> [REDACTED_PASS_ADMIN]   <<< CONTRASEÑA CORRECTA

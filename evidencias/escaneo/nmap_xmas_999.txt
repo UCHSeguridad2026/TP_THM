@@ -1,0 +1,7 @@
+# Nmap 7.99 scan initiated Wed Oct  7 22:15:56 2026 as: /usr/lib/nmap/nmap -sX -p1-999 -Pn -oN /mnt/c/Facultad/Seguridad/tp-thm/evidencias/escaneo/nmap_xmas_999.txt 10.66.130.208
+Nmap scan report for 10.66.130.208
+Host is up.
+All 999 scanned ports on 10.66.130.208 are in ignored states.
+Not shown: 999 open|filtered tcp ports (no-response)
+
+# Nmap done at Wed Oct  7 22:19:22 2026 -- 1 IP address (1 host up) scanned in 205.82 seconds

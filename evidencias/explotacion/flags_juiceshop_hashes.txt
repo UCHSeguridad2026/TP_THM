@@ -1,0 +1,7 @@
+# Flags de OWASP Juice Shop - hashes SHA-256 (el flag completo NO se publica)
+# TP THM - gonzacarbajal18 - Wed Oct  7 09:35:11 PM -03 2026
+
+Desafio "Login Admin"  (Task 3) -> SHA256: 349c8e90d67ff93122c92c42e8635c198702e7e3fe226480715a650f8182a81a
+Desafio "Login Bender" (Task 3) -> SHA256: 5abd99971549d5558e49c33e33ddf0c2f4c25c2241ad99f19c849b6a9ba18b4e
+Desafio "Password Strength"   (Task 4) -> SHA256: 720352a4a7cd0263de30fe49ed55535aebae8939795c02d2b9a81a0af46a6b4b
+Desafio "Reset Jim Password"  (Task 4) -> SHA256: 541300e04b1d1041cefd4aa26753e5bfa75af9de614dcda7df292b51e56814b5
