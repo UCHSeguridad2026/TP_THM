@@ -1,0 +1,38 @@
+# ==========================================================
+# .gitignore — TP TryHackMe
+# Evita subir credenciales y material sensible al repositorio.
+# Buenas prácticas de seguridad: las claves nunca se publican.
+# ==========================================================
+
+# --- Claves privadas y material criptográfico ---
+id_rsa
+id_rsa.*
+*.key
+*.pem
+*_key
+*_rsa
+*.ppk
+
+# --- Hashes de credenciales (permiten recrackeo) ---
+*.hash
+*.hash~
+
+# --- Archivos de configuración de VPN (llevan claves) ---
+*.ovpn
+
+# --- Archivos temporales de herramientas ---
+hydra.restore
+*.restore
+john.pot
+.john/
+
+# --- Volcados de credenciales en claro (si los hubiera) ---
+# Revisar manualmente antes de subir cualquier .txt con secretos.
+creds.txt
+passwords.txt
+
+# --- Basura del sistema / editor ---
+*~
+*.tmp
+.DS_Store
+Thumbs.db

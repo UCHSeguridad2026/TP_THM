@@ -1,0 +1,1 @@
+# Nmap 7.99 scan initiated Wed Oct  7 23:37:15 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN bitacora/nmap_blue.txt 10.64.132.204
