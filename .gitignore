@@ -1,0 +1,31 @@
+# VPN y credenciales
+*.ovpn
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Variables y secretos
+.env
+.env.*
+*secret*
+*token*
+*credential*
+
+# Capturas de tráfico
+*.pcap
+*.pcapng
+
+# Logs temporales
+*.log
+
+# Archivos del sistema/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.swp
