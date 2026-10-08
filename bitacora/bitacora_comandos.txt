@@ -1,0 +1,46 @@
+ACTIVIDAD A08 - BITÁCORA DE COMANDOS Y ACTIVIDADES
+
+Estudiante: Micaela Denis Chacón Olivares
+Usuario de TryHackMe: micaelachacon00
+Sala: Basic Pentesting
+Fecha del trabajo: 06/10/2026 al 08/10/2026
+IP temporal del laboratorio: 10.64.180.6
+
+ACLARACIÓN
+Esta bitácora se reconstruyó a partir de las capturas guardadas durante la práctica. No es una exportación del historial original de Kali. Se indican las herramientas, los resultados visibles y las capturas que los respaldan. No se agregan comandos completos que no se hayan podido verificar ni se publican contraseñas o claves.
+
+1. RECONOCIMIENTO
+Se completó la sala Pentesting Fundamentals y se inició Basic Pentesting.
+Evidencias: evidencias/reconocimiento/1_fases_pentesting.png; 2_pentesting fundamentals completo.png; 3_thm_basic_pentesting_room.png
+
+2. ESCANEO CON NMAP
+Se escaneó la máquina del laboratorio para identificar puertos y servicios. Se observaron SSH (22), HTTP (80), SMB (139 y 445), AJP (8009) y Tomcat (8080).
+Evidencia: evidencias/escaneo/4_nmap_escaneo.png
+
+3. BÚSQUEDA DE DIRECTORIOS CON GOBUSTER
+Se buscaron directorios y archivos web. Entre los resultados visibles están /development y /index.html.
+Evidencia: evidencias/escaneo/5_gobuster_fuzzing.png
+
+4. ENUMERACIÓN CON ENUM4LINUX
+Se ejecutó enum4linux. En la captura se observa que la salida se dirigió a un archivo, pero no se conserva su contenido; por eso no se registran resultados adicionales.
+Evidencia: evidencias/escaneo/6_enum4linux_ejecucion.png
+
+5. PRUEBA DE CREDENCIALES Y ACCESO SSH
+Se utilizó Hydra en el entorno de práctica y se encontró una credencial válida para el usuario jan. Luego se comprobó el acceso por SSH. Se omite la contraseña.
+Evidencias: evidencias/explotacion/7_hydra_bruteforce_jan.png y 8_ssh_login_jan.png
+
+6. ACCESO AL USUARIO KAY
+Se encontró una clave privada SSH relacionada con kay y se utilizó John the Ripper para recuperar su frase de contraseña. Después se comprobó el acceso por SSH. Se omiten la clave y la frase de contraseña.
+Evidencias: evidencias/post/9_id_rsa_key_kay.png,  10_john_crack_passphrase.png y 11_ssh_login_kay.png
+
+7. LECTURA DEL ARCHIVO FINAL
+Comando visible: cat pass.bak
+Se obtuvo el contenido del archivo, que no se reproduce en esta bitácora.
+Evidencia: evidencias/post/12_flag_pass_bak.png
+
+8. FINALIZACIÓN
+Se completó la sala Basic Pentesting.
+Evidencia: evidencias/post/13_basic_pentesting_completo.png
+
+OBSERVACIÓN FINAL
+No se recuperó el historial original de la terminal porque la sesión anterior de AttackBox ya no estaba disponible. Esta bitácora es un registro reconstruido
