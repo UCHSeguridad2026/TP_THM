@@ -1,0 +1,8 @@
+# Nmap 7.991 scan initiated Wed Oct  7 00:06:36 2026 as: nmap -sC -sV -oN nmap_vulnversity.txt 10.67.178.161
+Nmap scan report for 10.67.178.161
+Host is up (0.14s latency).
+All 1000 scanned ports on 10.67.178.161 are in ignored states.
+Not shown: 1000 closed tcp ports (conn-refused)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 00:06:47 2026 -- 1 IP address (1 host up) scanned in 11.05 seconds
