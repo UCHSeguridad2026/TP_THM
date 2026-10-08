@@ -1,8 +1,35 @@
-# Nmap 7.99 scan initiated Tue Oct  6 23:16:57 2026 as: /usr/lib/nmap/nmap -Pn -T4 -F -sV -oN bitacora/nmap_inicial.txt 10.67.158.136
-Nmap scan report for 10.67.158.136
-Host is up.
-All 100 scanned ports on 10.67.158.136 are in ignored states.
-Not shown: 100 filtered tcp ports (no-response)
+# Nmap 7.99 scan initiated Wed Oct  7 22:34:48 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -Pn -oN bitacora/nmap_inicial.txt 10.67.158.216
+Nmap scan report for 10.67.158.216
+Host is up (0.16s latency).
+Not shown: 994 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 6a:5f:6e:88:c5:d6:77:69:a0:0c:b3:05:8a:7d:29:dd (RSA)
+|   256 a4:8f:1e:0f:e3:61:88:7c:9a:47:ac:92:67:f5:6c:27 (ECDSA)
+|_  256 ef:b7:1f:04:77:de:ac:66:d3:79:3e:57:9d:34:6d:5f (ED25519)
+80/tcp   open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+139/tcp  open  netbios-ssn Samba smbd 4
+445/tcp  open  netbios-ssn Samba smbd 4
+8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)
+| ajp-methods: 
+|_  Supported methods: GET HEAD POST OPTIONS
+8080/tcp open  http        Apache Tomcat 9.0.7
+|_http-favicon: Apache Tomcat
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Apache Tomcat/9.0.7
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-time: 
+|   date: 2026-10-08T02:35:47
+|_  start_date: N/A
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Tue Oct  6 23:17:09 2026 -- 1 IP address (1 host up) scanned in 12.04 seconds
+# Nmap done at Wed Oct  7 22:35:52 2026 -- 1 IP address (1 host up) scanned in 63.90 seconds
