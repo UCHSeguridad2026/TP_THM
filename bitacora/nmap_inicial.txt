@@ -1,0 +1,30 @@
+# Nmap 7.99 scan initiated Thu Oct  8 20:02:44 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN bitacora/nmap_inicial.txt 10.64.181.122
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers: No such file or directory (2)
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.64.181.122
+Host is up (0.18s latency).
+Not shown: 996 closed tcp ports (reset)
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 e2:4a:e7:f9:4e:9d:cc:e0:46:c5:e6:c4:8e:04:77:37 (RSA)
+|   256 94:5a:2a:78:12:d0:f8:1e:db:90:27:ad:81:41:df:24 (ECDSA)
+|_  256 d3:b3:b9:77:ed:11:8b:99:af:4a:95:8b:06:90:d2:9f (ED25519)
+80/tcp  open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+139/tcp open  netbios-ssn Samba smbd 4
+445/tcp open  netbios-ssn Samba smbd 4
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-10-08T23:03:01
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Oct  8 20:03:06 2026 -- 1 IP address (1 host up) scanned in 22.39 seconds
