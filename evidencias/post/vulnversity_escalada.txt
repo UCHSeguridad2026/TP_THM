@@ -1,0 +1,32 @@
+Sala: Vulnversity
+Fase: Post-explotacion
+Hallazgo: Escalada de privilegios mediante SUID
+Componente afectado: /bin/systemctl
+
+Situacion inicial:
+Se obtuvo acceso al servidor mediante una reverse shell
+con los privilegios del usuario www-data (UID 33).
+
+Vulnerabilidad:
+El ejecutable /bin/systemctl tenia el permiso SUID activado.
+Permisos observados: -rwsr-xr-x (4755).
+
+Prueba realizada:
+Se creo un servicio temporal de systemd que ejecutaba
+el comando id y guardaba su resultado en /tmp.
+
+Resultado:
+uid=0(root) gid=0(root) groups=0(root)
+
+Impacto:
+Un usuario de bajos privilegios pudo ejecutar comandos
+con privilegios de administrador, comprometiendo la
+confidencialidad e integridad del sistema.
+
+Severidad preliminar: Critica
+
+Recomendaciones:
+- Retirar el permiso SUID innecesario de systemctl.
+- Auditar los ejecutables con permisos SUID y SGID.
+- Aplicar el principio de minimo privilegio.
+- Supervisar modificaciones de servicios systemd.

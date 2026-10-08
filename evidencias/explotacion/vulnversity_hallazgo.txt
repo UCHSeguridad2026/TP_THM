@@ -1,0 +1,20 @@
+Sala: Vulnversity
+Componente: Aplicación web, puerto 3333
+Ruta identificada: /internal/
+Herramienta utilizada: Burp Suite Intruder
+
+Hallazgo:
+La aplicación rechazaba archivos con extensión .php,
+pero aceptaba archivos con extensión .phtml.
+
+Resultado:
+Se comprobó la ejecución de código PHP en el servidor,
+obteniendo una sesión remota con el usuario www-data.
+
+Impacto:
+Ejecución remota de código y compromiso del servidor web.
+
+Recomendación:
+Restringir las extensiones permitidas, validar los archivos
+en el servidor y deshabilitar la ejecución de scripts
+en los directorios de subida.
