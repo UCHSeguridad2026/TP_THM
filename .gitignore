@@ -2,7 +2,4 @@ kay_id_rsa
 kay_id_rsa.save
 kay_hash.txt
 hydra.restore
-*.aux
-*.log
-*.out
-*.toc
+
