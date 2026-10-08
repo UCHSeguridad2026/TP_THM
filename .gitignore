@@ -27,3 +27,6 @@ desktop.ini
 
 # Archivos internos de Claude Code (no forman parte de la entrega)
 /MEMORY.md
+
+# Fuente del informe: se entrega solo el PDF, no el Markdown
+reportes/informe_pentesting.md
