@@ -22,3 +22,21 @@ Usuarios del sistema: jan, kay
    - Aplicar el principio de menor privilegio (PoLP) en la configuración de /etc/sudoers.
    - Auditar periódicamente binarios SUID mediante:
      find / -perm -4000 -type f 2>/dev/null
+
+===================================================
+AUDITORÍA Y HARDENING DEL ARCHIVO /ETC/SUDOERS
+===================================================
+
+1. Principios de Seguridad en la Configuración de Sudo:
+   - El archivo /etc/sudoers controla la delegación de privilegios administrativos en sistemas Linux.
+   - La regla '(ALL : ALL) ALL' otorga capacidades completas de superusuario (root), lo que representa un riesgo elevado si se asigna a cuentas no administrativas o de servicios.
+
+2. Riesgos Asociados a Misconfiguraciones:
+   - Uso de NOPASSWD: Permite ejecutar comandos con privilegios elevados sin autenticación previa, facilitando el movimiento lateral o la escalada en caso de compromiso de la cuenta.
+   - Asignación de Comandos Comodín (ALL): Conceder acceso a ejecutables genéricos o intérpretes de comandos permite la evasión de restricciones y el acceso irrestricto al sistema.
+
+3. Medidas de Hardening y Buenas Prácticas:
+   - Aplicar el Principio de Menor Privilegio (PoLP): Especificar únicamente las rutas absolutas de los binarios estrictamente requeridos para la función operativa.
+   - Deshabilitar el uso de NOPASSWD salvo en procesos automatizados debidamente aislados.
+   - Editar siempre mediante la herramienta 'visudo' para prevenir errores sintácticos que dejen inoperable el acceso administrativo.
+   - Mantener el registro de auditoría activo (auth.log / secure) para monitorear ejecuciones mediante sudo.
