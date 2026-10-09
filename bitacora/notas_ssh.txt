@@ -17,3 +17,8 @@ Usuarios identificados: jan, kay
    - Requerir autenticación exclusiva por clave pública: PubkeyAuthentication yes
    - Implementar Fail2ban o mecanismos de rate-limiting para mitigar intentos fallidos consecutivos.
    - Restringir el acceso directo de usuarios privilegiados: PermitRootLogin no
+
+4. Auditoría de Credenciales (Fuerza Bruta):
+   - Herramienta: Hydra v9.x
+   - Comando: hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.66.171.56 -t 4
+   - Objetivo: Evaluar la robustez de la contraseña del usuario 'jan'.
