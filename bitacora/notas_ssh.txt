@@ -1,0 +1,19 @@
+===================================================
+ANÁLISIS DE AUTENTICACIÓN Y HARDENING - SERVICIO SSH
+===================================================
+Objetivo: 10.66.171.56
+Puerto: 22/tcp (OpenSSH 8.2p1 Ubuntu)
+Usuarios identificados: jan, kay
+
+1. Hallazgos de Enumeración:
+   - Se confirmaron las cuentas de usuario válidas 'jan' y 'kay' a través de la enumeración del servicio Samba y archivos expuestos en el servidor web (/development/dev.txt y staff.txt).
+   - El puerto 22 se encuentra abierto y acepta solicitudes de autenticación.
+
+2. Riesgos de Seguridad e Impacto:
+   - La existencia de cuentas de usuario válidas combinada con servicios de autenticación expuestos permite ataques de fuerza bruta si las políticas de contraseñas son débiles.
+
+3. Medidas de Mitigación y Reconciliación Defensiva (Hardening):
+   - Deshabilitar autenticación por contraseña en /etc/ssh/sshd_config: PasswordAuthentication no
+   - Requerir autenticación exclusiva por clave pública: PubkeyAuthentication yes
+   - Implementar Fail2ban o mecanismos de rate-limiting para mitigar intentos fallidos consecutivos.
+   - Restringir el acceso directo de usuarios privilegiados: PermitRootLogin no
