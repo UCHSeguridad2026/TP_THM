@@ -1,0 +1,43 @@
+# Nmap 7.99 scan initiated Fri Oct  9 00:43:51 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN bitacora/nmap_blue_inicial.txt 10.64.148.50
+Nmap scan report for 10.64.148.50
+Host is up (0.15s latency).
+Not shown: 990 closed tcp ports (reset)
+PORT      STATE SERVICE       VERSION
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds  Windows Server 2012 R2 Datacenter 9600 microsoft-ds
+3389/tcp  open  ms-wbt-server Microsoft Terminal Service
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49152/tcp open  msrpc         Microsoft Windows RPC
+49153/tcp open  msrpc         Microsoft Windows RPC
+49154/tcp open  msrpc         Microsoft Windows RPC
+49155/tcp open  msrpc         Microsoft Windows RPC
+49175/tcp open  msrpc         Microsoft Windows RPC
+Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_nbstat: NetBIOS name: WIN-JO6REVNMMMP, NetBIOS user: <unknown>, NetBIOS MAC: 0a:ff:ea:8a:9b:f3 (unknown)
+| smb-os-discovery: 
+|   OS: Windows Server 2012 R2 Datacenter 9600 (Windows Server 2012 R2 Datacenter 6.3)
+|   OS CPE: cpe:/o:microsoft:windows_server_2012::-
+|   Computer name: WIN-JO6REVNMMMP
+|   NetBIOS computer name: WIN-JO6REVNMMMP\x00
+|   Workgroup: WORKGROUP\x00
+|_  System time: 2026-10-08T20:48:57-07:00
+| smb2-security-mode: 
+|   3.0.2: 
+|_    Message signing enabled but not required
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+|_clock-skew: mean: 2h20m00s, deviation: 4h02m29s, median: 0s
+| smb2-time: 
+|   date: 2026-10-09T03:48:57
+|_  start_date: 2026-10-09T03:43:35
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Oct  9 00:50:05 2026 -- 1 IP address (1 host up) scanned in 374.10 seconds
