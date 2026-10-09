@@ -1,0 +1,84 @@
+git config user.name "Camila Borodij"
+git config user.email "camilaborodijferrari@gmail.com"
+git config --global user.name "Camila Borodij"
+git config --global user.email "camilaborodijferrari@gmail.com"
+git clone https://github.com/UCHSeguridad2026/TP_THM.git
+cd TP_THM
+git config user.name
+git config user.email
+git checkout -b borodij-camila
+mkdir -p evidencias/{reconocimiento,escaneo,explotacion,post}
+mkdir -p bitacora
+mkdir -p reportes
+git branch
+sudo openvpn ~/Downloads/conexion.ovpn
+cd ~/TP_THM
+openvpn ~/Downloads/conexion.ovpn
+git config user.email "camilaborodijferrari@gmail.com"
+git config --global user.email "camilaborodijferrari@gmail.com"
+git config --global user.name "Camila Borodij Ferrari"
+git clone https://github.com/UCHSeguridad2026/TP_THM.git
+cd TP_THM
+git config user.email "camilaborodijferrari@gmail.com"
+git config user.name "Camila Borodij Ferrari"
+git checkout -b borodij-camila
+git checkout borodij-camila
+bash
+ls
+git add .
+git commit -m "Inicializa la estructura de carpetas: evidencias, bitacora y reportes"
+touch evidencias/reconocimiento/.gitkeep
+touch evidencias/escaneo/.gitkeep
+touch evidencias/explotacion/.gitkeep
+touch evidencias/post/.gitkeep
+touch bitacora/.gitkeep
+touch reportes/.gitkeep
+bash
+git commit -m "Inicializa la estructura de carpetas de la materia"
+git add .
+git commit -m "Inicializa la estructura de carpetas de la materia"
+git push origin borodij-camila
+echo -n "THM{PENTEST_COMPLETE}" | sha256sum
+nmap -sC -sV -oN bitacora/nmap_inicial.txt 10.66.171.56
+git config --get user.email
+cd TP_THM
+nmap --version
+cd TP_THM
+nmap -sC -sV -oN bitacora/nmap_inicial.txt 10.66.171.56
+nano bitacora/nmap_inicial.txt
+cat bitacora/nmap_inicial.txt
+git add bitacora/nmap_inicial.txt
+git commit -m "docs: agregar resultado de escaneo inicial de Nmap para 10.66.171.56"
+nano bitacora/notas_development.txt
+git add bitacora/notas_development.txt
+git commit -m "docs: guardar notas de /development/dev.txt con pistas sobre usuarios J y K"
+nano bitacora/notas_samba.txt
+git add bitacora/notas_samba.txt
+git commit -m "docs: confirmar nombres de usuario jan y kay a partir de staff.txt"
+git push origin borodij-camila
+nano bitacora/notas_ssh.txt
+git add bitacora/notas_ssh.txt
+git commit -m "docs: agregar analisis defensivo y medidas de hardening para el servicio SSH"
+git push origin borodij-camila
+git status
+nano bitacora/notas_ssh.txt
+git add bitacora/notas_ssh.txt
+git commit -m "docs: registrar prueba de fuerza bruta con hydra para el usuario jan"
+git push origin borodij-camila
+nano bitacora/notas_ssh.txt
+git add bitacora/notas_ssh.txt
+git commit -m "docs: actualizar plantilla de documentacion para el servicio SSH"
+git push origin borodij-camila
+nano bitacora/notas_escalada.txt
+git add bitacora/notas_escalada.txt
+git commit -m "docs: agregar plantilla y analisis defensivo para enumeracion local de privilegios"
+git push origin borodij-camila
+nano bitacora/notas_escalada.txt
+git add bitacora/notas_escalada.txt
+git commit -m "docs: registrar analisis teorico y recomendaciones de hardening para sudoers"
+git push origin borodij-camila
+nano bitacora/conclusiones.txt
+git add bitacora/conclusiones.txt
+git commit -m "docs: agregar conclusiones y matriz de remediacion final"
+git push origin borodij-camila
+history | sed -E 's/(password|passwd|token|secret|api[-]?key) [^ ]*/\1=[REDACTED]/Ig' > bitacora/clase_09_20261008.txt
