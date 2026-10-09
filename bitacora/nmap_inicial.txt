@@ -1,0 +1,28 @@
+# Nmap 7.99 scan initiated Wed Oct  7 22:11:55 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN bitacora/nmap_inicial.txt 10.66.178.58
+Nmap scan report for 10.66.178.58
+Host is up (0.18s latency).
+Not shown: 996 closed tcp ports (reset)
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 11:bb:9e:bf:ad:5b:55:da:a6:b3:89:b4:d6:cd:77:a0 (RSA)
+|   256 a1:6a:90:19:c1:80:03:81:0a:9a:4a:71:81:0a:f2:15 (ECDSA)
+|_  256 bc:4c:74:1b:ec:c3:f6:18:37:12:62:e7:38:3f:9c:f5 (ED25519)
+80/tcp  open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+139/tcp open  netbios-ssn Samba smbd 4
+445/tcp open  netbios-ssn Samba smbd 4
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2026-10-08T02:12:14
+|_  start_date: N/A
+|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  7 22:12:19 2026 -- 1 IP address (1 host up) scanned in 23.41 seconds

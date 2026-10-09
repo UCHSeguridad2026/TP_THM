@@ -1,0 +1,16 @@
+# Credenciales y claves privadas
+claves/
+*.pem
+*.key
+id_rsa
+*.ovpn
+
+# Archivos sensibles del laboratorio
+kay_hash.txt
+hydra_*.txt
+passwords_*.txt
+ghostcat_resultado.txt
+
+# Archivos temporales
+*.swp
+*.tmp
