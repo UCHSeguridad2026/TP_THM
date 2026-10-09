@@ -1,0 +1,12 @@
+# Nmap 7.99 scan initiated Fri Oct  9 17:34:11 2026 as: /usr/lib/nmap/nmap -sS -Pn -p 1-5000 -T4 --max-retries 1 -oN bitacora/nmap/syn.txt 10.64.180.50
+Nmap scan report for 10.64.180.50
+Host is up (0.18s latency).
+Not shown: 4995 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+21/tcp   open  ftp
+53/tcp   open  domain
+80/tcp   open  http
+135/tcp  open  msrpc
+3389/tcp open  ms-wbt-server
+
+# Nmap done at Fri Oct  9 17:34:39 2026 -- 1 IP address (1 host up) scanned in 27.44 seconds
