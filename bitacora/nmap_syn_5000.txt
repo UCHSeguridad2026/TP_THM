@@ -1,0 +1,13 @@
+
+# Nmap 7.99 scan initiated Thu Oct 8 21:06:56 2026 as: /usr/lib/nmap/nmap -sS -Pn -p 1-5000 --reason -oN /home/kali/nmap_syn_5000.txt 10.67.190.96
+Nmap scan report for 10.67.190.96
+Host is up, received user-set (0.14s latency).
+Not shown: 4995 filtered tcp ports (no-response)
+PORT     STATE SERVICE       REASON
+21/tcp   open  ftp           syn-ack ttl 126
+53/tcp   open  domain        syn-ack ttl 126
+80/tcp   open  http          syn-ack ttl 126
+135/tcp  open  msrpc         syn-ack ttl 126
+3389/tcp open  ms-wbt-server syn-ack ttl 126
+
+# Nmap done at Thu Oct 8 21:07:23 2026 -- 1 IP address (1 host up) scanned in 27.03 seconds

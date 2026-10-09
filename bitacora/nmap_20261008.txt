@@ -1,0 +1,79 @@
+ACTIVIDAD A08 - TRYHACKME
+BITACORA DE LA SALA NMAP (FURTHER NMAP)
+Fecha de ejecucion: 08/10/2026 (segun salidas de Kali compartidas)
+Entorno: Kali Linux en VirtualBox / VPN de TryHackMe (tun0)
+Objetivo autorizado y temporal: 10.67.190.96
+Sala: Nmap (Further Nmap)
+
+1) COMPROBACION DE INTERFAZ VPN
+Comando: ip a show tun0
+Resultado relevante: tun0 con estado UP e IP 192.168.151.153/18.
+
+2) COMPROBACION ICMP
+Comando: ping -c 4 10.67.190.96
+Resultado: 4 paquetes transmitidos, 0 recibidos, 100% packet loss.
+Interpretacion: ausencia de respuesta ICMP; no acredita por si sola que el host este inactivo.
+
+3) COMPROBACION DE RUTA
+Comando: ip route get 10.67.190.96
+Salida relevante:
+10.67.190.96 via 192.168.128.1 dev tun0 src 192.168.151.153 uid 1000
+Interpretacion: ruta hacia el objetivo a traves de tun0.
+
+4) ESCANEO TCP CONNECT INICIAL
+Comando: nmap -Pn -sT -p 80 10.67.190.96
+Salida relevante:
+Host is up (0.14s latency).
+80/tcp open http
+Interpretacion: el puerto TCP 80 acepto conexiones.
+
+5) ESCANEO XMAS SOBRE LOS PRIMEROS 999 PUERTOS
+Comando: sudo nmap -sX -Pn -p 1-999 --reason 10.67.190.96
+Salida relevante:
+All 999 scanned ports on 10.67.190.96 are in ignored states.
+Not shown: 999 open|filtered tcp ports (no-response)
+Nmap done: 1 IP address (1 host up) scanned in 207.94 seconds
+Interpretacion: los 999 puertos se clasificaron open|filtered por ausencia de respuesta;
+NO se concluye que los 999 puertos esten abiertos.
+
+6) ESCANEO SYN DE LOS PRIMEROS 5000 PUERTOS
+Comando: sudo nmap -sS -Pn -p 1-5000 --reason -oN ~/nmap_syn_5000.txt 10.67.190.96
+Salida relevante:
+Not shown: 4995 filtered tcp ports (no-response)
+21/tcp   open  ftp           syn-ack ttl 126
+53/tcp   open  domain        syn-ack ttl 126
+80/tcp   open  http          syn-ack ttl 126
+135/tcp  open  msrpc         syn-ack ttl 126
+3389/tcp open  ms-wbt-server syn-ack ttl 126
+Nmap done: 1 IP address (1 host up) scanned in 27.03 seconds
+Interpretacion: cinco puertos TCP abiertos y 4995 filtrados dentro del rango examinado.
+Archivo original de salida: bitacora/nmap_syn_5000.txt (exportado desde Kali).
+Los resultados anteriores coinciden con la salida original de Nmap incluida en el repositorio.
+
+7) TCP CONNECT CON OBSERVACION EN WIRESHARK
+Comando: nmap -sT -Pn -p 80 10.67.190.96
+Resultado Nmap: 80/tcp open http
+Interfaz de captura: tun0
+Filtro de visualizacion: ip.addr == 10.67.190.96 && tcp.port == 80
+Observacion: secuencia SYN, SYN/ACK, ACK y posteriormente RST/ACK.
+Interpretacion: el servicio del puerto TCP 80 acepto una conexion TCP completa.
+Evidencia: evidencias/escaneo/nmap_tcp_connect_wireshark.png
+
+8) COMPROBACION DE FTP ANONIMO CON NSE
+Comando: nmap -sV -p 21 --script=ftp-anon -Pn 10.67.190.96
+Salida relevante:
+21/tcp open ftp FileZilla ftpd 0.9.60 beta
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_Can't get directory listing: TIMEOUT
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+Nmap done: 1 IP address (1 host up) scanned in 32.01 seconds
+Interpretacion: el servidor acepto el inicio de sesion anonimo (230), pero la
+consulta del listado remoto vencio por tiempo. No se verifico la lectura de archivos.
+Evidencia: evidencias/escaneo/nmap_ftp_anonymous.png
+
+9) FINALIZACION
+El perfil de TryHackMe mostro tres salas completadas: Pentesting Fundamentals,
+Basic Pentesting y Nmap.
+Evidencia: evidencias/post/nmap_sala_completada.png
+
+\n
