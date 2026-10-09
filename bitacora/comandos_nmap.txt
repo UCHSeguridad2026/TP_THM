@@ -1,0 +1,20 @@
+BITÁCORA DE COMANDOS — NMAP
+Sala: Nmap (TryHackMe)
+Usuario: micaelachacon00
+Entorno: AttackBox de TryHackMe
+IP del objetivo: 10.65.171.129
+
+# Comprobación de conectividad
+ping -c 4 10.65.171.129
+
+# Xmas Scan — primeros 999 puertos
+sudo nmap -sX -p 1-999 -Pn --reason -oN xmas.txt 10.65.171.129
+
+# SYN Scan — primeros 5000 puertos
+sudo nmap -sS -p 1-5000 -Pn -oN syn.txt 10.65.171.129
+
+# TCP Connect Scan — puerto 80
+nmap -sT -p 80 10.65.171.129
+
+# Script FTP anónimo — puerto 21
+nmap -p 21 --script ftp-anon -oN ftp.txt 10.65.171.129
