@@ -1,0 +1,19 @@
+===================================================
+MATRIZ DE REMEDIACIÓN Y CONCLUSIONES TÉCNICAS
+===================================================
+
+1. Resumen de Hallazgos y Mitigación:
+   - Servicio SMB/Samba:
+     * Riesgo: Acceso anónimo a recursos compartidos.
+     * Mitigación: Deshabilitar 'map to guest = bad user' y restringir permisos de lectura en comparticiones sensibles.
+   
+   - Servicio SSH:
+     * Riesgo: Exposición a autenticación basada en contraseña.
+     * Mitigación: Configurar 'PasswordAuthentication no', habilitar 'PubkeyAuthentication yes' e implementar Fail2ban.
+
+   - Control de Accesos Locales:
+     * Riesgo: Asignación amplia de privilegios administrativos en /etc/sudoers.
+     * Mitigación: Aplicar el Principio de Menor Privilegio (PoLP) restringiendo binarios y evitando la directiva NOPASSWD.
+
+2. Conclusión Académica:
+   - La implementación de controles defensivos multicapa (Defense in Depth) minimiza la superficie de ataque y previene el movimiento lateral o la elevación no autorizada de privilegios dentro del sistema operativo.
