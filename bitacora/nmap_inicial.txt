@@ -1,35 +1,31 @@
-# Nmap 7.99 scan initiated Wed Oct  7 22:34:48 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -Pn -oN bitacora/nmap_inicial.txt 10.67.158.216
-Nmap scan report for 10.67.158.216
-Host is up (0.16s latency).
-Not shown: 994 closed tcp ports (reset)
+# Nmap 7.99 scan initiated Fri Oct  9 12:12:04 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -p 22,80,445,8080 -oN bitacora/nmap_inicial.txt 10.67.160.12
+Nmap scan report for 10.67.160.12
+Host is up (0.14s latency).
+
 PORT     STATE SERVICE     VERSION
 22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey: 
-|   3072 6a:5f:6e:88:c5:d6:77:69:a0:0c:b3:05:8a:7d:29:dd (RSA)
-|   256 a4:8f:1e:0f:e3:61:88:7c:9a:47:ac:92:67:f5:6c:27 (ECDSA)
-|_  256 ef:b7:1f:04:77:de:ac:66:d3:79:3e:57:9d:34:6d:5f (ED25519)
+|   3072 9b:f8:4a:ad:3e:85:48:e6:9d:6b:59:4c:8f:37:c7:da (RSA)
+|   256 01:85:db:9c:42:00:43:76:23:7e:18:09:f2:8e:4d:e3 (ECDSA)
+|_  256 aa:1b:26:46:30:29:28:77:ee:82:d0:0b:82:96:e6:31 (ED25519)
 80/tcp   open  http        Apache httpd 2.4.41 ((Ubuntu))
-|_http-title: Site doesn't have a title (text/html).
 |_http-server-header: Apache/2.4.41 (Ubuntu)
-139/tcp  open  netbios-ssn Samba smbd 4
+|_http-title: Site doesn't have a title (text/html).
 445/tcp  open  netbios-ssn Samba smbd 4
-8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)
-| ajp-methods: 
-|_  Supported methods: GET HEAD POST OPTIONS
 8080/tcp open  http        Apache Tomcat 9.0.7
-|_http-favicon: Apache Tomcat
-|_http-open-proxy: Proxy might be redirecting requests
 |_http-title: Apache Tomcat/9.0.7
+|_http-favicon: Apache Tomcat
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Host script results:
 | smb2-security-mode: 
 |   3.1.1: 
 |_    Message signing enabled but not required
-|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
 | smb2-time: 
-|   date: 2026-10-08T02:35:47
+|   date: 2026-10-09T16:12:17
 |_  start_date: N/A
+|_clock-skew: 2s
+|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Wed Oct  7 22:35:52 2026 -- 1 IP address (1 host up) scanned in 63.90 seconds
+# Nmap done at Fri Oct  9 12:12:19 2026 -- 1 IP address (1 host up) scanned in 15.06 seconds
