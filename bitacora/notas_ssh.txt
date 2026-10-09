@@ -22,3 +22,22 @@ Usuarios identificados: jan, kay
    - Herramienta: Hydra v9.x
    - Comando: hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.66.171.56 -t 4
    - Objetivo: Evaluar la robustez de la contraseña del usuario 'jan'.
+
+===================================================
+REGISTRO DE PRUEBAS DE AUTENTICACIÓN Y HARDENING
+===================================================
+Servicio: SSH (Puerto 22/tcp)
+Usuario evaluado: jan
+
+1. Alcance de la Evaluación:
+   - Se evaluó la resistencia del servicio de autenticación SSH frente a intentos de inicio de sesión mediante contraseña.
+
+2. Resultados de la Evaluación:
+   - Estado: [Completado / Pendiente]
+   - Observaciones: [Registrar el resultado obtenido en el entorno de laboratorio]
+
+3. Recomendaciones de Remedación Defensiva:
+   - Deshabilitar el acceso por contraseña en /etc/ssh/sshd_config:
+     PasswordAuthentication no
+   - Implementar autenticación mediante claves criptográficas asimétricas (SSH Keys).
+   - Configurar herramientas de prevención de intrusiones (ej. Fail2ban) para bloquear IPs tras múltiples intentos fallidos.
