@@ -1,0 +1,10 @@
+# Nmap 7.99 scan initiated Thu Oct  8 20:17:00 2026 as: /usr/lib/nmap/nmap --privileged -Pn -sV -p- -oN evidencias/escaneo/vulnversity_nmap.txt 10.66.148.193
+Nmap scan report for 10.66.148.193
+Host is up (0.15s latency).
+Not shown: 65533 closed tcp ports (reset)
+PORT     STATE SERVICE    VERSION
+3128/tcp open  http-proxy Squid http proxy 4.10
+3333/tcp open  http       Apache httpd 2.4.41 ((Ubuntu))
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Oct  8 20:23:43 2026 -- 1 IP address (1 host up) scanned in 403.29 seconds
