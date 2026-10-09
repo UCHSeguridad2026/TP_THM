@@ -1,27 +1,62 @@
-# TP_TryHackMe
+# Actividad A08 — Informe de Pentesting Ético (INSECUR S.A.)
 
-Repositorio de entrega del trabajo práctico de TryHackMe.
+**Materia:** Seguridad Aplicada a Sistemas de Información
+**Docente:** Ing. Rodrigo Atilio Elgueta
+**Alumno/a:** Diego Daniel Jofré Winterstetter
+**Username TryHackMe:** `ddjwinter`
+**Branch:** `jofre-diego`
 
-Este repositorio está destinado exclusivamente a la entrega individual del estudiante. Cada alumno debe trabajar en su propia branch y mantener evidencia ordenada del proceso realizado.
+## Descripción
 
-## Política de ramas
+Informe de pentesting ético sobre entornos controlados de TryHackMe, realizado como
+trabajo práctico final de la cátedra. El trabajo cubre el núcleo obligatorio
+(*Pentesting Fundamentals* + *Basic Pentesting*) y la sala de elección
+(*Vulnversity*), siguiendo la metodología PTES / NIST SP 800-115.
 
-- Cada estudiante debe crear una branch personal con su nombre/apellido.
-- La entrega debe realizarse desde esa branch.
-- No se permite reemplazar la entrega con un pull request.
+> Todas las pruebas se ejecutaron exclusivamente contra las IP asignadas por
+> TryHackMe a través de la VPN oficial de la plataforma, dentro del alcance
+> autorizado por la cátedra. No se realizó ninguna acción contra sistemas reales.
 
-## Penalización
 
-Si un estudiante envía un pull request en lugar de trabajar en su propia branch, se descontarán 3/10 puntos del trabajo.
+## Estructura del repositorio
 
-## Reglas adicionales
+```
+.
+├── reportes/
+│   └── informe_pentesting.pdf      # Informe final
+├── bitacora/
+│   ├── vulnversity_nmap_puertos.txt
+│   ├── gobuster.txt
+│   └── hydra.txt                   # credenciales sanitizadas como [REDACTED]
+├── evidencias/
+│   ├── reconocimiento/
+│   ├── escaneo/
+│   ├── explotacion/
+│   └── post/
+└── README.md
+```
 
-- Cada estudiante es responsable de su propia rama.
-- No se permite hacer `git push --force` sobre ramas compartidas.
-- Si se comete un error sobre `main` o la rama de otro compañero, debe comunicarse de inmediato al docente.
-- Se deben respetar las buenas prácticas de GitHub y la guía de la actividad.
 
-## Ética y legalidad
+## Higiene de secretos y flags
 
-La actividad debe desarrollarse únicamente en entornos controlados y autorizados. No se permite aplicar estas técnicas sobre sistemas reales sin autorización.
+- Las credenciales obtenidas (bitácora `hydra.txt`) figuran sanitizadas como
+  `[REDACTED]`.
+- Las flags obtenidas se documentan únicamente como hash SHA-256 (Anexo C del
+  informe), nunca en texto plano.
 
+## Checklist antes del push
+
+- [x] Informe en `reportes/informe_pentesting.pdf`
+- [x] Evidencias en `evidencias/` (por fase) — **revisar que ninguna muestre
+      flags en texto plano** antes de subirlas
+- [x] Bitácoras en `bitacora/`
+- [x] Branch nombrado `apellido-nombre`
+- [x] Commits con identidad institucional real
+- [x] Datos personales completados en el informe (nombre, DNI, email)
+- [x] Declaración ética (Anexo D) firmada
+
+## Alcance ético
+
+Trabajo realizado en entornos sandbox de TryHackMe con fines exclusivamente
+académicos, dentro del alcance autorizado por la cátedra (ver Anexo D del
+informe).
