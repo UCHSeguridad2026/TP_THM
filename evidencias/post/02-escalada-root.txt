@@ -1,0 +1,5 @@
+kay@ip-10-64-163-158:~$ sudo su
+root@ip-10-64-163-158:/home/kay# whoami
+root
+root@ip-10-64-163-158:/home/kay# id
+uid=0(root) gid=0(root) groups=0(root)

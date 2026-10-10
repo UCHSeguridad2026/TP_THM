@@ -1,0 +1,7 @@
+kay@ip-10-64-163-158:~$ sudo -l
+[sudo] password for kay: 
+Matching Defaults entries for kay on ip-10-64-163-158:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+User kay may run the following commands on ip-10-64-163-158:
+    (ALL : ALL) ALL
