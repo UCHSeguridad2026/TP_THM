@@ -1,2 +1,5 @@
+# Vulnversity - SHA-256 de las flags (sin salto de linea en el valor hasheado)
+# user.txt
 d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
+# root.txt
 cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
