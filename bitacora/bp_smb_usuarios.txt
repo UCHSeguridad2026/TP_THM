@@ -1,0 +1,40 @@
+Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Fri Oct  9 10:02:39 2026
+
+[34m =========================================( [0m[32mTarget Information[0m[34m )=========================================
+
+[0mTarget ........... 10.65.166.39
+RID Range ........ 500-550,1000-1050
+Username ......... ''
+Password ......... ''
+Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+
+
+[34m ============================( [0m[32mEnumerating Workgroup/Domain on 10.65.166.39[0m[34m )============================
+
+[0m[33m
+[+] [0m[32mGot domain/workgroup name: WORKGROUP
+
+[0m
+[34m ===================================( [0m[32mSession Check on 10.65.166.39[0m[34m )===================================
+
+[0m[33m
+[+] [0m[32mServer 10.65.166.39 allows sessions using username '', password ''
+
+[0m
+[34m ================================( [0m[32mGetting domain SID for 10.65.166.39[0m[34m )================================
+
+[0mDomain Name: WORKGROUP
+Domain Sid: (NULL SID)
+[33m
+[+] [0m[32mCan't determine if host is part of domain or part of a workgroup
+
+[0m
+[34m =======================================( [0m[32mUsers on 10.65.166.39[0m[34m )=======================================
+
+[0mUse of uninitialized value $users in print at ./enum4linux.pl line 972.
+Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 975.
+
+Use of uninitialized value $users in print at ./enum4linux.pl line 986.
+Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 988.
+enum4linux complete on Fri Oct  9 10:02:54 2026
+

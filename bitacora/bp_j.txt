@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+Date: Fri, 09 Oct 2026 13:55:44 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Last-Modified: Mon, 23 Apr 2018 17:10:24 GMT
+ETag: "eb-56a871d126229"
+Accept-Ranges: bytes
+Content-Length: 235
+Vary: Accept-Encoding
+Content-Type: text/plain
+
+For J:
+
+I've been auditing the contents of /etc/shadow to make sure we don't have any weak credentials,
+and I was able to crack your hash really easily. You know our password policy, so please follow
+it? Change that password ASAP.
+
+-K

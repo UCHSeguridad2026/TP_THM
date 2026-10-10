@@ -1,0 +1,13 @@
+# Nmap 7.99 scan initiated Fri Oct  9 09:53:10 2026 as: /usr/lib/nmap/nmap --privileged -Pn -p 445 --script smb2-security-mode -oN /home/kali/TP_THM_evidencias/bitacora/bp_smb_signing.txt 10.65.166.39
+Nmap scan report for 10.65.166.39
+Host is up (0.29s latency).
+
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+
+# Nmap done at Fri Oct  9 09:53:14 2026 -- 1 IP address (1 host up) scanned in 3.85 seconds

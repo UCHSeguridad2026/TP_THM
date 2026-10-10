@@ -1,0 +1,1 @@
+getting file \staff.txt of size 173 as /home/kali/TP_THM_evidencias/bitacora/bp_staff.txt (0.2 KiloBytes/sec) (average 0.2 KiloBytes/sec)

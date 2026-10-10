@@ -1,0 +1,10 @@
+# Nmap 7.99 scan initiated Fri Oct  9 10:06:08 2026 as: /usr/lib/nmap/nmap --privileged -Pn -sV -p 22 -oN /home/kali/TP_THM_evidencias/bitacora/bp_ssh.txt 10.65.166.39
+Nmap scan report for 10.65.166.39
+Host is up (0.28s latency).
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Oct  9 10:06:12 2026 -- 1 IP address (1 host up) scanned in 4.26 seconds
