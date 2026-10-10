@@ -1,0 +1,14 @@
+# Nmap 7.99 scan initiated Sat Oct 10 01:37:53 2026 as: /usr/lib/nmap/nmap -Pn -sS -T4 -p 21,22,80,139,445,3128,3333 -oN /home/kali/TP_THM_evidencias/vulnversity/bitacora/vv_nmap_puertos.txt 10.65.129.71
+Nmap scan report for 10.65.129.71
+Host is up.
+
+PORT     STATE    SERVICE
+21/tcp   filtered ftp
+22/tcp   filtered ssh
+80/tcp   filtered http
+139/tcp  filtered netbios-ssn
+445/tcp  filtered microsoft-ds
+3128/tcp filtered squid-http
+3333/tcp filtered dec-notes
+
+# Nmap done at Sat Oct 10 01:37:57 2026 -- 1 IP address (1 host up) scanned in 4.67 seconds

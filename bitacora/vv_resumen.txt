@@ -1,0 +1,26 @@
+# Vulnversity - resumen de la intrusion
+# Objetivo (ultimo deploy): 10.64.136.253 (misma sala, IP rotativa)
+
+## Reconocimiento (nmap -sV)
+21/tcp  vsftpd 3.0.5
+22/tcp  OpenSSH 8.2p1 Ubuntu
+139/445 Samba smbd 4
+3128/tcp Squid http proxy 4.10
+3333/tcp Apache httpd 2.4.41 (servidor web)
+
+## Enumeracion web (gobuster)
+Directorio /internal/ con formulario de upload (index.php, campo name=file)
+
+## Explotacion - subida de archivo
+Filtro bloquea .php ; acepta .phtml (lista negra incompleta)
+Subida de reverse shell php (shell.phtml) -> Success
+Ejecucion: /internal/uploads/shell.phtml -> reverse shell www-data
+
+## Acceso obtenido
+uid=33(www-data)
+user flag: /home/*/user.txt (valor en vv_flags_sha256.txt como hash)
+
+## Escalada de privilegios
+find / -perm -4000 -type f -> /bin/systemctl con SUID
+Servicio systemd malicioso (/tmp/root.service) + systemctl link/start -> ejecucion como root
+root flag: /root/root.txt (valor en vv_flags_sha256.txt como hash)
