@@ -1,0 +1,12 @@
+Objetivo: 10.65.136.68:8080
+Servicio identificado: Apache Tomcat 9.0.7
+
+Ruta /manager/html: HTTP 401
+Ruta /host-manager/html: HTTP 401
+Ruta /docs/: HTTP 200
+Ruta /examples/: HTTP 200
+
+Interpretación:
+Las rutas de administración requieren autenticación.
+La documentación y los ejemplos son accesibles.
+Estos resultados por sí solos no confirman una vulnerabilidad explotable.

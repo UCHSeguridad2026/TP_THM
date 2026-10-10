@@ -1,0 +1,35 @@
+# Nmap 7.99 scan initiated Fri Oct  9 19:31:36 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN /home/kali/TP_THM/evidencias/escaneo/nmap_inicial.txt 10.64.182.112
+Nmap scan report for 10.64.182.112 (10.64.182.112)
+Host is up (0.18s latency).
+Not shown: 994 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 bb:ab:7b:7b:fb:39:ac:6c:2e:a0:c6:aa:d7:b7:1c:4c (RSA)
+|   256 26:95:24:de:f2:8d:f4:ce:8d:97:0a:0a:9f:1c:fe:d9 (ECDSA)
+|_  256 e0:62:96:14:18:d1:c1:59:36:4e:f1:51:30:10:be:70 (ED25519)
+80/tcp   open  http        Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+139/tcp  open  netbios-ssn Samba smbd 4
+445/tcp  open  netbios-ssn Samba smbd 4
+8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)
+| ajp-methods: 
+|_  Supported methods: GET HEAD POST OPTIONS
+8080/tcp open  http        Apache Tomcat 9.0.7
+|_http-title: Apache Tomcat/9.0.7
+|_http-favicon: Apache Tomcat
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-time: 
+|   date: 2026-10-09T23:32:15
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled but not required
+|_nbstat: NetBIOS name: BASIC2, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+|_clock-skew: 19s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Oct  9 19:32:02 2026 -- 1 IP address (1 host up) scanned in 25.90 seconds

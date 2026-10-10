@@ -1,0 +1,11 @@
+Objetivo: 10.65.136.68:8080
+Fecha de prueba: 2026-10-09
+
+/struts2-rest-showcase/ : HTTP 404
+/struts/               : HTTP 404
+/examples/             : HTTP 200
+/docs/                 : HTTP 200
+
+Conclusión:
+No se encontró la aplicación Struts en las dos rutas consultadas.
+La existencia de una aplicación vulnerable no está confirmada.

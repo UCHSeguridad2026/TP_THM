@@ -1,0 +1,18 @@
+Objetivo: 10.65.136.68
+Fase: Enumeración web
+
+Ruta: /development/
+Resultado: listado de directorio accesible.
+Archivos encontrados: dev.txt y j.txt.
+
+dev.txt:
+Menciona Apache Struts 2.5.12 y un ejemplo REST.
+También indica que SMB fue configurado.
+
+j.txt:
+Describe que un hash de contraseña pudo descifrarse
+con facilidad, lo que sugiere credenciales débiles.
+
+Evaluación:
+Son pistas relevantes para continuar la enumeración.
+Por sí solas no confirman la explotación de una vulnerabilidad.
