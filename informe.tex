@@ -1,0 +1,717 @@
+\documentclass[11pt,a4paper]{article}
+
+% =========================================================
+% PAQUETES
+% =========================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\babelprovide[main]{spanish}
+\setlocalecaption{spanish}{contents}{Indice}
+\setlocalecaption{spanish}{figure}{Figura}
+\usepackage[a4paper,margin=2.3cm,headheight=15pt]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{parskip}
+\usepackage{amssymb}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!50!black,
+    citecolor=blue!50!black,
+    pdftitle={Informe de Pentesting - INSECUR S.A.},
+    pdfauthor={Leonardo Cangialosi},
+    pdfsubject={Actividad A08 - Hacking Etico}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\definecolor{insecblue}{HTML}{17365D}
+\definecolor{critical}{HTML}{F4CCCC}
+\definecolor{high}{HTML}{FCE5CD}
+\definecolor{medium}{HTML}{FFF2CC}
+\definecolor{low}{HTML}{D9EAD3}
+\definecolor{lightblue}{HTML}{EAF2F8}
+\definecolor{darkgray}{HTML}{444444}
+
+\titleformat{\section}{\Large\bfseries\color{insecblue}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries\color{insecblue}}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{darkgray}}{\thesubsubsection.}{0.5em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small INSECUR S.A. -- Actividad A08}
+\rhead{\small Hacking Etico}
+\cfoot{\small Pagina \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{lightblue},
+    frame=single,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{darkgray}
+}
+
+\newtcolorbox{campo}[1][Campo del Informe]{
+  enhanced, breakable, colback=white, colframe=black!60,
+  fonttitle=\bfseries, title=#1,
+  boxrule=0.8pt, arc=2mm, left=6pt, right=6pt, top=6pt, bottom=6pt}
+
+% =========================================================
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Large\bfseries Informe de Pentesting}\\[0.3cm]
+{\Large\bfseries Actividad A08 --- Hacking Etico}\\[1cm]
+{\large Cliente: \textbf{INSECUR S.A.} --- Laboratorio: TryHackMe}\\[2cm]
+{\large Seguridad Aplicada a Sistemas de Informacion}\\
+Licenciatura en Sistemas de Informacion --- Facultad de Informatica y Diseno\\
+Docente: Ing. Rodrigo Atilio Elgueta\\[1cm]
+{\large Alumno: \textbf{Leonardo Cangialosi}}\\[0.3cm]
+Branch: \texttt{cangialosi-leonardo}\\[2cm]
+\vfill
+{\small Ciclo Academico Vigente}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =========================================================
+\section{Datos generales}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{@{} p{5cm} X @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+Cliente & INSECUR S.A. \\
+Contratista (alumno/a) & Leonardo Cangialosi \\
+DNI & \dotfill \\
+Username TryHackMe & \dotfill \\
+Email institucional & leocangialosi04@gmail.com \\
+Sala de eleccion (Nivel 2) & Vulnversity \\
+Branch en GitHub & \texttt{cangialosi-leonardo} \\
+Fecha de inicio & \dotfill \\
+Fecha de cierre & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =========================================================
+\section{Pre-pentesting}
+
+\begin{campo}[Alcance del trabajo]
+El alcance de esta intervencion comprende exclusivamente los entornos de laboratorio provistos por la plataforma TryHackMe, asignados en la guia de la catedra:
+\begin{itemize}
+  \item Sala obligatoria: \textbf{Pentesting Fundamentals} (metodologia).
+  \item Sala obligatoria: \textbf{Basic Pentesting} (enumeracion, explotacion y escalada de privilegios).
+  \item Sala de eleccion: \textbf{Vulnversity} (enumeracion de servicios, explotacion web y escalada de privilegios en Linux).
+\end{itemize}
+Quedan excluidos del alcance cualquier sistema, red o servicio que no sea provisto explicitamente por TryHackMe dentro de estas salas. No se realizo ninguna accion contra sistemas de produccion ni activos reales de terceros.
+\end{campo}
+
+\begin{campo}[Reglas de Enfrentamiento (ROE)]
+\begin{itemize}
+  \item Las pruebas se ejecutan unicamente contra la IP asignada por TryHackMe a traves de la VPN oficial de la plataforma.
+  \item No se realizan ataques de denegacion de servicio (DoS) ni se satura el ancho de banda del laboratorio.
+  \item Toda herramienta de fuerza bruta (p. ej. Hydra) se usa con limite de hilos razonable y unicamente sobre los servicios habilitados por la sala.
+  \item Ante cualquier incidente o comportamiento inesperado de la maquina, se detiene la prueba y se notifica al docente.
+  \item No se publican flags en texto plano; se reportan como hash SHA-256 (ver Anexo C).
+\end{itemize}
+\end{campo}
+
+\begin{campo}[Autorizacion]
+Declaro que cuento con autorizacion expresa de la catedra de Seguridad Aplicada a Sistemas de Informacion (FID-UCH) para ejecutar tecnicas de pentesting unicamente sobre los entornos de laboratorio de TryHackMe indicados en la guia de la Actividad A08, en el marco del caso academico ficticio INSECUR S.A.
+\end{campo}
+
+\begin{campo}[Metodologia utilizada]
+Se adopta como referencia metodologica el \textbf{PTES (Penetration Testing Execution Standard)}, complementado con la guia \textbf{OWASP Testing Guide} para los componentes web encontrados. Se elige PTES por su cobertura completa de las fases de pre-engagement, reconocimiento, escaneo, explotacion, post-explotacion y reporte, que coincide con la estructura exigida por la catedra.
+\end{campo}
+
+% =========================================================
+\section{Durante: Hallazgos por fase}
+
+\subsection{Nucleo obligatorio: Pentesting Fundamentals}
+
+Sala completada al 100\% (Tasks 1 a 5, incluyendo el practico ACME Penetration Test). Esta sala es teorico-practica introductoria y no involucra explotacion sobre una maquina propia; el entregable verificable es la flag del ejercicio practico.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/reconocimiento/reconocimiento_PentestingFundamentals_100pct.png}
+\caption{Sala Pentesting Fundamentals completada al 100\%}
+\end{figure}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{@{} p{5cm} X @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+Flag obtenida (practico ACME) & {\small\texttt{SHA-256:}}\newline {\footnotesize\texttt{583f30ba446f9f74d509726d25956b4b75ad965f953feffc996f6ad1382dc8d6}} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Nucleo obligatorio: Basic Pentesting}
+
+\textit{Estado al cierre de esta version del informe: reconocimiento, escaneo y obtencion de credenciales de usuario \texttt{jan} completados. Acceso SSH confirmado. Escalada de privilegios hacia el usuario \texttt{kay} y root en curso.}
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-01 \\
+\midrule
+Fase & $\blacksquare$ Reconocimiento $\quad\square$ Escaneo $\quad\square$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & Identificacion de la maquina objetivo (\texttt{10.67.168.50}) dentro del rango asignado por TryHackMe, diferenciandola de la IP de la propia AttackBox (\texttt{10.67.159.193}). \\
+\midrule
+Componente afectado & Red de laboratorio THM \\
+\midrule
+Herramienta utilizada & Panel "Active machines information" de la sala \\
+\midrule
+Impacto en la Triada CIA & $\square$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-02 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\blacksquare$ Escaneo $\quad\square$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & Escaneo de puertos y servicios con Nmap. Se detectan cuatro servicios expuestos: SSH, HTTP (Apache) y Samba (SMB) duplicado en TCP/139 y TCP/445. \\
+\midrule
+Componente afectado & \texttt{10.67.168.50} (puertos 22, 80, 139, 445) \\
+\midrule
+Categoria (OWASP / CWE) & CWE-200 (exposicion de informacion de version de servicios) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\blacksquare$ Medio $\quad\square$ Alto $\quad\square$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{nmap -sC -sV 10.67.168.50} --- ver \texttt{bitacora/nmap\_inicial.txt} y Figura~\ref{fig:nmap} \\
+\midrule
+Herramienta utilizada & Nmap 7.94SVN \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Restringir el banner-grabbing (ocultar version de Apache/OpenSSH/Samba), exponer unicamente los servicios estrictamente necesarios y segmentar SMB fuera de la red publica. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/escaneo/escaneo_BP-01_nmap_puertos.png}
+\caption{Resultado de Nmap sobre 10.67.168.50}
+\label{fig:nmap}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-03 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\blacksquare$ Escaneo $\quad\square$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & Enumeracion de directorios web con Gobuster. Se descubre el directorio \texttt{/development} (listado abierto de Apache), que expone dos archivos de texto internos (\texttt{dev.txt} y \texttt{j.txt}) con notas de desarrollo y una referencia directa a un usuario del sistema. \\
+\midrule
+Componente afectado & \texttt{http://10.67.168.50/development/} \\
+\midrule
+Categoria (OWASP / CWE) & A05:2021 - Security Misconfiguration (directory listing habilitado); CWE-200 \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\blacksquare$ Alto $\quad\square$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{gobuster dir -u http://10.67.168.50 -w /usr/share/wordlists/dirb/common.txt} --- ver \texttt{bitacora/gobuster.txt} y Figuras~\ref{fig:gobuster}--\ref{fig:devtxt} \\
+\midrule
+Herramienta utilizada & Gobuster v3.6 \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Deshabilitar \texttt{Options +Indexes} en Apache, remover archivos de desarrollo/notas internas de directorios publicos y nunca versionar credenciales ni nombres de usuario en texto plano accesible via web. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_BP-02_gobuster.png}
+\caption{Gobuster descubre el directorio \texttt{/development}}
+\label{fig:gobuster}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_BP-03_index_development.png}
+\caption{Listado abierto de \texttt{/development/}: \texttt{dev.txt} y \texttt{j.txt}}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_BP-04_jtxt_nota.png}
+\caption{Contenido de \texttt{j.txt}: nota interna que confirma al usuario \texttt{jan} y revela que su contrase\~na fue auditada como debil}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_BP-05_devtxt_nota.png}
+\caption{Contenido de \texttt{dev.txt}: bitacora de desarrollo que identifica al usuario \texttt{jan} y referencias de configuracion del servidor}
+\label{fig:devtxt}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-04 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\blacksquare$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & A partir del usuario \texttt{jan} (obtenido en H-03), se realiza fuerza bruta contra el servicio SSH. Se obtiene una contrase\~na valida y se logra acceso remoto autenticado a la maquina. \\
+\midrule
+Componente afectado & SSH (TCP/22) en \texttt{10.67.168.50}, cuenta \texttt{jan} \\
+\midrule
+Categoria (OWASP / CWE) & CWE-521 (contrase\~na debil); CWE-307 (falta de proteccion ante intentos excesivos de autenticacion) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\square$ Alto $\quad\blacksquare$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{hydra -l jan -P <wordlist> 10.67.168.50 ssh -t 16} --- ver \texttt{bitacora/hydra\_jan.txt} y Figuras~\ref{fig:hydra}--\ref{fig:sshlogin} \\
+\midrule
+Herramienta utilizada & THC-Hydra \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\blacksquare$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Politica de contrase\~nas robustas (longitud minima, complejidad, no reutilizacion), autenticacion por clave publica en lugar de password para SSH, y bloqueo/throttling de intentos fallidos (fail2ban o equivalente). \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_BP-06_hydra_password.png}
+\caption{Hydra obtiene la contrase\~na de \texttt{jan} por fuerza bruta contra SSH}
+\label{fig:hydra}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_BP-07_ssh_jan_login.png}
+\caption{Acceso SSH exitoso como \texttt{jan} en \texttt{10.67.168.50}}
+\label{fig:sshlogin}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-05 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\square$ Explotacion $\quad\blacksquare$ Post-explotacion \\
+\midrule
+Descripcion & Enumerando como \texttt{jan}, se detecta que el directorio home de \texttt{kay} (\texttt{/home/kay}) tiene permisos \texttt{755} y su subcarpeta \texttt{.ssh} tambien es de lectura abierta. Esto permite leer la clave privada SSH de \texttt{kay} (\texttt{id\_rsa}) sin ser su propietario, aunque la clave esta protegida con passphrase (AES-128-CBC). \\
+\midrule
+Componente afectado & \texttt{/home/kay/.ssh/id\_rsa} \\
+\midrule
+Categoria (OWASP / CWE) & CWE-732 (asignacion incorrecta de permisos para un recurso critico) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\blacksquare$ Alto $\quad\square$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{ls -la /home/kay/}; \texttt{cat /home/kay/.ssh/id\_rsa} --- Figuras~\ref{fig:homekay}--\ref{fig:idrsa} \\
+\midrule
+Herramienta utilizada & Bash (enumeracion manual) \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Aplicar permisos \texttt{700} a todos los directorios home y \texttt{600}/\texttt{700} a \texttt{\textasciitilde/.ssh} y su contenido; revisar periodicamente permisos de archivos sensibles con herramientas de hardening (CIS Benchmarks). \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_BP-08_home_kay_listado.png}
+\caption{Listado de \texttt{/home/kay/} accesible desde la cuenta \texttt{jan}}
+\label{fig:homekay}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_BP-09_kay_idrsa_contenido.png}
+\caption{Clave privada SSH de \texttt{kay} extraida (cifrada con passphrase)}
+\label{fig:idrsa}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-06 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\square$ Explotacion $\quad\blacksquare$ Post-explotacion \\
+\midrule
+Descripcion & La clave privada obtenida en H-05 se transfiere a la AttackBox y se convierte con \texttt{ssh2john} para crackeo offline con John the Ripper contra \texttt{rockyou.txt}. Se obtiene la passphrase de la clave, lo que permite autenticarse como \texttt{kay} via SSH. \\
+\midrule
+Componente afectado & SSH (TCP/22), cuenta \texttt{kay} \\
+\midrule
+Categoria (OWASP / CWE) & CWE-521 (passphrase debil, presente en diccionario de contrasenas filtradas) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\square$ Alto $\quad\blacksquare$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{ssh2john kay\_id\_rsa > kay\_hash.txt}; \texttt{john --wordlist=rockyou.txt kay\_hash.txt} --- ver \texttt{bitacora/enum4linux.txt} y Figuras~\ref{fig:john}--\ref{fig:sshkay} \\
+\midrule
+Herramienta utilizada & John the Ripper \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\blacksquare$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Exigir passphrases de alta entropia para claves SSH (no presentes en diccionarios publicos), y complementar con autenticacion multifactor para accesos administrativos. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_BP-10_john_crack_passphrase.png}
+\caption{John the Ripper obtiene la passphrase de la clave de \texttt{kay}: \texttt{beeswax}}
+\label{fig:john}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_BP-11_ssh_kay_login.png}
+\caption{Acceso SSH exitoso como \texttt{kay} utilizando la clave privada y su passphrase}
+\label{fig:sshkay}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-07 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\square$ Explotacion $\quad\blacksquare$ Post-explotacion \\
+\midrule
+Descripcion & Dentro del home de \texttt{kay} existe un archivo \texttt{pass.bak} con permisos restringidos al propietario (\texttt{600}), ilegible por \texttt{jan} pero accesible una vez autenticado como \texttt{kay}. Contiene una contrasena en texto plano, posiblemente un respaldo olvidado de una politica de contrasenas anterior. \\
+\midrule
+Componente afectado & \texttt{/home/kay/pass.bak} \\
+\midrule
+Categoria (OWASP / CWE) & CWE-312 (almacenamiento de credenciales en texto plano) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\blacksquare$ Alto $\quad\square$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{cat /home/kay/pass.bak} --- Figura~\ref{fig:passbak} \\
+\midrule
+Herramienta utilizada & Bash \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Eliminar respaldos de credenciales en texto plano; utilizar gestores de secretos (Vault, gestor de contrasenas corporativo) en lugar de archivos sueltos en el sistema de archivos. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/post/post_BP-12_passbak_contenido.png}
+\caption{Contenido de \texttt{pass.bak}: contrasena final obtenida}
+\label{fig:passbak}
+\end{figure}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{@{} p{5cm} X @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+Sala Basic Pentesting & Completada 100\% \\
+Contrasena final obtenida & \texttt{heresareallystrongpasswordthatfollowsthepasswordpolicy\$\$} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/reconocimiento/reconocimiento_BasicPentesting_100pct.png}
+\caption{Sala Basic Pentesting completada al 100\%}
+\end{figure}
+
+\subsection{Sala de eleccion: Vulnversity}
+
+\textit{Sala completada al 100\%. Objetivo: \texttt{10.64.171.15}.}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-08 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\blacksquare$ Escaneo $\quad\square$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & Escaneo con Nmap revela 6 servicios expuestos: FTP (vsftpd 3.0.5), SSH, Samba (TCP/139 y 445), un proxy Squid 4.10 (TCP/3128) y un servidor Apache en un puerto no estandar (TCP/3333). \\
+\midrule
+Componente afectado & \texttt{10.64.171.15} (puertos 21, 22, 139, 445, 3128, 3333) \\
+\midrule
+Categoria (OWASP / CWE) & CWE-200 \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\blacksquare$ Medio $\quad\square$ Alto $\quad\square$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{nmap -sV 10.64.171.15} --- ver \texttt{bitacora/nmap\_vulnversity.txt} y Figura~\ref{fig:vunmap} \\
+\midrule
+Herramienta utilizada & Nmap \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\square$ Integridad $\quad\square$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Minimizar servicios expuestos, actualizar Squid y Apache a versiones soportadas, y ocultar banners de version. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/escaneo/escaneo_VU-01_nmap_puertos.png}
+\caption{Resultado de Nmap sobre \texttt{10.64.171.15}: 6 puertos abiertos}
+\label{fig:vunmap}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-09 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\blacksquare$ Explotacion $\quad\square$ Post-explotacion \\
+\midrule
+Descripcion & La enumeracion de directorios con Gobuster sobre el puerto 3333 descubre \texttt{/internal}, una pagina con un formulario de carga de archivos sin autenticacion. El filtro de extensiones bloquea \texttt{.php} pero no \texttt{.phtml}, lo que permite subir y ejecutar un payload PHP (reverse shell) y obtener ejecucion remota de codigo como el usuario \texttt{www-data}. \\
+\midrule
+Componente afectado & \texttt{http://10.64.171.15:3333/internal/} \\
+\midrule
+Categoria (OWASP / CWE) & A05:2021 - Security Misconfiguration; CWE-434 (carga de archivo peligroso sin restriccion adecuada) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\square$ Alto $\quad\blacksquare$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{gobuster dir -u http://10.64.171.15:3333 -w directory-list-1.0.txt}; payload PHP reverse shell renombrado a \texttt{.phtml} --- ver \texttt{bitacora/nmap\_vulnversity.txt}, \texttt{bitacora/vulnversity\_resumen\_ataque.txt} y Figuras~\ref{fig:vugobuster}--\ref{fig:vushell} \\
+\midrule
+Herramienta utilizada & Gobuster, Netcat, payload PHP reverse shell \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\blacksquare$ Integridad $\quad\blacksquare$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Validar extensiones por listas blancas (no negras), verificar el contenido real del archivo (magic bytes) en vez de la extension, y ejecutar el directorio de subidas sin permisos de ejecucion de scripts. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_VU-02_gobuster_internal.png}
+\caption{Gobuster descubre \texttt{/internal} en el puerto 3333}
+\label{fig:vugobuster}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/explotacion/explotacion_VU-03_upload_form.png}
+\caption{Formulario de carga de archivos en \texttt{/internal}}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/explotacion/explotacion_VU-04_reverse_shell_wwwdata.png}
+\caption{Reverse shell obtenida como \texttt{www-data}}
+\label{fig:vushell}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{evidencias/escaneo/escaneo_VU-05_etc_passwd_bill.png}
+\caption{\texttt{/etc/passwd} revela al usuario real \texttt{bill}}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/escaneo/escaneo_VU-06_apache_procesos_root.png}
+\caption{El proceso maestro de Apache corre como \texttt{root}; los procesos hijos como \texttt{www-data}}
+\end{figure}
+
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-10 \\
+\midrule
+Fase & $\square$ Reconocimiento $\quad\square$ Escaneo $\quad\square$ Explotacion $\quad\blacksquare$ Post-explotacion \\
+\midrule
+Descripcion & La enumeracion de binarios con bit SUID (\texttt{find / -perm -4000}) revela \texttt{/bin/systemctl} con el bit activado, algo no estandar en una instalacion limpia de Ubuntu. Se explota creando un servicio systemd temporal que, al habilitarse con \texttt{systemctl}, ejecuta \texttt{chmod +s /bin/bash} con privilegios de root, otorgando una shell de root completa. \\
+\midrule
+Componente afectado & \texttt{/bin/systemctl} (bit SUID mal configurado) \\
+\midrule
+Categoria (OWASP / CWE) & CWE-250 (ejecucion con privilegios innecesarios) \\
+\midrule
+CVSS estimado & $\square$ Bajo $\quad\square$ Medio $\quad\square$ Alto $\quad\blacksquare$ Critico \\
+\midrule
+Evidencia (captura / comando) & \texttt{find / -perm -4000 -type f}; explotacion via unidad systemd temporal (GTFOBins) --- ver \texttt{bitacora/vulnversity\_resumen\_ataque.txt} y Figura~\ref{fig:vuroot} \\
+\midrule
+Herramienta utilizada & systemctl (GTFOBins) \\
+\midrule
+Impacto en la Triada CIA & $\blacksquare$ Confidencialidad $\quad\blacksquare$ Integridad $\quad\blacksquare$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & Eliminar el bit SUID de binarios que no lo requieren (\texttt{chmod u-s /bin/systemctl}), auditar periodicamente binarios SUID/SGID contra una linea base conocida, y aplicar el principio de menor privilegio. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo $\quad\square$ Medio $\quad\square$ Alto \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/post/post_VU-07_systemctl_privesc_root.png}
+\caption{Escalada a root via \texttt{systemctl} SUID: \texttt{whoami} confirma \texttt{root} y se obtiene la flag}
+\label{fig:vuroot}
+\end{figure}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{@{} p{5cm} X @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+Sala Vulnversity & Completada 100\% \\
+Usuario que gestiona el webserver & \texttt{bill} (proceso maestro de Apache corre como root; usuario real del sistema: bill) \\
+Root flag obtenida & \texttt{a58ff8579f0a9270368d33a9966c7fd5} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{evidencias/reconocimiento/reconocimiento_Vulnversity_100pct.png}
+\caption{Sala Vulnversity completada al 100\%}
+\end{figure}
+
+% =========================================================
+\section{Resumen ejecutivo de hallazgos}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{@{} p{4cm} p{3cm} X @{}}
+\toprule
+\textbf{Severidad} & \textbf{Cantidad} & \textbf{ID de hallazgos} \\
+\midrule
+\cellcolor{critical} Critico & 4 & H-04, H-06, H-09, H-10 \\
+\cellcolor{high} Alto & 3 & H-03, H-05, H-07 \\
+\cellcolor{medium} Medio & 2 & H-02, H-08 \\
+\cellcolor{low} Bajo & 1 & H-01 \\
+\midrule
+\textbf{Total} & 10 & H-01 a H-10 (Pentesting Fundamentals, Basic Pentesting y Vulnversity completas) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =========================================================
+\section{Post-pentesting: Recomendaciones}
+
+\begin{campo}[Recomendaciones tecnicas (parches y configuraciones)]
+\textit{Completar en base a los hallazgos reales: actualizacion de versiones de servicios vulnerables, cierre de puertos innecesarios, endurecimiento de permisos SUID/SGID, politicas de contrasenas, etc.}
+\vspace{3cm}
+\end{campo}
+
+\begin{campo}[Recomendaciones administrativas (politicas y procesos)]
+\textit{Politicas de actualizacion periodica, capacitacion del personal, revisiones de seguridad programadas, gestion de parches.}
+\vspace{2cm}
+\end{campo}
+
+% =========================================================
+\section{Protocolo de contingencia}
+
+\begin{campo}[Escenario de falla]
+Si las tecnicas de explotacion aplicadas en el laboratorio (p. ej. ejecucion remota de codigo sobre un servicio FTP/HTTP vulnerable, o escalada de privilegios via binarios SUID) se replicaran por error o de forma malintencionada sobre un servidor de produccion de INSECUR S.A., podria ocasionarse la caida del servicio afectado, corrupcion de datos o acceso no autorizado con privilegios de administrador.
+\end{campo}
+
+\begin{campo}[Impacto sobre la continuidad del negocio]
+\textit{Completar: que procesos de INSECUR S.A. dependen del servicio comprometido (por ejemplo, el sitio web publico o el servidor de archivos) y por cuanto tiempo se veria interrumpida la operacion si no se actua a tiempo.}
+\vspace{2cm}
+\end{campo}
+
+\begin{campo}[Plan de respuesta]
+\begin{enumerate}
+  \item \textbf{Activacion:} deteccion mediante monitoreo de logs y alertas de IDS/antivirus ante trafico o procesos anomalos.
+  \item \textbf{Contencion (primeros 15 minutos):} aislar el servidor afectado de la red, revocar credenciales comprometidas, preservar evidencia forense.
+  \item \textbf{Recuperacion:} restaurar el servicio desde el ultimo backup verificado o levantar el servidor espejo; aplicar el parche correspondiente antes de reconectar a produccion.
+  \item \textbf{Comunicacion:} notificar a direccion de INSECUR S.A. y, si corresponde por el tipo de dato afectado, a las autoridades competentes y a los clientes impactados.
+  \item \textbf{Post-mortem:} documentar la cronologia del incidente, causa raiz y acciones correctivas; actualizar el plan de contingencia con lo aprendido.
+\end{enumerate}
+\end{campo}
+
+\begin{campo}[RTO y RPO estimados]
+\textbf{RTO} (Recovery Time Objective): \dotfill \\
+\textbf{RPO} (Recovery Point Objective): \dotfill
+\end{campo}
+
+% =========================================================
+\section{Anexos}
+
+\begin{campo}[Anexo A --- Bitacora de comandos]
+Ver archivos \texttt{bitacora/*.txt} en esta branch.
+\end{campo}
+
+\begin{campo}[Anexo B --- Capturas de pantalla]
+Ver carpeta \texttt{evidencias/} organizada por fase (reconocimiento, escaneo, explotacion, post).
+\end{campo}
+
+\begin{campo}[Anexo C --- Hashes de las flags obtenidas]
+\begin{lstlisting}
+# Formato: flag_id  sha256_hash
+F-01 (Pentesting Fundamentals, practico ACME)
+  583f30ba446f9f74d509726d25956b4b75ad965f953feffc996f6ad1382dc8d6
+
+F-02 (Basic Pentesting, password final de kay / pass.bak)
+  Credencial en texto plano hallada durante H-07; no se publica en
+  este anexo por tratarse de una contrasena de cuenta real de la
+  maquina victima (ver hallazgo H-07 para el detalle completo).
+
+F-03 (Vulnversity, root flag)
+  cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
+\end{lstlisting}
+\end{campo}
+
+\begin{campo}[Anexo D --- Declaracion etica firmada]
+Declaro que todas las actividades se realizaron dentro del alcance autorizado, en entornos controlados y con fines exclusivamente academicos.\\[0.4cm]
+\begin{tabularx}{\textwidth}{@{} X X @{}}
+\rule{6cm}{0.4pt} & \rule{6cm}{0.4pt} \\
+Leonardo Cangialosi & Fecha \\
+\end{tabularx}
+\end{campo}
+
+\end{document}

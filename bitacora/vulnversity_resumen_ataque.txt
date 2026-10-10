@@ -1,0 +1,27 @@
+# Nota: este archivo quedo con el nombre heredado del hallazgo original de
+# Basic Pentesting (fuerza bruta de jan). El proceso completo de explotacion
+# de Vulnversity (upload de shell + privesc) esta documentado en:
+#   - bitacora/nmap_vulnversity.txt  (reconocimiento y escaneo)
+#   - evidencias/explotacion/explotacion_VU-03_upload_form.png
+#   - evidencias/explotacion/explotacion_VU-04_reverse_shell_wwwdata.png
+#   - evidencias/post/post_VU-07_systemctl_privesc_root.png
+
+# Resumen del ataque a Vulnversity (10.64.171.15):
+# 1. nmap -sV descubre 6 servicios: FTP, SSH, Samba (x2), Squid proxy y
+#    Apache en el puerto 3333.
+# 2. gobuster sobre :3333 descubre /internal, un formulario de carga de
+#    archivos.
+# 3. Se genera un payload PHP reverse shell con msfvenom/payload estandar,
+#    renombrado a .phtml para evadir el filtro de extensiones (.php bloqueado).
+# 4. Se sube el archivo y se navega a su URL, obteniendo una reverse shell
+#    como www-data (usuario que efectivamente atiende las requests; el
+#    proceso maestro de Apache corre como root segun 'ps aux').
+# 5. /etc/passwd revela un usuario real del sistema: 'bill' (home propio,
+#    /bin/bash).
+# 6. find / -perm -4000 -type f revela el binario /bin/systemctl con el bit
+#    SUID activado -- no es un SUID estandar de Ubuntu, es el vector de
+#    escalada (tecnica documentada en GTFOBins).
+# 7. Se crea un servicio systemd temporal que, al habilitarse via systemctl
+#    con el bit SUID, ejecuta 'chmod +s /bin/bash' como root.
+# 8. Se obtiene /bin/bash -p como root (confirmado con whoami).
+# 9. root flag obtenida: a58ff8579f0a9270368d33a9966c7fd5

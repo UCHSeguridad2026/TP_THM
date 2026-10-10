@@ -1,0 +1,31 @@
+root@AttackBox:~# nmap -sV 10.64.171.15
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-10 00:23 UTC
+Nmap scan report for ip-10-64-171-15.ec2.internal (10.64.171.15)
+Host is up (0.00043s latency).
+Not shown: 994 closed tcp ports (reset)
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.5
+22/tcp   open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+139/tcp  open  netbios-ssn Samba smbd 4.6.2
+445/tcp  open  netbios-ssn Samba smbd 4.6.2
+3128/tcp open  http-proxy  Squid http proxy 4.10
+3333/tcp open  http        Apache httpd 2.4.41 ((Ubuntu))
+MAC Address: 0A:FF:CC:5E:20:F7 (Unknown)
+Service Info: OS: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 21.93 seconds
+
+# Gobuster sobre el puerto 3333
+root@AttackBox:~# gobuster dir -u http://10.64.171.15:3333 -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+/.hta                 (Status: 403) [Size: 279]
+/.htpasswd            (Status: 403) [Size: 279]
+/.htaccess            (Status: 403) [Size: 279]
+/css                  (Status: 301) [Size: 317]
+/fonts                (Status: 301) [Size: 319]
+/images               (Status: 301) [Size: 320]
+/index.html           (Status: 200) [Size: 33014]
+/internal             (Status: 301) [Size: 322]
+/js                   (Status: 301) [Size: 316]
+/server-status        (Status: 403) [Size: 279]
+Finished
