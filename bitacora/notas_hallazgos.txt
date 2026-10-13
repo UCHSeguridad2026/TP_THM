@@ -1,0 +1,6 @@
+Hallazgo: archivo staff.txt obtenido via SMB share 'Anonymous' (sin autenticacion). Contenido menciona nombres de usuario candidatos: kay, jan
+Hallazgo: directorio oculto encontrado via gobuster: /development/ (status 301)
+Hallazgo: dev.txt menciona Apache Struts version 2.5.12, ejemplo REST, configurado por usuario K. j.txt confirma que el usuario J tiene contrasena debil (crackeada facilmente por K via /etc/shadow)
+Hallazgo: credenciales SSH obtenidas via fuerza bruta con Hydra. Usuario: jan. Password hasheada con SHA-256 (ver Anexo C del informe, no se expone en texto plano en la bitacora).
+Hallazgo: directorio oculto /internal/ encontrado via gobuster en puerto 3333
+Hallazgo: formulario de subida de archivos en /internal/index.php. Los archivos subidos se guardan en /internal/uploads/
