@@ -4,3 +4,4 @@ Hallazgo: dev.txt menciona Apache Struts version 2.5.12, ejemplo REST, configura
 Hallazgo: credenciales SSH obtenidas via fuerza bruta con Hydra. Usuario: jan. Password hasheada con SHA-256 (ver Anexo C del informe, no se expone en texto plano en la bitacora).
 Hallazgo: directorio oculto /internal/ encontrado via gobuster en puerto 3333
 Hallazgo: formulario de subida de archivos en /internal/index.php. Los archivos subidos se guardan en /internal/uploads/
+Hallazgo: shell reversa PHP subida via formulario de upload (extension .phtml, no bloqueada). Acceso obtenido como www-data. Flag de usuario encontrada en /home/bill/user.txt (hash SHA-256 en Anexo C del informe)
