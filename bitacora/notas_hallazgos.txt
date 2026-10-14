@@ -5,3 +5,4 @@ Hallazgo: credenciales SSH obtenidas via fuerza bruta con Hydra. Usuario: jan. P
 Hallazgo: directorio oculto /internal/ encontrado via gobuster en puerto 3333
 Hallazgo: formulario de subida de archivos en /internal/index.php. Los archivos subidos se guardan en /internal/uploads/
 Hallazgo: shell reversa PHP subida via formulario de upload (extension .phtml, no bloqueada). Acceso obtenido como www-data. Flag de usuario encontrada en /home/bill/user.txt (hash SHA-256 en Anexo C del informe)
+hallazgo: shell reversa PHP subida en formulario upload (extension .phtml). acceso obtenido como www-data. flag de usuario en /home/bill/user.txt (SHA-256)
