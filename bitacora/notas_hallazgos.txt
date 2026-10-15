@@ -9,3 +9,4 @@ hallazgo: shell reversa PHP subida en formulario upload (extension .phtml). acce
 Hallazgo: binario /bin/systemctl con bit SUID activado (fuera de lo normal). Explotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. Flag de usuario (bill): hash en Anexo C. Flag de root: hash en Anexo C
 Hallazgo: binario /bin/systemctl con bit SUID activado (fuera de lo normal). Explotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. Flag de usuario (bill): hash en Anexo C. Flag de root: hash en Anexo C
 hallazgo: binaario /bin/systemctl con vit SUID activado. expotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. flag de usuario (bill): hash en anexo C. flag de root: hash en anexo C
+hallazgo: binario /bin/systemctl con bit SUID activado, permite escalada de privilegios a root

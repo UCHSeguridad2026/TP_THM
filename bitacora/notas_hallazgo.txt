@@ -1,1 +1,0 @@
-hallazgo: binario /bin/systemctl con bit SUID activado, permite escalada de privilegios a root
