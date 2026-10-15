@@ -6,3 +6,6 @@ Hallazgo: directorio oculto /internal/ encontrado via gobuster en puerto 3333
 Hallazgo: formulario de subida de archivos en /internal/index.php. Los archivos subidos se guardan en /internal/uploads/
 Hallazgo: shell reversa PHP subida via formulario de upload (extension .phtml, no bloqueada). Acceso obtenido como www-data. Flag de usuario encontrada en /home/bill/user.txt (hash SHA-256 en Anexo C del informe)
 hallazgo: shell reversa PHP subida en formulario upload (extension .phtml). acceso obtenido como www-data. flag de usuario en /home/bill/user.txt (SHA-256)
+Hallazgo: binario /bin/systemctl con bit SUID activado (fuera de lo normal). Explotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. Flag de usuario (bill): hash en Anexo C. Flag de root: hash en Anexo C
+Hallazgo: binario /bin/systemctl con bit SUID activado (fuera de lo normal). Explotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. Flag de usuario (bill): hash en Anexo C. Flag de root: hash en Anexo C
+hallazgo: binaario /bin/systemctl con vit SUID activado. expotado creando un servicio malicioso que agrega SUID a /bin/bash, logrando shell como root. flag de usuario (bill): hash en anexo C. flag de root: hash en anexo C
