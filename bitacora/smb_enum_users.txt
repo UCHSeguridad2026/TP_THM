@@ -1,0 +1,9 @@
+# Nmap 7.99 scan initiated Thu Oct 15 11:45:26 2026 as: /usr/lib/nmap/nmap --privileged -Pn -sT -p 139,445 --script smb-enum-users -oN bitacora/smb_enum_users.txt 10.67.184.249
+Nmap scan report for 10.67.184.249 (10.67.184.249)
+Host is up (0.20s latency).
+
+PORT    STATE SERVICE
+139/tcp open  netbios-ssn
+445/tcp open  microsoft-ds
+
+# Nmap done at Thu Oct 15 11:45:28 2026 -- 1 IP address (1 host up) scanned in 1.39 seconds
