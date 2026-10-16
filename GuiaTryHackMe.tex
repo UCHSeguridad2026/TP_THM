@@ -356,22 +356,22 @@ Fecha de cierre & 16/10/2026 \\
 
 \begin{campo}[Alcance del trabajo]
 \textit{Describí qué sistemas están dentro del alcance y cuáles quedan excluidos.}
-\vspace{2cm}
+El alcance del presente trabajo abarca exclusivamente la máquina virtual Vulnversity provista por la plataforma TryHackMe, dentro de la red VPN asignada por la cátedra (rangos 10.64.0.0/12 y 10.66.0.0/12). Quedan excluidos cualquier otro sistema, red o servicio ajeno al entorno de laboratorio de TryHackMe, incluyendo la infraestructura propia del alumno.\\\vspace{0.5cm}
 \end{campo}
 
 \begin{campo}[Reglas de Enfrentamiento (ROE)]
 \textit{Indicá las restricciones técnicas acordadas: horarios, técnicas prohibidas, límites de tráfico, notificación ante incidentes.}
-\vspace{2cm}
+El trabajo se realizó dentro del horario de cursada asignado por la cátedra, utilizando únicamente las herramientas provistas en el entorno Kali/AttackBox. No se emplearon técnicas de denegación de servicio (DoS) ni ataques que pudieran afectar la disponibilidad de la plataforma TryHackMe para otros usuarios. Cualquier incidente debía notificarse de inmediato al docente a cargo.\\\vspace{0.5cm}
 \end{campo}
 
 \begin{campo}[Autorización]
 \textit{Declará que contás con autorización expresa de la cátedra para trabajar sobre los entornos de TryHackMe indicados.}
-\vspace{1cm}
+Declaro contar con autorización expresa de la cátedra de Seguridad Informática (UCH) para realizar las pruebas de penetración descritas en este informe sobre los entornos de TryHackMe indicados, en el marco del trabajo práctico asignado.\\\vspace{0.3cm}
 \end{campo}
 
 \begin{campo}[Metodología utilizada]
 \textit{Indicá qué marco seguiste (PTES, OSSTMM, OWASP Testing Guide, NIST SP 800-115, etc.) y justificá la elección.}
-\vspace{2cm}
+Se utilizó el marco PTES (Penetration Testing Execution Standard) por ser uno de los estándares más aplicados en pentesting de infraestructura web, cubriendo de forma clara las fases de reconocimiento, escaneo, explotación y post-explotación seguidas en este trabajo.\\\vspace{0.5cm}
 \end{campo}
 
 \subsection{Durante: Hallazgos por fase}
@@ -450,13 +450,6 @@ Riesgo residual tras aplicar & $\blacksquare$ Bajo \\
 \end{longtable}
 \end{center}
 
-\midrule
-Salvaguarda propuesta & \vspace{2cm} \\
-\midrule
-Riesgo residual tras aplicar & $\square$ Bajo $\square$ Medio $\square$ Alto \\
-\bottomrule
-\end{longtable}
-\end{center}
 
 \subsection{Resumen ejecutivo de hallazgos}
 
@@ -466,12 +459,12 @@ Riesgo residual tras aplicar & $\square$ Bajo $\square$ Medio $\square$ Alto \\
 \toprule
 \textbf{Severidad} & \textbf{Cantidad} & \textbf{ID de hallazgos} \\
 \midrule
-\cellcolor{rojosuave} Crítico & & \\
-\cellcolor{naranjasuave} Alto & & \\
-\cellcolor{verdesuave} Medio & & \\
-\cellcolor{azulsuave} Bajo & & \\
+\cellcolor{rojosuave} Crítico & 1 & H-02 \\
+\cellcolor{naranjasuave} Alto & 1 & H-01 \\
+\cellcolor{verdesuave} Medio & 0 & --- \\
+\cellcolor{azulsuave} Bajo & 0 & --- \\
 \midrule
-\textbf{Total} & & \\
+\textbf{Total} & 2 & H-01, H-02 \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -480,40 +473,40 @@ Riesgo residual tras aplicar & $\square$ Bajo $\square$ Medio $\square$ Alto \\
 
 \begin{campo}[Recomendaciones técnicas (parches y configuraciones)]
 \textit{Listá las acciones concretas de remediación, priorizadas por criticidad.}
-\vspace{3cm}
+1. Validar el contenido real de los archivos subidos (magic bytes/MIME), no solo la extensión, y aplicar lista blanca estricta de tipos permitidos (prioridad: Alta, asociado a H-01).\\ 2. Servir el directorio de uploads sin permisos de ejecución de scripts.\\ 3. Eliminar el bit SUID de /bin/systemctl (chmod u-s /bin/systemctl), ya que no es necesario para su funcionamiento normal (prioridad: Crítica, asociado a H-02).\\ 4. Auditar periódicamente el sistema en busca de binarios SUID no estándar.\\\vspace{0.5cm}
 \end{campo}
 
 \begin{campo}[Recomendaciones administrativas (políticas y procesos)]
 \textit{Políticas, capacitaciones, revisiones periódicas, etc.}
-\vspace{2cm}
+1. Establecer una política de revisión periódica de permisos y binarios SUID en servidores productivos.\\ 2. Capacitar al equipo de desarrollo en prácticas seguras de carga de archivos (OWASP Secure File Upload).\\ 3. Incorporar pruebas de pentesting como parte del ciclo de despliegue antes de pasar a producción.\\\vspace{0.5cm}
 \end{campo}
 
 \section{PARTE III: PROTOCOLO DE CONTINGENCIA}
 
 \begin{campo}[Escenario de falla]
 \textit{Describí qué procedimiento realizado podría fallar o causar una interrupción del servicio en producción.}
-\vspace{2cm}
+La aplicación del parche de validación de archivos subidos (H-01) en producción, sin un ambiente de pruebas previo, podría romper una integración legítima que dependa del endpoint de carga actual. Asimismo, la remoción del bit SUID de /bin/systemctl (H-02) podría afectar scripts de administración que dependan de ese permiso elevado para gestionar servicios sin sudo.\\\vspace{0.5cm}
 \end{campo}
 
 \begin{campo}[Impacto sobre la continuidad del negocio]
 \textit{¿Qué procesos de INSECUR S.A. se verían afectados? ¿Por cuánto tiempo?}
-\vspace{2cm}
+Se vería afectado el servicio web de carga de archivos de INSECUR S.A., interrumpiendo la disponibilidad del formulario de subida durante la ventana de aplicación del parche (estimado entre 15 y 30 minutos). Los procesos administrativos que dependan de systemctl con privilegios elevados podrían requerir ajuste manual tras el cambio de permisos.\\\vspace{0.5cm}
 \end{campo}
 
 \begin{campo}[Plan de respuesta]
 \begin{enumerate}
-  \item \textbf{Activación:} ¿Cómo se detecta la falla?
-  \item \textbf{Contención:} ¿Qué se hace en los primeros 15 minutos?
-  \item \textbf{Recuperación:} ¿Cómo se restaura el servicio (backup, servidor espejo, rollback)?
-  \item \textbf{Comunicación:} ¿A quiénes se notifica (dirección, clientes, autoridades)?
-  \item \textbf{Post-mortem:} ¿Cómo se documenta y se aprende del incidente?
+  \item \textbf{Activación:} Se detecta mediante monitoreo del servicio web (caída de disponibilidad del endpoint de carga) o fallo reportado por usuarios administrativos al ejecutar comandos systemctl sin privilegios.
+  \item \textbf{Contención:} Revertir el cambio de configuración aplicado (restaurar permisos previos de systemctl o deshabilitar temporalmente la validación estricta de uploads) para restablecer el servicio mientras se analiza la causa.
+  \item \textbf{Recuperación:} Rollback a la configuración anterior mediante backup de los archivos de configuración del servidor web, tomado antes de aplicar el parche.
+  \item \textbf{Comunicación:} Se notifica al equipo de infraestructura de INSECUR S.A. y, de ser necesario, a los usuarios afectados sobre la interrupción temporal del servicio.
+  \item \textbf{Post-mortem:} Se documenta el incidente en la bitácora del equipo, detallando causa raíz, tiempo de resolución y ajustes al procedimiento de despliegue para futuras aplicaciones de parches.
 \end{enumerate}
 \vspace{2cm}
 \end{campo}
 
 \begin{campo}[RTO y RPO estimados]
-\textbf{RTO} (Recovery Time Objective): \dotfill \\
-\textbf{RPO} (Recovery Point Objective): \dotfill
+\textbf{RTO} (Recovery Time Objective): 30 minutos \\
+\textbf{RPO} (Recovery Point Objective): 0 minutos (sin pérdida de datos, solo configuración)
 \end{campo}
 
 \section{Anexos}

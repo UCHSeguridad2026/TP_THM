@@ -1,1 +1,6 @@
 shell.phtml
+*.aux
+*.log
+*.out
+*.toc
+GuiaTryHackMe.pdf
